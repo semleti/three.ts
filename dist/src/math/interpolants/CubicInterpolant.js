@@ -1,0 +1,100 @@
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+import { ZeroCurvatureEnding } from '../../constants';
+import { Interpolant } from '../Interpolant';
+import { WrapAroundEnding, ZeroSlopeEnding } from '../../constants';
+/**
+ * Fast and simple cubic spline interpolant.
+ *
+ * It was derived from a Hermitian construction setting the first derivative
+ * at each sample position to the linear slope between neighboring positions
+ * over their parameter interval.
+ *
+ * @author tschw
+ */
+var CubicInterpolant = /** @class */ (function (_super) {
+    __extends(CubicInterpolant, _super);
+    function CubicInterpolant(parameterPositions, sampleValues, sampleSize, resultBuffer) {
+        var _this = _super.call(this, parameterPositions, sampleValues, sampleSize, resultBuffer) || this;
+        _this.DefaultSettings_ = {
+            endingStart: ZeroCurvatureEnding,
+            endingEnd: ZeroCurvatureEnding
+        };
+        _this._weightPrev = -0;
+        _this._offsetPrev = -0;
+        _this._weightNext = -0;
+        _this._offsetNext = -0;
+        return _this;
+    }
+    CubicInterpolant.prototype.intervalChanged_ = function (i1, t0, t1) {
+        var pp = this.parameterPositions, iPrev = i1 - 2, iNext = i1 + 1, tPrev = pp[iPrev], tNext = pp[iNext];
+        if (tPrev === undefined) {
+            switch (this.getSettings_().endingStart) {
+                case ZeroSlopeEnding:
+                    // f'(t0) = 0
+                    iPrev = i1;
+                    tPrev = 2 * t0 - t1;
+                    break;
+                case WrapAroundEnding:
+                    // use the other end of the curve
+                    iPrev = pp.length - 2;
+                    tPrev = t0 + pp[iPrev] - pp[iPrev + 1];
+                    break;
+                default:// ZeroCurvatureEnding
+                    // f''(t0) = 0 a.k.a. Natural Spline
+                    iPrev = i1;
+                    tPrev = t1;
+            }
+        }
+        if (tNext === undefined) {
+            switch (this.getSettings_().endingEnd) {
+                case ZeroSlopeEnding:
+                    // f'(tN) = 0
+                    iNext = i1;
+                    tNext = 2 * t1 - t0;
+                    break;
+                case WrapAroundEnding:
+                    // use the other end of the curve
+                    iNext = 1;
+                    tNext = t1 + pp[1] - pp[0];
+                    break;
+                default:// ZeroCurvatureEnding
+                    // f''(tN) = 0, a.k.a. Natural Spline
+                    iNext = i1 - 1;
+                    tNext = t0;
+            }
+        }
+        var halfDt = (t1 - t0) * 0.5, stride = this.valueSize;
+        this._weightPrev = halfDt / (t0 - tPrev);
+        this._weightNext = halfDt / (tNext - t1);
+        this._offsetPrev = iPrev * stride;
+        this._offsetNext = iNext * stride;
+    };
+    CubicInterpolant.prototype.interpolate_ = function (i1, t0, t, t1) {
+        var result = this.resultBuffer, values = this.sampleValues, stride = this.valueSize, o1 = i1 * stride, o0 = o1 - stride, oP = this._offsetPrev, oN = this._offsetNext, wP = this._weightPrev, wN = this._weightNext, p = (t - t0) / (t1 - t0), pp = p * p, ppp = pp * p;
+        // evaluate polynomials
+        var sP = -wP * ppp + 2 * wP * pp - wP * p;
+        var s0 = (1 + wP) * ppp + (-1.5 - 2 * wP) * pp + (-0.5 + wP) * p + 1;
+        var s1 = (-1 - wN) * ppp + (1.5 + wN) * pp + 0.5 * p;
+        var sN = wN * ppp - wN * pp;
+        // combine data linearly
+        for (var i = 0; i !== stride; ++i) {
+            result[i] =
+                sP * values[oP + i] +
+                    s0 * values[o0 + i] +
+                    s1 * values[o1 + i] +
+                    sN * values[oN + i];
+        }
+        return result;
+    };
+    return CubicInterpolant;
+}(Interpolant));
+export { CubicInterpolant };
