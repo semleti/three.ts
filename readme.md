@@ -3,7 +3,7 @@ Ongoing port of [three.js](https://github.com/mrdoob/three.js) to [TypeScript](h
 Currently using revision 91dev.
 
 
-##Goals
+## Goals
 Harness the strong typing of TypeScript to make life easier:
 - easier bug detection
 - quicker learning of the library
@@ -11,28 +11,25 @@ Harness the strong typing of TypeScript to make life easier:
 Future proof by hoping the compiler will do all the work? (maybe, not sure how TypeScript will evolve).
 
 
-##Dev Environmnent
+## Dev Environmnent
 This project is set up to work with [VisualStudio Code](https://code.visualstudio.com).
-In order to build the project, it requires [npm](https://www.npmjs.com), [rollup](https://www.npmjs.com/package/rollup), and [google-closure-compiler](https://www.npmjs.com/package/google-closure-compiler).
+In order to build the project, it requires [npm](https://www.npmjs.com), [rollup](https://www.npmjs.com/package/rollup), and [google-closure-compiler](https://www.npmjs.com/package/google-closure-compiler-js).
 Execute the task 'Build THREE' to build the project.
 You can find the task by 'ctrl+shit+P' and typing 'task'.
-#####Note:
-google-closure-compiler requires [Java](https://www.java.com), there is a [js version](https://www.npmjs.com/package/google-closure-compiler-js) but I wasn't able to get it working.
-Let me know if you manage to get it to work.
 
 
-##Status
+## Status
 The entire project is using TypeScript.
 ~90% of the typings are done.
 ~2% of the typings are janky.
 ~1% of the typings are wrong.
 I got it working for a personal project (although with having a little ordering issue when rendering).
 I currently have run 0 tests, so consider this an alpha version.
-####Also:
+#### Also:
 This is my first real Github repo, so I have no clue what I'm doing ¯\_(ツ)_/¯
 
 
-##BUGGY
+## BUGGY
 Buggy.
 LOTS of BUGS!
 Do NOT use!
@@ -44,7 +41,7 @@ Most bugs will likely arise from these sources (I think):
 - typos? (most should have been caught by TypeScript and google-closure-compiler, but you never know)
 
 
-##Build
+## Build
 The build process is controlled by the '.vscode/build.js' script:
 - calls tsc to compile TypeScript to js (options specified in 'tsconfig.json')
 - copies the .glsl files from 'src/renderers/ShaderChunk|ShaderLib' to 'dist/src/renderers/ShaderChunk|ShaderLib' to make sure rollup finds them
@@ -58,7 +55,7 @@ This makes me hopefull that it'll be possible to reach a similar build size.
 The size difference is most likely due to the way TypeScript creates classes and handles prototypes.
 
 
-##RoadMap
+## RoadMap
 Port the tests and examples from [three.js](https://github.com/mrdoob/three.js/) to TypeScript to make sure everything works as intended.
 Resolve the circular dependencies.
 Finish and correct the typings.
