@@ -23,6 +23,9 @@ var LOD = /** @class */ (function (_super) {
         _this.levels = [];
         return _this;
     }
+    LOD.prototype.clone = function () {
+        return new LOD().copy(this);
+    };
     LOD.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source, false);
         var levels = source.levels;

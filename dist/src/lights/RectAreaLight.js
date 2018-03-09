@@ -22,6 +22,9 @@ var RectAreaLight = /** @class */ (function (_super) {
         _this.height = (height !== undefined) ? height : 10;
         return _this;
     }
+    RectAreaLight.prototype.clone = function () {
+        return new RectAreaLight(this.color, this.intensity, this.width, this.height).copy(this);
+    };
     RectAreaLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.width = source.width;

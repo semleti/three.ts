@@ -80,6 +80,17 @@ export class BoxBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'uv', new Float32BufferAttribute( this.uvs, 2 ) );
 	}
 
+	clone() : BoxBufferGeometry {
+		return new BoxBufferGeometry(this.parameters.width, this.parameters.height, this.parameters.depth,
+		this.parameters.widthSegments, this.parameters.heightSegments, this.parameters.depthSegments).copy(this);
+	}
+
+	copy( source : BoxBufferGeometry) : BoxBufferGeometry {
+		super.copy(source);
+		this.indices = source.indices;
+		return this;
+	}
+
 	buildPlane( u : string, v : string, w : string, udir : number, vdir : number, width : number, height : number, depth : number,
 		 gridX : number, gridY : number, materialIndex : number ) : void {
 

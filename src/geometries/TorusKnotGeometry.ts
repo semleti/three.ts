@@ -167,6 +167,17 @@ export class TorusKnotBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'uv', new Float32BufferAttribute( this.uvs, 2 ) );
 	}
 
+	clone() : TorusKnotBufferGeometry {
+		return new TorusKnotBufferGeometry(this.parameters.radius,this.parameters.tube,this.parameters.tubularSegments,this.parameters.radialSegments,this.parameters.p,this.parameters.q).copy(this);
+	}
+
+	copy( source : TorusKnotBufferGeometry) : TorusKnotBufferGeometry {
+		super.copy(source);
+		this.indices = source.indices;
+		this.vertices = source.vertices;
+		return this;
+	}
+
 	
 
 	// this function calculates the current position on the torus curve

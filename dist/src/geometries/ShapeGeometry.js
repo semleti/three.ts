@@ -80,6 +80,15 @@ var ShapeBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    ShapeBufferGeometry.prototype.clone = function () {
+        return new ShapeBufferGeometry(this.parameters.shapes, this.parameters.curveSegments).copy(this);
+    };
+    ShapeBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertices = source.vertices;
+        this.indices = source.indices;
+        return this;
+    };
     // helper functions
     ShapeBufferGeometry.prototype.addShape = function (shape) {
         var i, l, shapeHole;

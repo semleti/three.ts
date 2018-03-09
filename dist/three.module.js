@@ -623,19 +623,6 @@ var Vector2 = /** @class */ (function () {
 var Matrix4 = /** @class */ (function () {
     function Matrix4() {
         this.isMatrix4 = true;
-        this.applyToBufferAttribute = function () {
-            var v1 = new Vector3();
-            return function applyToBufferAttribute(attribute) {
-                for (var i = 0, l = attribute.count; i < l; i++) {
-                    v1.x = attribute.getX(i);
-                    v1.y = attribute.getY(i);
-                    v1.z = attribute.getZ(i);
-                    v1.applyMatrix4(this);
-                    attribute.setXYZ(i, v1.x, v1.y, v1.z);
-                }
-                return attribute;
-            };
-        }();
         this.elements = [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -944,6 +931,17 @@ var Matrix4 = /** @class */ (function () {
         te[15] *= s;
         return this;
     };
+    Matrix4.prototype.applyToBufferAttribute = function (attribute) {
+        var v1 = new Vector3();
+        for (var i = 0, l = attribute.count; i < l; i++) {
+            v1.x = attribute.getX(i);
+            v1.y = attribute.getY(i);
+            v1.z = attribute.getZ(i);
+            v1.applyMatrix4(this);
+            attribute.setXYZ(i, v1.x, v1.y, v1.z);
+        }
+        return attribute;
+    };
     Matrix4.prototype.determinant = function () {
         var te = this.elements;
         var n11 = te[0], n12 = te[4], n13 = te[8], n14 = te[12];
@@ -1248,34 +1246,6 @@ var Matrix4 = /** @class */ (function () {
  */
 var Quaternion = /** @class */ (function () {
     function Quaternion(x, y, z, w) {
-        this.setFromUnitVectors = function () {
-            // assumes direction vectors vFrom and vTo are normalized
-            var v1 = new Vector3();
-            var r;
-            var EPS = 0.000001;
-            return function setFromUnitVectors(vFrom, vTo) {
-                if (v1 === undefined)
-                    v1 = new Vector3();
-                r = vFrom.dot(vTo) + 1;
-                if (r < EPS) {
-                    r = 0;
-                    if (Math.abs(vFrom.x) > Math.abs(vFrom.z)) {
-                        v1.set(-vFrom.y, vFrom.x, 0);
-                    }
-                    else {
-                        v1.set(0, -vFrom.z, vFrom.y);
-                    }
-                }
-                else {
-                    v1.crossVectors(vFrom, vTo);
-                }
-                this._x = v1.x;
-                this._y = v1.y;
-                this._z = v1.z;
-                this._w = r;
-                return this.normalize();
-            };
-        }();
         this.onChangeCallback = function () { };
         this._x = x || 0;
         this._y = y || 0;
@@ -1479,6 +1449,32 @@ var Quaternion = /** @class */ (function () {
         }
         this.onChangeCallback();
         return this;
+    };
+    // assumes direction vectors vFrom and vTo are normalized
+    Quaternion.prototype.setFromUnitVectors = function (vFrom, vTo) {
+        var v1 = new Vector3();
+        var r;
+        var EPS = 0.000001;
+        if (v1 === undefined)
+            v1 = new Vector3();
+        r = vFrom.dot(vTo) + 1;
+        if (r < EPS) {
+            r = 0;
+            if (Math.abs(vFrom.x) > Math.abs(vFrom.z)) {
+                v1.set(-vFrom.y, vFrom.x, 0);
+            }
+            else {
+                v1.set(0, -vFrom.z, vFrom.y);
+            }
+        }
+        else {
+            v1.crossVectors(vFrom, vTo);
+        }
+        this._x = v1.x;
+        this._y = v1.y;
+        this._z = v1.z;
+        this._w = r;
+        return this.normalize();
     };
     Quaternion.prototype.inverse = function () {
         // quaternion is assumed to have unit length
@@ -1758,11 +1754,9 @@ var Vector3 = /** @class */ (function () {
         }
         return this.applyQuaternion(quaternion.setFromEuler(euler));
     };
-    Vector3.prototype.applyAxisAngle = function () {
+    Vector3.prototype.applyAxisAngle = function (axis, angle) {
         var quaternion = new Quaternion();
-        return function applyAxisAngle(axis, angle) {
-            return this.applyQuaternion(quaternion.setFromAxisAngle(axis, angle));
-        };
+        return this.applyQuaternion(quaternion.setFromAxisAngle(axis, angle));
     };
     Vector3.prototype.applyMatrix3 = function (m) {
         var x = this.x, y = this.y, z = this.z;
@@ -6204,14 +6198,6 @@ var WebGLAttributes = /** @class */ (function () {
 var Euler = /** @class */ (function () {
     function Euler(x, y, z, order) {
         this.isEuler = true;
-        this.reorder = function () {
-            // WARNING: this discards revolution information -bhouston
-            var q = new Quaternion();
-            return function reorder(newOrder) {
-                q.setFromEuler(this);
-                return this.setFromQuaternion(q, newOrder);
-            };
-        }();
         this.onChangeCallback = function () { };
         this._x = x || 0;
         this._y = y || 0;
@@ -6371,6 +6357,12 @@ var Euler = /** @class */ (function () {
     Euler.prototype.setFromVector3 = function (v, order) {
         return this.set(v.x, v.y, v.z, order || this._order);
     };
+    // WARNING: this discards revolution information -bhouston
+    Euler.prototype.reorder = function (newOrder) {
+        var q = new Quaternion();
+        q.setFromEuler(this);
+        return this.setFromQuaternion(q, newOrder);
+    };
     Euler.prototype.equals = function (euler) {
         return (euler._x === this._x) && (euler._y === this._y) && (euler._z === this._z) && (euler._order === this._order);
     };
@@ -6391,7 +6383,7 @@ var Euler = /** @class */ (function () {
         array[offset] = this._x;
         array[offset + 1] = this._y;
         array[offset + 2] = this._z;
-        array[offset + 3] = parseInt(this._order);
+        array[offset + 3] = this._order;
         return array;
     };
     Euler.prototype.toVector3 = function (optionalResult) {
@@ -6986,6 +6978,11 @@ var OrthographicCamera = /** @class */ (function (_super) {
         _this.updateProjectionMatrix();
         return _this;
     }
+    OrthographicCamera.prototype.clone = function () {
+        var cam = new OrthographicCamera(this.left, this.right, this.top, this.bottom, this.near, this.far);
+        cam.copy(this);
+        return cam;
+    };
     OrthographicCamera.prototype.copy = function (source, recursive) {
         _super.prototype.copy.call(this, source, recursive);
         this.left = source.left;
@@ -7478,6 +7475,16 @@ var Geometry = /** @class */ (function (_super) {
             face.vertexNormals = face.__originalVertexNormals;
         }
     };
+    Geometry.prototype.computeLineDistances = function () {
+        var d = 0;
+        var vertices = this.vertices;
+        for (var i = 0, il = vertices.length; i < il; i++) {
+            if (i > 0) {
+                d += vertices[i].distanceTo(vertices[i - 1]);
+            }
+            this.lineDistances[i] = d;
+        }
+    };
     Geometry.prototype.computeBoundingBox = function () {
         if (this.boundingBox === null) {
             this.boundingBox = new Box3();
@@ -7662,7 +7669,6 @@ var Geometry = /** @class */ (function (_super) {
         // standard Geometry serialization
         data.uuid = this.uuid;
         data.type = this.type;
-        data.name = '';
         data.data = new Geometry.DataData();
         if (this.name !== '')
             data.name = this.name;
@@ -9094,6 +9100,14 @@ var BoxBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    BoxBufferGeometry.prototype.clone = function () {
+        return new BoxBufferGeometry(this.parameters.width, this.parameters.height, this.parameters.depth, this.parameters.widthSegments, this.parameters.heightSegments, this.parameters.depthSegments).copy(this);
+    };
+    BoxBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        return this;
+    };
     BoxBufferGeometry.prototype.buildPlane = function (u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex) {
         var segmentWidth = width / gridX;
         var segmentHeight = height / gridY;
@@ -15038,6 +15052,9 @@ var Scene = /** @class */ (function (_super) {
         _this.autoUpdate = true; // checked by the renderer
         return _this;
     }
+    Scene.prototype.clone = function () {
+        return new Scene().copy(this);
+    };
     Scene.prototype.copy = function (source, recursive) {
         _super.prototype.copy.call(this, source, recursive);
         if (source.background !== null)
@@ -15204,6 +15221,9 @@ var LOD = /** @class */ (function (_super) {
         _this.levels = [];
         return _this;
     }
+    LOD.prototype.clone = function () {
+        return new LOD().copy(this);
+    };
     LOD.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source, false);
         var levels = source.levels;
@@ -15421,6 +15441,13 @@ var Bone = /** @class */ (function (_super) {
         _this.isBone = true;
         return _this;
     }
+    Bone.prototype.clone = function () {
+        return new Bone().copy(this);
+    };
+    Bone.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return Bone;
 }(Object3D));
 
@@ -16023,6 +16050,13 @@ var Group = /** @class */ (function (_super) {
         _this.isGroup = true;
         return _this;
     }
+    Group.prototype.clone = function () {
+        return new Group().copy(this);
+    };
+    Group.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return Group;
 }(Object3D));
 
@@ -16145,6 +16179,7 @@ var WireframeGeometry = /** @class */ (function (_super) {
         _this.type = 'WireframeGeometry';
         // buffer
         _this.vertices = [];
+        _this.geometry = geometry;
         var i, j, l, o, ol;
         var edge = [0, 0], edges = {}, e, edge1, edge2;
         var key, keys = ['a', 'b', 'c'];
@@ -16236,6 +16271,14 @@ var WireframeGeometry = /** @class */ (function (_super) {
         _this.position = new Float32BufferAttribute(_this.vertices, 3);
         return _this;
     }
+    WireframeGeometry.prototype.clone = function () {
+        return new WireframeGeometry(this.geometry).copy(this);
+    };
+    WireframeGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertices = source.vertices;
+        return this;
+    };
     return WireframeGeometry;
 }(BufferGeometry));
 
@@ -16348,6 +16391,15 @@ var ParametricBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    ParametricBufferGeometry.prototype.clone = function () {
+        return new ParametricBufferGeometry(this.parameters.func, this.parameters.slices, this.parameters.stacks).copy(this);
+    };
+    ParametricBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertices = source.vertices;
+        this.indices = source.indices;
+        return this;
+    };
     ParametricBufferGeometry.EPS = 0.00001;
     return ParametricBufferGeometry;
 }(BufferGeometry));
@@ -16395,14 +16447,16 @@ var PolyhedronBufferGeometry = /** @class */ (function (_super) {
         // default buffer data
         _this.vertexBuffer = [];
         _this.uvBuffer = [];
+        vertices = vertices || [];
+        indices = indices || [];
+        radius = radius || 1;
+        detail = detail || 0;
         _this.parameters = {
             vertices: vertices,
             indices: indices,
             radius: radius,
             detail: detail
         };
-        radius = radius || 1;
-        detail = detail || 0;
         // the subdivision creates the vertex buffer data
         _this.subdivide(detail);
         // all vertices should lie on a conceptual sphere with a given radius
@@ -16421,6 +16475,14 @@ var PolyhedronBufferGeometry = /** @class */ (function (_super) {
         }
         return _this;
     }
+    PolyhedronBufferGeometry.prototype.clone = function () {
+        return new PolyhedronBufferGeometry(this.parameters.vertices, this.parameters.indices).copy(this);
+    };
+    PolyhedronBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertexBuffer = source.vertexBuffer;
+        return this;
+    };
     // helper functions
     PolyhedronBufferGeometry.prototype.subdivide = function (detail) {
         var a = new Vector3();
@@ -16852,6 +16914,14 @@ var TubeGeometry = /** @class */ (function (_super) {
         _this.mergeVertices();
         return _this;
     }
+    TubeGeometry.prototype.clone = function () {
+        return new TubeGeometry(this.parameters.path, this.parameters.tubularSegments, this.parameters.radius, this.parameters.radialSegments, this.parameters.closed).copy(this);
+    };
+    TubeGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.tangents = source.tangents;
+        return this;
+    };
     return TubeGeometry;
 }(Geometry));
 // TubeBufferGeometry
@@ -16891,6 +16961,14 @@ var TubeBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    TubeBufferGeometry.prototype.clone = function () {
+        return new TubeBufferGeometry(this.parameters.path, this.parameters.tubularSegments, this.parameters.radius, this.parameters.radialSegments, this.parameters.closed).copy(this);
+    };
+    TubeBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.tangents = source.tangents;
+        return this;
+    };
     // functions
     TubeBufferGeometry.prototype.generateBufferData = function () {
         for (var i = 0; i < this.parameters.tubularSegments; i++) {
@@ -17088,6 +17166,15 @@ var TorusKnotBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    TorusKnotBufferGeometry.prototype.clone = function () {
+        return new TorusKnotBufferGeometry(this.parameters.radius, this.parameters.tube, this.parameters.tubularSegments, this.parameters.radialSegments, this.parameters.p, this.parameters.q).copy(this);
+    };
+    TorusKnotBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        this.vertices = source.vertices;
+        return this;
+    };
     // this function calculates the current position on the torus curve
     TorusKnotBufferGeometry.prototype.calculatePositionOnCurve = function (u, p, q, radius, position) {
         var cu = Math.cos(u);
@@ -17203,6 +17290,13 @@ var TorusBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    TorusBufferGeometry.prototype.clone = function () {
+        return new TorusBufferGeometry(this.parameters.radius, this.parameters.tube, this.parameters.radialSegments, this.parameters.tubularSegments, this.parameters.arc).copy(this);
+    };
+    TorusBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return TorusBufferGeometry;
 }(BufferGeometry));
 
@@ -18450,6 +18544,13 @@ var SphereBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(uvs, 2));
         return _this;
     }
+    SphereBufferGeometry.prototype.clone = function () {
+        return new SphereBufferGeometry(this.parameters.radius, this.parameters.widthSegments, this.parameters.heightSegments, this.parameters.phiStart, this.parameters.phiLength, this.parameters.thetaStart, this.parameters.thetaLength).copy(this);
+    };
+    SphereBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return SphereBufferGeometry;
 }(BufferGeometry));
 
@@ -18767,6 +18868,15 @@ var ShapeBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    ShapeBufferGeometry.prototype.clone = function () {
+        return new ShapeBufferGeometry(this.parameters.shapes, this.parameters.curveSegments).copy(this);
+    };
+    ShapeBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertices = source.vertices;
+        this.indices = source.indices;
+        return this;
+    };
     // helper functions
     ShapeBufferGeometry.prototype.addShape = function (shape) {
         var i, l, shapeHole;
@@ -18901,7 +19011,7 @@ var EdgesGeometry = /** @class */ (function (_super) {
             }
         }
         // build geometry
-        _this.position = new Float32BufferAttribute(_this.vertices, 3);
+        _this.addAttribute('position', new Float32BufferAttribute(_this.vertices, 3));
         return _this;
     }
     return EdgesGeometry;
@@ -18957,6 +19067,14 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
         _this.indx = 0;
         _this.indexArray = [];
         _this.groupStart = 0;
+        radiusTop = radiusTop !== undefined ? radiusTop : 1;
+        radiusBottom = radiusBottom !== undefined ? radiusBottom : 1;
+        height = height || 1;
+        radialSegments = Math.floor(radialSegments) || 8;
+        heightSegments = Math.floor(heightSegments) || 1;
+        openEnded = openEnded !== undefined ? openEnded : false;
+        thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
+        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
         _this.parameters = {
             radiusTop: radiusTop,
             radiusBottom: radiusBottom,
@@ -18967,14 +19085,6 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
             thetaStart: thetaStart,
             thetaLength: thetaLength
         };
-        radiusTop = radiusTop !== undefined ? radiusTop : 1;
-        radiusBottom = radiusBottom !== undefined ? radiusBottom : 1;
-        height = height || 1;
-        radialSegments = Math.floor(radialSegments) || 8;
-        heightSegments = Math.floor(heightSegments) || 1;
-        openEnded = openEnded !== undefined ? openEnded : false;
-        thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
-        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
         // helper variables
         _this.halfHeight = height / 2;
         // generate geometry
@@ -18992,6 +19102,15 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    CylinderBufferGeometry.prototype.clone = function () {
+        return new CylinderBufferGeometry(this.parameters.radiusTop, this.parameters.radiusBottom, this.parameters.height, this.parameters.radialSegments, this.parameters.heightSegments, this.parameters.openEnded, this.parameters.thetaStart, this.parameters.thetaLength).copy(this);
+    };
+    CylinderBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        this.vertices = source.vertices;
+        return this;
+    };
     CylinderBufferGeometry.prototype.generateTorso = function () {
         var x, y;
         var normal = new Vector3();
@@ -19012,7 +19131,7 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
                 var cosTheta = Math.cos(theta);
                 // vertex
                 vertex.x = radius * sinTheta;
-                vertex.y = -v * this.parameters.height + this.parameters.halfHeight;
+                vertex.y = -v * this.parameters.height + this.halfHeight;
                 vertex.z = radius * cosTheta;
                 this.vertices.push(vertex.x, vertex.y, vertex.z);
                 // normal
@@ -19248,6 +19367,15 @@ var CircleBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    CircleBufferGeometry.prototype.clone = function () {
+        return new CircleBufferGeometry(this.parameters.radius, this.parameters.segments, this.parameters.thetaStart, this.parameters.thetaLength).copy(this);
+    };
+    CircleBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        this.vertices = source.vertices;
+        return this;
+    };
     return CircleBufferGeometry;
 }(BufferGeometry));
 
@@ -22025,6 +22153,9 @@ var Light = /** @class */ (function (_super) {
         _this.receiveShadow = undefined;
         return _this;
     }
+    Light.prototype.clone = function () {
+        return new Light(this.color, this.intensity).copy(this);
+    };
     Light.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.color.copy(source.color);
@@ -22095,6 +22226,9 @@ var HemisphereLight = /** @class */ (function (_super) {
         _this.groundColor = new Color(groundColor);
         return _this;
     }
+    HemisphereLight.prototype.clone = function () {
+        return new HemisphereLight(this.color, this.groundColor, this.intensity).copy(this);
+    };
     HemisphereLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.groundColor.copy(source.groundColor);
@@ -22180,6 +22314,13 @@ var SpotLightShadow = /** @class */ (function (_super) {
             camera.updateProjectionMatrix();
         }
     };
+    SpotLightShadow.prototype.clone = function () {
+        return new SpotLightShadow().copy(this);
+    };
+    SpotLightShadow.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return SpotLightShadow;
 }(LightShadow));
 
@@ -22226,6 +22367,9 @@ var SpotLight = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    SpotLight.prototype.clone = function () {
+        return new SpotLight(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay).copy(this);
+    };
     SpotLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.distance = source.distance;
@@ -22277,6 +22421,9 @@ var PointLight = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    PointLight.prototype.clone = function () {
+        return new PointLight(this.color, this.intensity, this.distance, this.decay).copy(this);
+    };
     PointLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.distance = source.distance;
@@ -22305,6 +22452,13 @@ var DirectionalLightShadow = /** @class */ (function (_super) {
     function DirectionalLightShadow() {
         return _super.call(this, new OrthographicCamera(-5, 5, 5, -5, 0.5, 500)) || this;
     }
+    DirectionalLightShadow.prototype.clone = function () {
+        return new DirectionalLightShadow().copy(this);
+    };
+    DirectionalLightShadow.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return DirectionalLightShadow;
 }(LightShadow));
 
@@ -22334,6 +22488,9 @@ var DirectionalLight = /** @class */ (function (_super) {
         _this.shadow = new DirectionalLightShadow();
         return _this;
     }
+    DirectionalLight.prototype.clone = function () {
+        return new DirectionalLight(this.color, this.intensity).copy(this);
+    };
     DirectionalLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.target = source.target.clone();
@@ -22365,6 +22522,12 @@ var AmbientLight = /** @class */ (function (_super) {
         _this.castShadow = undefined;
         return _this;
     }
+    AmbientLight.prototype.clone = function () {
+        return new AmbientLight(this.color, this.intensity).copy(this);
+    };
+    AmbientLight.prototype.copy = function (source) {
+        return _super.prototype.copy.call(this, source);
+    };
     return AmbientLight;
 }(Light));
 
@@ -22391,6 +22554,9 @@ var RectAreaLight = /** @class */ (function (_super) {
         _this.height = (height !== undefined) ? height : 10;
         return _this;
     }
+    RectAreaLight.prototype.clone = function () {
+        return new RectAreaLight(this.color, this.intensity, this.width, this.height).copy(this);
+    };
     RectAreaLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.width = source.width;
@@ -22845,6 +23011,8 @@ var AnimationUtils = /** @class */ (function () {
  */
 var KeyframeTrack = /** @class */ (function () {
     function KeyframeTrack(name, times, values, interpolation) {
+        this.TimeBufferType = Float32Array;
+        this.ValueBufferType = Float32Array;
         this.DefaultInterpolation = InterpolateLinear;
         if (name === undefined)
             throw new Error('THREE.KeyframeTrack: track name is undefined');
@@ -23262,29 +23430,26 @@ var __extends$98 = (this && this.__extends) || (function () {
  * @author Ben Houston / http://clara.io/
  * @author David Sarno / http://lighthaus.us/
  */
-var AnimationClip = /** @class */ (function (_super) {
-    __extends$98(AnimationClip, _super);
+var AnimationClip = /** @class */ (function () {
     function AnimationClip(name, duration, tracks) {
-        var _this = _super.call(this, name, duration, tracks, null) || this;
-        _this.name = name;
-        _this.tracks = tracks;
-        _this.duration = (duration !== undefined) ? duration : -1;
-        _this.uuid = _Math.generateUUID();
+        this.name = name;
+        this.tracks = tracks;
+        this.duration = (duration !== undefined) ? duration : -1;
+        this.uuid = _Math.generateUUID();
         // this means it should figure out its duration by scanning the tracks
-        if (_this.duration < 0) {
-            _this.resetDuration();
+        if (this.duration < 0) {
+            this.resetDuration();
         }
-        _this.optimize();
-        return _this;
+        this.optimize();
     }
-    AnimationClip.prototype.parse = function (json) {
+    AnimationClip.parse = function (json) {
         var tracks = [], jsonTracks = json.tracks, frameTime = 1.0 / (json.fps || 1.0);
         for (var i = 0, n = jsonTracks.length; i !== n; ++i) {
             tracks.push(KeyframeTrack.parse(jsonTracks[i]).scale(frameTime));
         }
         return new AnimationClip(json.name, json.duration, tracks);
     };
-    AnimationClip.prototype.toJSON = function (clip) {
+    AnimationClip.toJSON = function (clip) {
         var tracks = [], clipTracks = clip.tracks;
         for (var i = 0, n = clipTracks.length; i !== n; ++i) {
             tracks.push(KeyframeTrack.toJSON(clipTracks[i]));
@@ -23446,7 +23611,7 @@ var AnimationClip = /** @class */ (function (_super) {
         return this;
     };
     return AnimationClip;
-}(KeyframeTrack));
+}());
 (function (AnimationClip) {
     var Data = /** @class */ (function (_super) {
         __extends$98(Data, _super);
@@ -25237,6 +25402,9 @@ var CubeCamera = /** @class */ (function (_super) {
         _this.type = 'CubeCamera';
         _this.fov = 90;
         _this.aspect = 1;
+        _this.near = near;
+        _this.far = far;
+        _this.cubeResolution = cubeResolution;
         _this.cameraPX = new PerspectiveCamera(_this.fov, _this.aspect, near, far);
         _this.cameraPX.up.set(0, -1, 0);
         _this.cameraPX.lookAt(1, 0, 0);
@@ -25266,6 +25434,13 @@ var CubeCamera = /** @class */ (function (_super) {
         _this.renderTarget.texture.name = "CubeCamera";
         return _this;
     }
+    CubeCamera.prototype.clone = function () {
+        return new CubeCamera(this.near, this.far, this.cubeResolution).copy(this);
+    };
+    CubeCamera.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     CubeCamera.prototype.update = function (renderer, scene) {
         if (this.parent === null)
             this.updateMatrixWorld();
@@ -25323,6 +25498,13 @@ var AudioListener = /** @class */ (function (_super) {
         _this.gain.connect(_this.context.destination);
         return _this;
     }
+    AudioListener.prototype.clone = function () {
+        return new AudioListener().copy(this);
+    };
+    AudioListener.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     AudioListener.prototype.getInput = function () {
         return this.gain;
     };
@@ -25413,11 +25595,19 @@ var Audio = /** @class */ (function (_super) {
         _this.hasPlaybackControl = true;
         _this.sourceType = 'empty';
         _this.filters = [];
+        _this.listener = listener;
         _this.context = listener.context;
         _this.gain = _this.context.createGain();
         _this.gain.connect(listener.getInput());
         return _this;
     }
+    Audio.prototype.clone = function () {
+        return new Audio(this.listener).copy(this);
+    };
+    Audio.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     Audio.prototype.getOutput = function () {
         return this.gain;
     };
@@ -25880,14 +26070,107 @@ var __extends$106 = (this && this.__extends) || (function () {
  * @author tschw
  */
 // Characters [].:/ are reserved for track binding syntax.
-var RESERVED_CHARS_RE = '\\[\\]\\.:\\/';
+var RESERVED_CHARS_RE = '\\[\\]\\.:\\/"%';
 var PropertyBinding = /** @class */ (function () {
     //TODO: create class parsedPath defined in PropertyBinding.parseTrackName
     function PropertyBinding(rootNode, path, parsedPath) {
+        this.BindingType = {
+            Direct: 0,
+            EntireArray: 1,
+            ArrayElement: 2,
+            HasFromToArray: 3
+        };
+        this.Versioning = {
+            None: 0,
+            NeedsUpdate: 1,
+            MatrixWorldNeedsUpdate: 2
+        };
+        //TODO: change to TypeScript style
+        this.GetterByBindingType = [
+            function getValue_direct(buffer, offset) {
+                buffer[offset] = this.node[this.propertyName];
+            },
+            function getValue_array(buffer, offset) {
+                var source = this.resolvedProperty;
+                for (var i = 0, n = source.length; i !== n; ++i) {
+                    buffer[offset++] = source[i];
+                }
+            },
+            function getValue_arrayElement(buffer, offset) {
+                buffer[offset] = this.resolvedProperty[this.propertyIndex];
+            },
+            function getValue_toArray(buffer, offset) {
+                this.resolvedProperty.toArray(buffer, offset);
+            }
+        ];
+        this.SetterByBindingTypeAndVersioning = [
+            [
+                // Direct
+                function setValue_direct(buffer, offset) {
+                    this.targetObject[this.propertyName] = buffer[offset];
+                },
+                function setValue_direct_setNeedsUpdate(buffer, offset) {
+                    this.targetObject[this.propertyName] = buffer[offset];
+                    this.targetObject.needsUpdate = true;
+                },
+                function setValue_direct_setMatrixWorldNeedsUpdate(buffer, offset) {
+                    this.targetObject[this.propertyName] = buffer[offset];
+                    this.targetObject.matrixWorldNeedsUpdate = true;
+                }
+            ], [
+                // EntireArray
+                function setValue_array(buffer, offset) {
+                    var dest = this.resolvedProperty;
+                    for (var i = 0, n = dest.length; i !== n; ++i) {
+                        dest[i] = buffer[offset++];
+                    }
+                },
+                function setValue_array_setNeedsUpdate(buffer, offset) {
+                    var dest = this.resolvedProperty;
+                    for (var i = 0, n = dest.length; i !== n; ++i) {
+                        dest[i] = buffer[offset++];
+                    }
+                    this.targetObject.needsUpdate = true;
+                },
+                function setValue_array_setMatrixWorldNeedsUpdate(buffer, offset) {
+                    var dest = this.resolvedProperty;
+                    for (var i = 0, n = dest.length; i !== n; ++i) {
+                        dest[i] = buffer[offset++];
+                    }
+                    this.targetObject.matrixWorldNeedsUpdate = true;
+                }
+            ], [
+                // ArrayElement
+                function setValue_arrayElement(buffer, offset) {
+                    this.resolvedProperty[this.propertyIndex] = buffer[offset];
+                },
+                function setValue_arrayElement_setNeedsUpdate(buffer, offset) {
+                    this.resolvedProperty[this.propertyIndex] = buffer[offset];
+                    this.targetObject.needsUpdate = true;
+                },
+                function setValue_arrayElement_setMatrixWorldNeedsUpdate(buffer, offset) {
+                    this.resolvedProperty[this.propertyIndex] = buffer[offset];
+                    this.targetObject.matrixWorldNeedsUpdate = true;
+                }
+            ], [
+                // HasToFromArray
+                function setValue_fromArray(buffer, offset) {
+                    this.resolvedProperty.fromArray(buffer, offset);
+                },
+                function setValue_fromArray_setNeedsUpdate(buffer, offset) {
+                    this.resolvedProperty.fromArray(buffer, offset);
+                    this.targetObject.needsUpdate = true;
+                },
+                function setValue_fromArray_setMatrixWorldNeedsUpdate(buffer, offset) {
+                    this.resolvedProperty.fromArray(buffer, offset);
+                    this.targetObject.matrixWorldNeedsUpdate = true;
+                }
+            ]
+        ];
         this._getValue_unbound = this.getValue;
         this._setValue_unbound = this.setValue;
         this.path = path;
-        this.parsedPath = parsedPath || PropertyBinding.parseTrackName()(path);
+        this.parsedPath = parsedPath || PropertyBinding.parseTrackName(path);
         this.node = PropertyBinding.findNode(rootNode, this.parsedPath.nodeName) || rootNode;
         this.rootNode = rootNode;
     }
@@ -25909,61 +26192,6 @@ var PropertyBinding = /** @class */ (function () {
     PropertyBinding.sanitizeNodeName = function (name) {
         var reservedRe = new RegExp('[' + RESERVED_CHARS_RE + ']', 'g');
         return name.replace(/\s/g, '_').replace(reservedRe, '');
-    };
-    PropertyBinding.parseTrackName = function () {
-        // Attempts to allow node names from any language. ES5's `\w` regexp matches
-        // only latin characters, and the unicode \p{L} is not yet supported. So
-        // instead, we exclude reserved characters and match everything else.
-        var wordChar = '[^' + RESERVED_CHARS_RE + ']';
-        var wordCharOrDot = '[^' + RESERVED_CHARS_RE.replace('\\.', '') + ']';
-        // Parent directories, delimited by '/' or ':'. Currently unused, but must
-        // be matched to parse the rest of the track name.
-        var directoryRe = /((?:WC+[\/:])*)/.source.replace('WC', wordChar);
-        // Target node. May contain word characters (a-zA-Z0-9_) and '.' or '-'.
-        var nodeRe = /(WCOD+)?/.source.replace('WCOD', wordCharOrDot);
-        // Object on target node, and accessor. May not contain reserved
-        // characters. Accessor may contain any character except closing bracket.
-        var objectRe = /(?:\.(WC+)(?:\[(.+)\])?)?/.source.replace('WC', wordChar);
-        // Property and accessor. May not contain reserved characters. Accessor may
-        // contain any non-bracket characters.
-        var propertyRe = /\.(WC+)(?:\[(.+)\])?/.source.replace('WC', wordChar);
-        var trackRe = new RegExp(''
-            + '^'
-            + directoryRe
-            + nodeRe
-            + objectRe
-            + propertyRe
-            + '$');
-        var supportedObjectNames = ['material', 'materials', 'bones'];
-        return function parseTrackName(trackName) {
-            var matches = trackRe.exec(trackName);
-            if (!matches) {
-                throw new Error('PropertyBinding: Cannot parse trackName: ' + trackName);
-            }
-            var results = new PropertyBinding.ParsedPath();
-            // directoryName: matches[ 1 ], // (tschw) currently unused
-            results.nodeName = matches[2];
-            results.objectName = matches[3];
-            results.objectIndex = parseInt(matches[4]);
-            results.propertyName = matches[5]; // required
-            results.propertyIndex = parseInt(matches[6]);
-            var lastDot = results.nodeName && results.nodeName.lastIndexOf('.');
-            if (lastDot !== undefined && lastDot !== -1) {
-                var objectName = results.nodeName.substring(lastDot + 1);
-                // Object names must be checked against a whitelist. Otherwise, there
-                // is no way to parse 'foo.bar.baz': 'baz' must be a property, but
-                // 'bar' could be the objectName, or part of a nodeName (which can
-                // include '.' characters).
-                if (supportedObjectNames.indexOf(objectName) !== -1) {
-                    results.nodeName = results.nodeName.substring(0, lastDot);
-                    results.objectName = objectName;
-                }
-            }
-            if (results.propertyName === null || results.propertyName.length === 0) {
-                throw new Error('PropertyBinding: can not parse propertyName from trackName: ' + trackName);
-            }
-            return results;
-        };
     };
     PropertyBinding.searchNodeSubtree = function (children, nodeName) {
         for (var i = 0; i < children.length; i++) {
@@ -26126,7 +26354,7 @@ var PropertyBinding = /** @class */ (function () {
                     // support resolving morphTarget names into indices.
                     for (var i = 0; i < targetObject.length; i++) {
                         if (targetObject[i].name === objectIndex) {
-                            objectIndex = i;
+                            objectIndex = i + '';
                             break;
                         }
                     }
@@ -26182,7 +26410,7 @@ var PropertyBinding = /** @class */ (function () {
                     }
                     for (var i = 0; i < this.node.geometry.morphAttributes.position.length; i++) {
                         if (targetObject.geometry.morphAttributes.position[i].name === propertyIndex) {
-                            propertyIndex = i;
+                            propertyIndex = i + '';
                             break;
                         }
                     }
@@ -26194,7 +26422,7 @@ var PropertyBinding = /** @class */ (function () {
                     }
                     for (var i = 0; i < this.node.geometry.morphTargets.length; i++) {
                         if (targetObject.geometry.morphTargets[i].name === propertyIndex) {
-                            propertyIndex = i;
+                            propertyIndex = i + '';
                             break;
                         }
                     }
@@ -26218,8 +26446,8 @@ var PropertyBinding = /** @class */ (function () {
         }
         // select getter / setter
         //TODO
-        //this.getValue = this.GetterByBindingType[ bindingType ];
-        //this.setValue = this.SetterByBindingTypeAndVersioning[ bindingType ][ versioning ];
+        this.getValue = this.GetterByBindingType[bindingType];
+        this.setValue = this.SetterByBindingTypeAndVersioning[bindingType][versioning];
     };
     PropertyBinding.prototype.unbind = function () {
         this.node = null;
@@ -26228,6 +26456,61 @@ var PropertyBinding = /** @class */ (function () {
         this.getValue = this._getValue_unbound;
         this.setValue = this._setValue_unbound;
     };
+    PropertyBinding.parseTrackName = function () {
+        // Attempts to allow node names from any language. ES5's `\w` regexp matches
+        // only latin characters, and the unicode \p{L} is not yet supported. So
+        // instead, we exclude reserved characters and match everything else.
+        var wordChar = '[^' + RESERVED_CHARS_RE + ']';
+        var wordCharOrDot = '[^' + RESERVED_CHARS_RE.replace('\\.', '') + ']';
+        // Parent directories, delimited by '/' or ':'. Currently unused, but must
+        // be matched to parse the rest of the track name.
+        var directoryRe = /((?:WC+[\/:])*)/.source.replace('WC', wordChar);
+        // Target node. May contain word characters (a-zA-Z0-9_) and '.' or '-'.
+        var nodeRe = /(WCOD+)?/.source.replace('WCOD', wordCharOrDot);
+        // Object on target node, and accessor. May not contain reserved
+        // characters. Accessor may contain any character except closing bracket.
+        var objectRe = /(?:\.(WC+)(?:\[(.+)\])?)?/.source.replace('WC', wordChar);
+        // Property and accessor. May not contain reserved characters. Accessor may
+        // contain any non-bracket characters.
+        var propertyRe = /\.(WC+)(?:\[(.+)\])?/.source.replace('WC', wordChar);
+        var trackRe = new RegExp(''
+            + '^'
+            + directoryRe
+            + nodeRe
+            + objectRe
+            + propertyRe
+            + '$');
+        var supportedObjectNames = ['material', 'materials', 'bones'];
+        return function parseTrackName(trackName) {
+            var matches = trackRe.exec(trackName);
+            if (!matches) {
+                throw new Error('PropertyBinding: Cannot parse trackName: ' + trackName);
+            }
+            var results = new PropertyBinding.ParsedPath();
+            // directoryName: matches[ 1 ], // (tschw) currently unused
+            results.nodeName = matches[2];
+            results.objectName = matches[3];
+            results.objectIndex = matches[4];
+            results.propertyName = matches[5]; // required
+            results.propertyIndex = matches[6];
+            var lastDot = results.nodeName && results.nodeName.lastIndexOf('.');
+            if (lastDot !== undefined && lastDot !== -1) {
+                var objectName = results.nodeName.substring(lastDot + 1);
+                // Object names must be checked against a whitelist. Otherwise, there
+                // is no way to parse 'foo.bar.baz': 'baz' must be a property, but
+                // 'bar' could be the objectName, or part of a nodeName (which can
+                // include '.' characters).
+                if (supportedObjectNames.indexOf(objectName) !== -1) {
+                    results.nodeName = results.nodeName.substring(0, lastDot);
+                    results.objectName = objectName;
+                }
+            }
+            if (results.propertyName === null || results.propertyName.length === 0) {
+                throw new Error('PropertyBinding: can not parse propertyName from trackName: ' + trackName);
+            }
+            return results;
+        };
+    }();
     return PropertyBinding;
 }());
 (function (PropertyBinding) {
@@ -26254,7 +26537,7 @@ var PropertyBinding = /** @class */ (function () {
                     bindings[i].setValue(array, offset);
                 }
             };
-            _this.parsedPath = optionalParsedPath || PropertyBinding.parseTrackName()(path);
+            _this.parsedPath = optionalParsedPath || PropertyBinding.parseTrackName(path);
             _this._targetGroup = targetGroup;
             _this._bindings = targetGroup.subscribe_(path, _this.parsedPath);
             return _this;
@@ -27880,6 +28163,13 @@ var ImmediateRenderObject = /** @class */ (function (_super) {
         _this.render = function () { };
         return _this;
     }
+    ImmediateRenderObject.prototype.clone = function () {
+        return new ImmediateRenderObject(this.material).copy(this);
+    };
+    ImmediateRenderObject.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return ImmediateRenderObject;
 }(Object3D));
 
@@ -28014,6 +28304,13 @@ var SpotLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    SpotLightHelper.prototype.clone = function () {
+        return new SpotLightHelper(this.light, this.color).copy(this);
+    };
+    SpotLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     SpotLightHelper.prototype.dispose = function () {
         this.cone.geometry.dispose();
         this.cone.material.dispose();
@@ -28230,6 +28527,13 @@ var RectAreaLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    RectAreaLightHelper.prototype.clone = function () {
+        return new RectAreaLightHelper(this.light, this.color).copy(this);
+    };
+    RectAreaLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     RectAreaLightHelper.prototype.dispose = function () {
         this.children[0].geometry.dispose();
         this.children[0].material.dispose();
@@ -28286,6 +28590,7 @@ var HemisphereLightHelper = /** @class */ (function (_super) {
     __extends$117(HemisphereLightHelper, _super);
     function HemisphereLightHelper(light, size, color) {
         var _this = _super.call(this) || this;
+        _this.size = size;
         _this.light = light;
         _this.light.updateMatrixWorld();
         _this.matrix = light.matrixWorld;
@@ -28303,6 +28608,13 @@ var HemisphereLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    HemisphereLightHelper.prototype.clone = function () {
+        return new HemisphereLightHelper(this.light, this.size, this.color).copy(this);
+    };
+    HemisphereLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     HemisphereLightHelper.prototype.dispose = function () {
         this.children[0].geometry.dispose();
         this.children[0].material.dispose();
@@ -28527,6 +28839,7 @@ var DirectionalLightHelper = /** @class */ (function (_super) {
     __extends$121(DirectionalLightHelper, _super);
     function DirectionalLightHelper(light, size, color) {
         var _this = _super.call(this) || this;
+        _this.size = size;
         _this.light = light;
         _this.light.updateMatrixWorld();
         _this.matrix = light.matrixWorld;
@@ -28552,6 +28865,13 @@ var DirectionalLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    DirectionalLightHelper.prototype.clone = function () {
+        return new DirectionalLightHelper(this.light, this.size, this.color).copy(this);
+    };
+    DirectionalLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     DirectionalLightHelper.prototype.dispose = function () {
         this.lightPlane.geometry.dispose();
         this.lightPlane.material.dispose();
@@ -28935,9 +29255,14 @@ var __extends$126 = (this && this.__extends) || (function () {
 var lineGeometry, coneGeometry;
 var ArrowHelper = /** @class */ (function (_super) {
     __extends$126(ArrowHelper, _super);
-    // dir is assumed to be normalized
     function ArrowHelper(dir, origin, length, color, headLength, headWidth) {
         var _this = _super.call(this) || this;
+        _this.dir = dir;
+        _this.origin = origin;
+        _this.length = length;
+        _this.color = color;
+        _this.headLength = headLength;
+        _this.headWidth = headWidth;
         if (color === undefined)
             color = 0xffff00;
         if (length === undefined)
@@ -28963,6 +29288,13 @@ var ArrowHelper = /** @class */ (function (_super) {
         _this.setLength(length, headLength, headWidth);
         return _this;
     }
+    ArrowHelper.prototype.clone = function () {
+        return new ArrowHelper(this.dir, this.origin, this.length, this.color, this.headLength, this.headWidth).copy(this);
+    };
+    ArrowHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     ArrowHelper.prototype.setDirection = function (dir) {
         var axis = new Vector3();
         var radians;

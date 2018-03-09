@@ -23,7 +23,7 @@ export class TubeGeometry extends Geometry {
 	tangents : Array<Vector3>;
 	normals : Array<number>;
 	binormals : Array<Vector3>;
-	constructor( path : Path, tubularSegments : number, radius : number, radialSegments : number, closed : boolean, taper ){
+	constructor( path : Path, tubularSegments : number, radius : number, radialSegments : number, closed : boolean, taper? ){
 		super();
 		this.parameters = {
 			path: path,
@@ -47,6 +47,16 @@ export class TubeGeometry extends Geometry {
 	
 		this.fromBufferGeometry( bufferGeometry );
 		this.mergeVertices();
+	}
+
+	clone() : TubeGeometry {
+		return new TubeGeometry(this.parameters.path,this.parameters.tubularSegments,this.parameters.radius,this.parameters.radialSegments,this.parameters.closed).copy(this);
+	}
+
+	copy( source : TubeGeometry) : TubeGeometry {
+		super.copy(source);
+		this.tangents = source.tangents;
+		return this;
 	}
 
 }
@@ -104,6 +114,16 @@ export class TubeBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'position', new Float32BufferAttribute( this.vertices, 3 ) );
 		this.addAttribute( 'normal', new Float32BufferAttribute( this.normals, 3 ) );
 		this.addAttribute( 'uv', new Float32BufferAttribute( this.uvs, 2 ) );
+	}
+
+	clone() : TubeBufferGeometry {
+		return new TubeBufferGeometry(this.parameters.path,this.parameters.tubularSegments,this.parameters.radius,this.parameters.radialSegments,this.parameters.closed).copy(this);
+	}
+
+	copy( source : TubeBufferGeometry) : TubeBufferGeometry {
+		super.copy(source);
+		this.tangents = source.tangents;
+		return this;
 	}
 
 	

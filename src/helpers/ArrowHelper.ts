@@ -31,9 +31,20 @@ export class ArrowHelper extends Object3D {
 	line : Line;
 	cone : Mesh;
 	// dir is assumed to be normalized
-
+	dir : Vector3;
+	origin : Vector3;
+	length : number;
+	color : number;
+	headLength : number;
+	headWidth : number ;
 	constructor( dir : Vector3, origin : Vector3, length : number, color : number, headLength : number, headWidth : number ){
 		super();
+		this.dir = dir;
+		this.origin = origin;
+		this.length = length;
+		this.color = color;
+		this.headLength = headLength;
+		this.headWidth = headWidth;
 		if ( color === undefined ) color = 0xffff00;
 		if ( length === undefined ) length = 1;
 		if ( headLength === undefined ) headLength = 0.2 * length;
@@ -61,6 +72,15 @@ export class ArrowHelper extends Object3D {
 
 		this.setDirection( dir );
 		this.setLength( length, headLength, headWidth );
+	}
+
+	clone () : ArrowHelper {
+		return new ArrowHelper(this.dir, this.origin, this.length, this.color, this.headLength, this.headWidth).copy(this);
+	}
+
+	copy (source : ArrowHelper) : ArrowHelper {
+		super.copy(source);
+		return this;
 	}
 
 	setDirection( dir : Vector3 ) : void {

@@ -312,51 +312,44 @@ export class Quaternion {
 
 	}
 
-	setFromUnitVectors = function () {
-
-		// assumes direction vectors vFrom and vTo are normalized
-
+	// assumes direction vectors vFrom and vTo are normalized
+	setFromUnitVectors( vFrom : Vector3, vTo : Vector3 )  : Quaternion {
 		let v1 = new Vector3();
 		let r;
 
 		let EPS = 0.000001;
+		if ( v1 === undefined ) v1 = new Vector3();
 
-		return function setFromUnitVectors( vFrom : Vector3, vTo : Vector3 )  : Quaternion {
+		r = vFrom.dot( vTo ) + 1;
 
-			if ( v1 === undefined ) v1 = new Vector3();
+		if ( r < EPS ) {
 
-			r = vFrom.dot( vTo ) + 1;
+			r = 0;
 
-			if ( r < EPS ) {
+			if ( Math.abs( vFrom.x ) > Math.abs( vFrom.z ) ) {
 
-				r = 0;
-
-				if ( Math.abs( vFrom.x ) > Math.abs( vFrom.z ) ) {
-
-					v1.set( - vFrom.y, vFrom.x, 0 );
-
-				} else {
-
-					v1.set( 0, - vFrom.z, vFrom.y );
-
-				}
+				v1.set( - vFrom.y, vFrom.x, 0 );
 
 			} else {
 
-				v1.crossVectors( vFrom, vTo );
+				v1.set( 0, - vFrom.z, vFrom.y );
 
 			}
 
-			this._x = v1.x;
-			this._y = v1.y;
-			this._z = v1.z;
-			this._w = r;
+		} else {
 
-			return this.normalize();
+			v1.crossVectors( vFrom, vTo );
 
-		};
+		}
 
-	}();
+		this._x = v1.x;
+		this._y = v1.y;
+		this._z = v1.z;
+		this._w = r;
+
+		return this.normalize();
+
+	}
 
 	inverse () : Quaternion {
 

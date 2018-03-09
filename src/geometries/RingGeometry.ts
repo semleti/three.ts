@@ -59,10 +59,10 @@ export class RingBufferGeometry extends BufferGeometry {
 	
 		// buffers
 	
-		let indices = [];
-		let vertices = [];
-		let normals = [];
-		let uvs = [];
+		let indices : Array<number> = [];
+		let vertices : Array<number> = [];
+		let normals : Array<number> = [];
+		let uvs : Array<number> = [];
 	
 		// some helper variables
 	

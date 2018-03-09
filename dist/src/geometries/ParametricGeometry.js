@@ -112,6 +112,15 @@ var ParametricBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    ParametricBufferGeometry.prototype.clone = function () {
+        return new ParametricBufferGeometry(this.parameters.func, this.parameters.slices, this.parameters.stacks).copy(this);
+    };
+    ParametricBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertices = source.vertices;
+        this.indices = source.indices;
+        return this;
+    };
     ParametricBufferGeometry.EPS = 0.00001;
     return ParametricBufferGeometry;
 }(BufferGeometry));

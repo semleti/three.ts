@@ -44,6 +44,9 @@ var SpotLight = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    SpotLight.prototype.clone = function () {
+        return new SpotLight(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay).copy(this);
+    };
     SpotLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.distance = source.distance;

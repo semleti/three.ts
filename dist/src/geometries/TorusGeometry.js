@@ -105,6 +105,13 @@ var TorusBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    TorusBufferGeometry.prototype.clone = function () {
+        return new TorusBufferGeometry(this.parameters.radius, this.parameters.tube, this.parameters.radialSegments, this.parameters.tubularSegments, this.parameters.arc).copy(this);
+    };
+    TorusBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return TorusBufferGeometry;
 }(BufferGeometry));
 export { TorusBufferGeometry };

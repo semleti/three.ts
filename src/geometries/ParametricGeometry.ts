@@ -144,6 +144,17 @@ export class ParametricBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'uv', new Float32BufferAttribute( this.uvs, 2 ) );
 	}
 
+	clone() : ParametricBufferGeometry {
+		return new ParametricBufferGeometry(this.parameters.func,this.parameters.slices,this.parameters.stacks).copy(this);
+	}
+
+	copy( source : ParametricBufferGeometry) : ParametricBufferGeometry {
+		super.copy(source);
+		this.vertices = source.vertices;
+		this.indices = source.indices;
+		return this;
+	}
+
 }
 
 	

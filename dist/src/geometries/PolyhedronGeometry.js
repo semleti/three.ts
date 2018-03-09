@@ -47,14 +47,16 @@ var PolyhedronBufferGeometry = /** @class */ (function (_super) {
         // default buffer data
         _this.vertexBuffer = [];
         _this.uvBuffer = [];
+        vertices = vertices || [];
+        indices = indices || [];
+        radius = radius || 1;
+        detail = detail || 0;
         _this.parameters = {
             vertices: vertices,
             indices: indices,
             radius: radius,
             detail: detail
         };
-        radius = radius || 1;
-        detail = detail || 0;
         // the subdivision creates the vertex buffer data
         _this.subdivide(detail);
         // all vertices should lie on a conceptual sphere with a given radius
@@ -73,6 +75,14 @@ var PolyhedronBufferGeometry = /** @class */ (function (_super) {
         }
         return _this;
     }
+    PolyhedronBufferGeometry.prototype.clone = function () {
+        return new PolyhedronBufferGeometry(this.parameters.vertices, this.parameters.indices).copy(this);
+    };
+    PolyhedronBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertexBuffer = source.vertexBuffer;
+        return this;
+    };
     // helper functions
     PolyhedronBufferGeometry.prototype.subdivide = function (detail) {
         var a = new Vector3();

@@ -26,8 +26,14 @@ export class CubeCamera extends Object3D {
 	cameraNY : PerspectiveCamera;
 	cameraPZ : PerspectiveCamera;
 	cameraNZ : PerspectiveCamera;
+	near : number;
+	far : number;
+	cubeResolution : number;
 	constructor( near : number, far : number, cubeResolution : number ){
 		super();
+		this.near = near;
+		this.far = far;
+		this.cubeResolution = cubeResolution;
 		this.cameraPX  = new PerspectiveCamera( this.fov, this.aspect, near, far );
 		this.cameraPX.up.set( 0, - 1, 0 );
 		this.cameraPX.lookAt( 1, 0, 0 );
@@ -62,6 +68,15 @@ export class CubeCamera extends Object3D {
 
 		this.renderTarget = new WebGLRenderTargetCube( cubeResolution, cubeResolution, options );
 		this.renderTarget.texture.name = "CubeCamera";
+	}
+
+	clone () : CubeCamera {
+		return new CubeCamera(this.near, this.far, this.cubeResolution).copy(this);
+	}
+
+	copy (source : CubeCamera) : CubeCamera {
+		super.copy(source);
+		return this;
 	}
 
 	update ( renderer : WebGLRenderer, scene : Scene ) : void {

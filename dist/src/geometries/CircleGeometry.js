@@ -88,6 +88,15 @@ var CircleBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    CircleBufferGeometry.prototype.clone = function () {
+        return new CircleBufferGeometry(this.parameters.radius, this.parameters.segments, this.parameters.thetaStart, this.parameters.thetaLength).copy(this);
+    };
+    CircleBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        this.vertices = source.vertices;
+        return this;
+    };
     return CircleBufferGeometry;
 }(BufferGeometry));
 export { CircleBufferGeometry };

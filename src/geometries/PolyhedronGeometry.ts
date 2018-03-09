@@ -39,14 +39,16 @@ export class PolyhedronBufferGeometry extends BufferGeometry {
 	constructor( vertices : Array<number>, indices : Array<number>, radius? : number, detail? : number )
 	{
 		super();
+		vertices = vertices || [];
+		indices = indices || [];
+		radius = radius || 1;
+		detail = detail || 0;
 		this.parameters = {
 			vertices: vertices,
 			indices: indices,
 			radius: radius,
 			detail: detail
 		};
-		radius = radius || 1;
-		detail = detail || 0;
 		// the subdivision creates the vertex buffer data
 
 		this.subdivide( detail );
@@ -74,6 +76,16 @@ export class PolyhedronBufferGeometry extends BufferGeometry {
 			this.normalizeNormals(); // smooth normals
 
 		}
+	}
+
+	clone() : PolyhedronBufferGeometry {
+		return new PolyhedronBufferGeometry(this.parameters.vertices, this.parameters.indices).copy(this);
+	}
+
+	copy( source : PolyhedronBufferGeometry) : PolyhedronBufferGeometry {
+		super.copy(source);
+		this.vertexBuffer = source.vertexBuffer;
+		return this;
 	}
 
 

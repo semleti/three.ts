@@ -12,4 +12,13 @@ export class Group extends Object3D {
 		super();
 	}
 
+	clone () : Group {
+		return new Group().copy(this);
+	}
+
+	copy (source : Group) : Group {
+		super.copy(source);
+		return this;
+	}
+
 }

@@ -28,11 +28,19 @@ var Audio = /** @class */ (function (_super) {
         _this.hasPlaybackControl = true;
         _this.sourceType = 'empty';
         _this.filters = [];
+        _this.listener = listener;
         _this.context = listener.context;
         _this.gain = _this.context.createGain();
         _this.gain.connect(listener.getInput());
         return _this;
     }
+    Audio.prototype.clone = function () {
+        return new Audio(this.listener).copy(this);
+    };
+    Audio.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     Audio.prototype.getOutput = function () {
         return this.gain;
     };

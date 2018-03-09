@@ -18,6 +18,13 @@ var DirectionalLightShadow = /** @class */ (function (_super) {
     function DirectionalLightShadow() {
         return _super.call(this, new OrthographicCamera(-5, 5, 5, -5, 0.5, 500)) || this;
     }
+    DirectionalLightShadow.prototype.clone = function () {
+        return new DirectionalLightShadow().copy(this);
+    };
+    DirectionalLightShadow.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return DirectionalLightShadow;
 }(LightShadow));
 export { DirectionalLightShadow };

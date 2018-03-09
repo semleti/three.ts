@@ -21,6 +21,13 @@ var ImmediateRenderObject = /** @class */ (function (_super) {
         _this.render = function () { };
         return _this;
     }
+    ImmediateRenderObject.prototype.clone = function () {
+        return new ImmediateRenderObject(this.material).copy(this);
+    };
+    ImmediateRenderObject.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return ImmediateRenderObject;
 }(Object3D));
 export { ImmediateRenderObject };

@@ -54,6 +54,14 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
         _this.indx = 0;
         _this.indexArray = [];
         _this.groupStart = 0;
+        radiusTop = radiusTop !== undefined ? radiusTop : 1;
+        radiusBottom = radiusBottom !== undefined ? radiusBottom : 1;
+        height = height || 1;
+        radialSegments = Math.floor(radialSegments) || 8;
+        heightSegments = Math.floor(heightSegments) || 1;
+        openEnded = openEnded !== undefined ? openEnded : false;
+        thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
+        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
         _this.parameters = {
             radiusTop: radiusTop,
             radiusBottom: radiusBottom,
@@ -64,14 +72,6 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
             thetaStart: thetaStart,
             thetaLength: thetaLength
         };
-        radiusTop = radiusTop !== undefined ? radiusTop : 1;
-        radiusBottom = radiusBottom !== undefined ? radiusBottom : 1;
-        height = height || 1;
-        radialSegments = Math.floor(radialSegments) || 8;
-        heightSegments = Math.floor(heightSegments) || 1;
-        openEnded = openEnded !== undefined ? openEnded : false;
-        thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
-        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
         // helper variables
         _this.halfHeight = height / 2;
         // generate geometry
@@ -89,6 +89,15 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    CylinderBufferGeometry.prototype.clone = function () {
+        return new CylinderBufferGeometry(this.parameters.radiusTop, this.parameters.radiusBottom, this.parameters.height, this.parameters.radialSegments, this.parameters.heightSegments, this.parameters.openEnded, this.parameters.thetaStart, this.parameters.thetaLength).copy(this);
+    };
+    CylinderBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        this.vertices = source.vertices;
+        return this;
+    };
     CylinderBufferGeometry.prototype.generateTorso = function () {
         var x, y;
         var normal = new Vector3();
@@ -109,7 +118,7 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
                 var cosTheta = Math.cos(theta);
                 // vertex
                 vertex.x = radius * sinTheta;
-                vertex.y = -v * this.parameters.height + this.parameters.halfHeight;
+                vertex.y = -v * this.parameters.height + this.halfHeight;
                 vertex.z = radius * cosTheta;
                 this.vertices.push(vertex.x, vertex.y, vertex.z);
                 // normal

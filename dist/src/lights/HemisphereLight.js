@@ -26,6 +26,9 @@ var HemisphereLight = /** @class */ (function (_super) {
         _this.groundColor = new Color(groundColor);
         return _this;
     }
+    HemisphereLight.prototype.clone = function () {
+        return new HemisphereLight(this.color, this.groundColor, this.intensity).copy(this);
+    };
     HemisphereLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.groundColor.copy(source.groundColor);

@@ -62,10 +62,10 @@ export class PlaneBufferGeometry extends BufferGeometry {
 	
 		// buffers
 	
-		let indices = [];
-		let vertices = [];
-		let normals = [];
-		let uvs = [];
+		let indices : Array<number> = [];
+		let vertices : Array<number> = [];
+		let normals : Array<number> = [];
+		let uvs : Array<number> = [];
 	
 		// generate vertices, normals and uvs
 	

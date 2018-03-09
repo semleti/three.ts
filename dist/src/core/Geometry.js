@@ -371,6 +371,16 @@ var Geometry = /** @class */ (function (_super) {
             face.vertexNormals = face.__originalVertexNormals;
         }
     };
+    Geometry.prototype.computeLineDistances = function () {
+        var d = 0;
+        var vertices = this.vertices;
+        for (var i = 0, il = vertices.length; i < il; i++) {
+            if (i > 0) {
+                d += vertices[i].distanceTo(vertices[i - 1]);
+            }
+            this.lineDistances[i] = d;
+        }
+    };
     Geometry.prototype.computeBoundingBox = function () {
         if (this.boundingBox === null) {
             this.boundingBox = new Box3();
@@ -555,7 +565,6 @@ var Geometry = /** @class */ (function (_super) {
         // standard Geometry serialization
         data.uuid = this.uuid;
         data.type = this.type;
-        data.name = '';
         data.data = new Geometry.DataData();
         if (this.name !== '')
             data.name = this.name;

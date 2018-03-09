@@ -154,9 +154,9 @@ export class KeyframeTrack {
 
 	}
 
-	TimeBufferType: Float32Array;
+	TimeBufferType = Float32Array;
 
-	ValueBufferType: Float32Array;
+	ValueBufferType = Float32Array;
 
 	DefaultInterpolation : number = InterpolateLinear;
 

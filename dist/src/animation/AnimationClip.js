@@ -21,29 +21,26 @@ import { _Math } from '../math/Math';
  * @author Ben Houston / http://clara.io/
  * @author David Sarno / http://lighthaus.us/
  */
-var AnimationClip = /** @class */ (function (_super) {
-    __extends(AnimationClip, _super);
+var AnimationClip = /** @class */ (function () {
     function AnimationClip(name, duration, tracks) {
-        var _this = _super.call(this, name, duration, tracks, null) || this;
-        _this.name = name;
-        _this.tracks = tracks;
-        _this.duration = (duration !== undefined) ? duration : -1;
-        _this.uuid = _Math.generateUUID();
+        this.name = name;
+        this.tracks = tracks;
+        this.duration = (duration !== undefined) ? duration : -1;
+        this.uuid = _Math.generateUUID();
         // this means it should figure out its duration by scanning the tracks
-        if (_this.duration < 0) {
-            _this.resetDuration();
+        if (this.duration < 0) {
+            this.resetDuration();
         }
-        _this.optimize();
-        return _this;
+        this.optimize();
     }
-    AnimationClip.prototype.parse = function (json) {
+    AnimationClip.parse = function (json) {
         var tracks = [], jsonTracks = json.tracks, frameTime = 1.0 / (json.fps || 1.0);
         for (var i = 0, n = jsonTracks.length; i !== n; ++i) {
             tracks.push(KeyframeTrack.parse(jsonTracks[i]).scale(frameTime));
         }
         return new AnimationClip(json.name, json.duration, tracks);
     };
-    AnimationClip.prototype.toJSON = function (clip) {
+    AnimationClip.toJSON = function (clip) {
         var tracks = [], clipTracks = clip.tracks;
         for (var i = 0, n = clipTracks.length; i !== n; ++i) {
             tracks.push(KeyframeTrack.toJSON(clipTracks[i]));
@@ -205,7 +202,7 @@ var AnimationClip = /** @class */ (function (_super) {
         return this;
     };
     return AnimationClip;
-}(KeyframeTrack));
+}());
 export { AnimationClip };
 (function (AnimationClip) {
     var Data = /** @class */ (function (_super) {

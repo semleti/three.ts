@@ -7,34 +7,6 @@ import { Vector3 } from './Vector3';
  */
 var Quaternion = /** @class */ (function () {
     function Quaternion(x, y, z, w) {
-        this.setFromUnitVectors = function () {
-            // assumes direction vectors vFrom and vTo are normalized
-            var v1 = new Vector3();
-            var r;
-            var EPS = 0.000001;
-            return function setFromUnitVectors(vFrom, vTo) {
-                if (v1 === undefined)
-                    v1 = new Vector3();
-                r = vFrom.dot(vTo) + 1;
-                if (r < EPS) {
-                    r = 0;
-                    if (Math.abs(vFrom.x) > Math.abs(vFrom.z)) {
-                        v1.set(-vFrom.y, vFrom.x, 0);
-                    }
-                    else {
-                        v1.set(0, -vFrom.z, vFrom.y);
-                    }
-                }
-                else {
-                    v1.crossVectors(vFrom, vTo);
-                }
-                this._x = v1.x;
-                this._y = v1.y;
-                this._z = v1.z;
-                this._w = r;
-                return this.normalize();
-            };
-        }();
         this.onChangeCallback = function () { };
         this._x = x || 0;
         this._y = y || 0;
@@ -238,6 +210,32 @@ var Quaternion = /** @class */ (function () {
         }
         this.onChangeCallback();
         return this;
+    };
+    // assumes direction vectors vFrom and vTo are normalized
+    Quaternion.prototype.setFromUnitVectors = function (vFrom, vTo) {
+        var v1 = new Vector3();
+        var r;
+        var EPS = 0.000001;
+        if (v1 === undefined)
+            v1 = new Vector3();
+        r = vFrom.dot(vTo) + 1;
+        if (r < EPS) {
+            r = 0;
+            if (Math.abs(vFrom.x) > Math.abs(vFrom.z)) {
+                v1.set(-vFrom.y, vFrom.x, 0);
+            }
+            else {
+                v1.set(0, -vFrom.z, vFrom.y);
+            }
+        }
+        else {
+            v1.crossVectors(vFrom, vTo);
+        }
+        this._x = v1.x;
+        this._y = v1.y;
+        this._z = v1.z;
+        this._w = r;
+        return this.normalize();
     };
     Quaternion.prototype.inverse = function () {
         // quaternion is assumed to have unit length

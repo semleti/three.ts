@@ -24,6 +24,10 @@ export class DirectionalLight extends Light {
 		this.shadow = new DirectionalLightShadow();
 	}
 
+	clone() : DirectionalLight {
+		return new DirectionalLight(this.color, this.intensity).copy(this);
+	}
+
 	copy ( source : DirectionalLight ) : DirectionalLight {
 
 		super.copy( source );

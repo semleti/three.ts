@@ -103,6 +103,17 @@ export class ShapeBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'uv', new Float32BufferAttribute( this.uvs, 2 ) );
 	}
 
+	clone() : ShapeBufferGeometry {
+		return new ShapeBufferGeometry(this.parameters.shapes,this.parameters.curveSegments).copy(this);
+	}
+
+	copy( source : ShapeBufferGeometry) : ShapeBufferGeometry {
+		super.copy(source);
+		this.vertices = source.vertices;
+		this.indices = source.indices;
+		return this;
+	}
+
 	
 
 

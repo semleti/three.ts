@@ -83,7 +83,7 @@ function removeExtends() {
 //reduce filesize by using google-closure
 function closure(){
     console.log('\ncompiling using google-closure...');
-    var cmd = 'google-closure-compiler-js --js dist/three.js --js_output_file dist/three.min.js --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT';
+    var cmd = 'google-closure-compiler --js dist/three.js --js_output_file dist/three.min.js --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT';
     //var cmd = 'google-closure-compiler --js dist/three.js --js_output_file dist/three.min.js --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT --compilation_level=ADVANCED_OPTIMIZATIONS';
     exec(cmd, function(error, stdout, stderr) {
         // command output is in stdout

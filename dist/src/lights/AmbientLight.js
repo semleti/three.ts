@@ -21,6 +21,12 @@ var AmbientLight = /** @class */ (function (_super) {
         _this.castShadow = undefined;
         return _this;
     }
+    AmbientLight.prototype.clone = function () {
+        return new AmbientLight(this.color, this.intensity).copy(this);
+    };
+    AmbientLight.prototype.copy = function (source) {
+        return _super.prototype.copy.call(this, source);
+    };
     return AmbientLight;
 }(Light));
 export { AmbientLight };

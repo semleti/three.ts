@@ -36,6 +36,10 @@ export class PointLight extends Light {
 		this.intensity = power / ( 4 * Math.PI );
 
 	}
+
+	clone() : PointLight {
+		return new PointLight(this.color, this.intensity, this.distance, this.decay).copy(this);
+	}
 	
 	copy ( source : PointLight ) : PointLight {
 

@@ -19,8 +19,10 @@ export class DirectionalLightHelper extends Object3D {
 	color : Color;
 	lightPlane : Line;
 	targetLine : Line;
+	size : number;
 	constructor( light : DirectionalLight, size : number, color : Color ){
 		super();
+		this.size = size;
 		this.light = light;
 		this.light.updateMatrixWorld();
 
@@ -52,6 +54,15 @@ export class DirectionalLightHelper extends Object3D {
 		this.add( this.targetLine );
 
 		this.update();
+	}
+
+	clone () : DirectionalLightHelper {
+		return new DirectionalLightHelper(this.light, this.size,this.color).copy(this);
+	}
+
+	copy (source : DirectionalLightHelper) : DirectionalLightHelper {
+		super.copy(source);
+		return this;
 	}
 
 	dispose () : void {

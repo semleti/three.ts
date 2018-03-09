@@ -39,6 +39,9 @@ var PointLight = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    PointLight.prototype.clone = function () {
+        return new PointLight(this.color, this.intensity, this.distance, this.decay).copy(this);
+    };
     PointLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.distance = source.distance;

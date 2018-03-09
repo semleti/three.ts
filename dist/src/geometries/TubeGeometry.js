@@ -47,6 +47,14 @@ var TubeGeometry = /** @class */ (function (_super) {
         _this.mergeVertices();
         return _this;
     }
+    TubeGeometry.prototype.clone = function () {
+        return new TubeGeometry(this.parameters.path, this.parameters.tubularSegments, this.parameters.radius, this.parameters.radialSegments, this.parameters.closed).copy(this);
+    };
+    TubeGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.tangents = source.tangents;
+        return this;
+    };
     return TubeGeometry;
 }(Geometry));
 export { TubeGeometry };
@@ -87,6 +95,14 @@ var TubeBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    TubeBufferGeometry.prototype.clone = function () {
+        return new TubeBufferGeometry(this.parameters.path, this.parameters.tubularSegments, this.parameters.radius, this.parameters.radialSegments, this.parameters.closed).copy(this);
+    };
+    TubeBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.tangents = source.tangents;
+        return this;
+    };
     // functions
     TubeBufferGeometry.prototype.generateBufferData = function () {
         for (var i = 0; i < this.parameters.tubularSegments; i++) {

@@ -19,6 +19,15 @@ export class AudioListener extends Object3D {
 		this.gain.connect( this.context.destination );
 	}
 
+	clone () : AudioListener {
+		return new AudioListener().copy(this);
+	}
+
+	copy (source : AudioListener) : AudioListener {
+		super.copy(source);
+		return this;
+	}
+
 	getInput () : any {
 
 		return this.gain;

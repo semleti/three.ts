@@ -14,4 +14,13 @@ export class Bone extends Object3D {
 		super();
 	}
 
+	clone () : Bone {
+		return new Bone().copy(this);
+	}
+
+	copy (source : Bone) : Bone {
+		super.copy(source);
+		return this;
+	}
+
 }

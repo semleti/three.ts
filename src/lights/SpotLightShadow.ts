@@ -31,4 +31,13 @@ export class SpotLightShadow extends LightShadow {
 		}
 
 	}
+
+	clone() : SpotLightShadow {
+		return new SpotLightShadow().copy(this);
+	}
+
+	copy (source : SpotLightShadow) : SpotLightShadow {
+		super.copy(source);
+		return this;
+	}
 }

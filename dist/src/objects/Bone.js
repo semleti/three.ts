@@ -22,6 +22,13 @@ var Bone = /** @class */ (function (_super) {
         _this.isBone = true;
         return _this;
     }
+    Bone.prototype.clone = function () {
+        return new Bone().copy(this);
+    };
+    Bone.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return Bone;
 }(Object3D));
 export { Bone };

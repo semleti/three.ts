@@ -33,9 +33,7 @@ export class LightShadow {
 	}
 
 	clone () : LightShadow {
-
 		return new LightShadow().copy( this );
-
 	}
 
 	toJSON () : LightShadow.Data {

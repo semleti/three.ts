@@ -35,9 +35,14 @@ import { Vector3 } from '../math/Vector3';
 var lineGeometry, coneGeometry;
 var ArrowHelper = /** @class */ (function (_super) {
     __extends(ArrowHelper, _super);
-    // dir is assumed to be normalized
     function ArrowHelper(dir, origin, length, color, headLength, headWidth) {
         var _this = _super.call(this) || this;
+        _this.dir = dir;
+        _this.origin = origin;
+        _this.length = length;
+        _this.color = color;
+        _this.headLength = headLength;
+        _this.headWidth = headWidth;
         if (color === undefined)
             color = 0xffff00;
         if (length === undefined)
@@ -63,6 +68,13 @@ var ArrowHelper = /** @class */ (function (_super) {
         _this.setLength(length, headLength, headWidth);
         return _this;
     }
+    ArrowHelper.prototype.clone = function () {
+        return new ArrowHelper(this.dir, this.origin, this.length, this.color, this.headLength, this.headWidth).copy(this);
+    };
+    ArrowHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     ArrowHelper.prototype.setDirection = function (dir) {
         var axis = new Vector3();
         var radians;

@@ -248,21 +248,15 @@ export class Euler {
 
 	}
 
-	reorder = function () {
-
-		// WARNING: this discards revolution information -bhouston
+	// WARNING: this discards revolution information -bhouston
+	reorder( newOrder : string ) : Euler {
 
 		let q = new Quaternion();
+		q.setFromEuler( this );
 
-		return function reorder( newOrder : string ) : Euler {
+		return this.setFromQuaternion( q, newOrder );
 
-			q.setFromEuler( this );
-
-			return this.setFromQuaternion( q, newOrder );
-
-		};
-
-	}();
+	}
 
 	equals ( euler : Euler ) : boolean {
 
@@ -283,7 +277,7 @@ export class Euler {
 
 	}
 
-	toArray ( array? : Array<number>, offset? : number ) : Array<number> {
+	toArray ( array? : Array<any>, offset? : number ) : Array<any> {
 
 		if ( array === undefined ) array = [];
 		if ( offset === undefined ) offset = 0;
@@ -291,7 +285,7 @@ export class Euler {
 		array[ offset ] = this._x;
 		array[ offset + 1 ] = this._y;
 		array[ offset + 2 ] = this._z;
-		array[ offset + 3 ] = parseInt(this._order);
+		array[ offset + 3 ] = this._order;
 
 		return array;
 

@@ -20,6 +20,13 @@ var Group = /** @class */ (function (_super) {
         _this.isGroup = true;
         return _this;
     }
+    Group.prototype.clone = function () {
+        return new Group().copy(this);
+    };
+    Group.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return Group;
 }(Object3D));
 export { Group };

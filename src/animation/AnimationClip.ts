@@ -14,13 +14,12 @@ import { Object3D, Bone, Geometry } from '../Three';
  * @author David Sarno / http://lighthaus.us/
  */
 
-export class AnimationClip extends KeyframeTrack{
+export class AnimationClip{
 	name : string;
 	tracks : Array<KeyframeTrack>;
 	duration : number;
 	uuid : string;
 	constructor( name : string, duration : number, tracks : Array<KeyframeTrack> ){
-		super( name, duration, tracks, null );
 		this.name = name;
 		this.tracks = tracks;
 		this.duration = ( duration !== undefined ) ? duration : - 1;
@@ -38,7 +37,7 @@ export class AnimationClip extends KeyframeTrack{
 	}
 
 
-	parse ( json : AnimationClip.Data ) : AnimationClip {
+	static parse ( json : AnimationClip.Data ) : AnimationClip {
 
 		let tracks = [],
 			jsonTracks = json.tracks,
@@ -54,7 +53,7 @@ export class AnimationClip extends KeyframeTrack{
 
 	}
 
-	toJSON ( clip : AnimationClip ) : AnimationClip.Data {
+	static toJSON ( clip : AnimationClip ) : AnimationClip.Data {
 
 		let tracks = [],
 			clipTracks = clip.tracks;

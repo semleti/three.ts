@@ -13,7 +13,7 @@ import { SkinnedMesh } from "../Three";
  */
 
 // Characters [].:/ are reserved for track binding syntax.
-let RESERVED_CHARS_RE = '\\[\\]\\.:\\/';
+let RESERVED_CHARS_RE = '\\[\\]\\.:\\/"%';
 
 
 export class PropertyBinding {
@@ -24,7 +24,7 @@ export class PropertyBinding {
 	//TODO: create class parsedPath defined in PropertyBinding.parseTrackName
 	constructor( rootNode : AnimationClip, path : string, parsedPath : PropertyBinding.ParsedPath ){
 		this.path = path;
-		this.parsedPath = parsedPath || PropertyBinding.parseTrackName()(path);
+		this.parsedPath = parsedPath || PropertyBinding.parseTrackName(path);
 
 		this.node = PropertyBinding.findNode( rootNode, this.parsedPath.nodeName ) || rootNode;
 
@@ -60,7 +60,7 @@ export class PropertyBinding {
 
 	}
 
-	static parseTrackName () {
+	static parseTrackName = function () {
 
 		// Attempts to allow node names from any language. ES5's `\w` regexp matches
 		// only latin characters, and the unicode \p{L} is not yet supported. So
@@ -108,9 +108,9 @@ export class PropertyBinding {
 			// directoryName: matches[ 1 ], // (tschw) currently unused
 			results.nodeName = matches[ 2 ];
 			results.objectName = matches[ 3 ];
-			results.objectIndex = parseInt(matches[ 4 ]);
+			results.objectIndex = matches[ 4 ];
 			results.propertyName = matches[ 5 ]; // required
-			results.propertyIndex = parseInt(matches[ 6 ]);
+			results.propertyIndex = matches[ 6 ];
 
 			let lastDot = results.nodeName && results.nodeName.lastIndexOf( '.' );
 
@@ -141,7 +141,7 @@ export class PropertyBinding {
 
 		};
 
-	}
+	}();
 
 	static searchNodeSubtree ( children : Array<any>, nodeName : string|number ) : any {
 
@@ -213,18 +213,173 @@ export class PropertyBinding {
 	propertyIndex;
 	targetObject;
 
-	BindingType: {
+	BindingType = {
 		Direct: 0,
 		EntireArray: 1,
 		ArrayElement: 2,
 		HasFromToArray: 3
 	};
 
-	Versioning: {
+	Versioning = {
 		None: 0,
 		NeedsUpdate: 1,
 		MatrixWorldNeedsUpdate: 2
 	};
+
+	//TODO: change to TypeScript style
+	GetterByBindingType = [
+
+		function getValue_direct( buffer, offset ) : void {
+
+			buffer[ offset ] = this.node[ this.propertyName ];
+
+		},
+
+		function getValue_array( buffer, offset ) : void {
+
+			var source = this.resolvedProperty;
+
+			for ( var i = 0, n = source.length; i !== n; ++ i ) {
+
+				buffer[ offset ++ ] = source[ i ];
+
+			}
+
+		},
+
+		function getValue_arrayElement( buffer, offset ) : void {
+
+			buffer[ offset ] = this.resolvedProperty[ this.propertyIndex ];
+
+		},
+
+		function getValue_toArray( buffer, offset ) : void {
+
+			this.resolvedProperty.toArray( buffer, offset );
+
+		}
+
+	];
+
+	SetterByBindingTypeAndVersioning = [
+		[
+			// Direct
+
+			function setValue_direct( buffer, offset : number ) : void {
+
+				this.targetObject[ this.propertyName ] = buffer[ offset ];
+
+			},
+
+			function setValue_direct_setNeedsUpdate( buffer, offset : number ) : void {
+
+				this.targetObject[ this.propertyName ] = buffer[ offset ];
+				this.targetObject.needsUpdate = true;
+
+			},
+
+			function setValue_direct_setMatrixWorldNeedsUpdate( buffer, offset : number ) : void {
+
+				this.targetObject[ this.propertyName ] = buffer[ offset ];
+				this.targetObject.matrixWorldNeedsUpdate = true;
+
+			}
+
+		], [
+
+			// EntireArray
+
+			function setValue_array( buffer, offset : number ) : void {
+
+				var dest = this.resolvedProperty;
+
+				for ( var i = 0, n = dest.length; i !== n; ++ i ) {
+
+					dest[ i ] = buffer[ offset ++ ];
+
+				}
+
+			},
+
+			function setValue_array_setNeedsUpdate( buffer, offset : number ) : void {
+
+				var dest = this.resolvedProperty;
+
+				for ( var i = 0, n = dest.length; i !== n; ++ i ) {
+
+					dest[ i ] = buffer[ offset ++ ];
+
+				}
+
+				this.targetObject.needsUpdate = true;
+
+			},
+
+			function setValue_array_setMatrixWorldNeedsUpdate( buffer, offset : number ) : void {
+
+				var dest = this.resolvedProperty;
+
+				for ( var i = 0, n = dest.length; i !== n; ++ i ) {
+
+					dest[ i ] = buffer[ offset ++ ];
+
+				}
+
+				this.targetObject.matrixWorldNeedsUpdate = true;
+
+			}
+
+		], [
+
+			// ArrayElement
+
+			function setValue_arrayElement( buffer, offset : number ) : void {
+
+				this.resolvedProperty[ this.propertyIndex ] = buffer[ offset ];
+
+			},
+
+			function setValue_arrayElement_setNeedsUpdate( buffer, offset : number ) : void {
+
+				this.resolvedProperty[ this.propertyIndex ] = buffer[ offset ];
+				this.targetObject.needsUpdate = true;
+
+			},
+
+			function setValue_arrayElement_setMatrixWorldNeedsUpdate( buffer, offset : number ) : void {
+
+				this.resolvedProperty[ this.propertyIndex ] = buffer[ offset ];
+				this.targetObject.matrixWorldNeedsUpdate = true;
+
+			}
+
+		], [
+
+			// HasToFromArray
+
+			function setValue_fromArray( buffer, offset : number ) : void {
+
+				this.resolvedProperty.fromArray( buffer, offset );
+
+			},
+
+			function setValue_fromArray_setNeedsUpdate( buffer, offset : number ) : void {
+
+				this.resolvedProperty.fromArray( buffer, offset );
+				this.targetObject.needsUpdate = true;
+
+			},
+
+			function setValue_fromArray_setMatrixWorldNeedsUpdate( buffer, offset : number ) : void {
+
+				this.resolvedProperty.fromArray( buffer, offset );
+				this.targetObject.matrixWorldNeedsUpdate = true;
+
+			}
+
+		]
+
+	];
 
 	getValue_direct( buffer, offset : number ) : void {
 
@@ -462,7 +617,7 @@ export class PropertyBinding {
 
 						if ( targetObject[ i ].name === objectIndex ) {
 
-							objectIndex = i;
+							objectIndex = i + '';
 							break;
 
 						}
@@ -560,7 +715,7 @@ export class PropertyBinding {
 
 						if ( targetObject.geometry.morphAttributes.position[ i ].name === propertyIndex ) {
 
-							propertyIndex = i;
+							propertyIndex = i + '';
 							break;
 
 						}
@@ -581,7 +736,7 @@ export class PropertyBinding {
 
 						if ( targetObject.geometry.morphTargets[ i ].name === propertyIndex ) {
 
-							propertyIndex = i;
+							propertyIndex = i + '';
 							break;
 
 						}
@@ -619,8 +774,8 @@ export class PropertyBinding {
 
 		// select getter / setter
 		//TODO
-		//this.getValue = this.GetterByBindingType[ bindingType ];
-		//this.setValue = this.SetterByBindingTypeAndVersioning[ bindingType ][ versioning ];
+		this.getValue = this.GetterByBindingType[ bindingType ];
+		this.setValue = this.SetterByBindingTypeAndVersioning[ bindingType ][ versioning ];
 
 	}
 
@@ -645,9 +800,9 @@ export module PropertyBinding{
 	export class ParsedPath {
 			nodeName : string;
 			objectName : string;
-			objectIndex : number;
+			objectIndex : string;
 			propertyName : string;
-			propertyIndex : number;
+			propertyIndex : string;
 	}
 	export class Composite extends PropertyBinding {
 		_targetGroup : AnimationObjectGroup;
@@ -655,7 +810,7 @@ export module PropertyBinding{
 		parsedPath : PropertyBinding.ParsedPath;
 		constructor( targetGroup : AnimationObjectGroup, path : string, optionalParsedPath? : PropertyBinding.ParsedPath ){
 			super(null,path,optionalParsedPath);
-			this.parsedPath = optionalParsedPath || PropertyBinding.parseTrackName()( path );
+			this.parsedPath = optionalParsedPath || PropertyBinding.parseTrackName( path );
 
 			this._targetGroup = targetGroup;
 			this._bindings = targetGroup.subscribe_( path, this.parsedPath );

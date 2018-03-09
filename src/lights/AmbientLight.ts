@@ -13,6 +13,14 @@ export class AmbientLight extends Light {
 		super( color, intensity );
 		this.castShadow = undefined;
 	}
+
+	clone () : AmbientLight {
+		return new AmbientLight(this.color, this.intensity).copy(this);
+	}
+
+	copy (source : AmbientLight) : AmbientLight {
+		return super.copy(source) as AmbientLight;
+	}
 	
 
 }

@@ -35,6 +35,13 @@ var RectAreaLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    RectAreaLightHelper.prototype.clone = function () {
+        return new RectAreaLightHelper(this.light, this.color).copy(this);
+    };
+    RectAreaLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     RectAreaLightHelper.prototype.dispose = function () {
         this.children[0].geometry.dispose();
         this.children[0].material.dispose();

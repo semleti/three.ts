@@ -57,17 +57,17 @@ export class LatheBufferGeometry extends BufferGeometry {
 	
 		// buffers
 	
-		let indices = [];
-		let vertices = [];
-		let uvs = [];
+		let indices : Array<number> = [];
+		let vertices : Array<number> = [];
+		let uvs : Array<number> = [];
 	
 		// helper variables
 	
-		let base;
-		let inverseSegments = 1.0 / segments;
-		let vertex = new Vector3();
-		let uv = new Vector2();
-		let i, j;
+		let base : number;
+		let inverseSegments : number = 1.0 / segments;
+		let vertex : Vector3 = new Vector3();
+		let uv : Vector2 = new Vector2();
+		let i : number, j : number;
 	
 		// generate vertices and uvs
 	

@@ -26,6 +26,13 @@ var AudioListener = /** @class */ (function (_super) {
         _this.gain.connect(_this.context.destination);
         return _this;
     }
+    AudioListener.prototype.clone = function () {
+        return new AudioListener().copy(this);
+    };
+    AudioListener.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     AudioListener.prototype.getInput = function () {
         return this.gain;
     };

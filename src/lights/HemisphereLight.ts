@@ -21,6 +21,10 @@ export class HemisphereLight extends Light {
 		this.groundColor = new Color( groundColor );
 	}
 
+	clone () : HemisphereLight {
+		return new HemisphereLight(this.color, this.groundColor, this.intensity).copy(this);
+	}
+
 	copy ( source : HemisphereLight ) : HemisphereLight {
 
 		super.copy(source);

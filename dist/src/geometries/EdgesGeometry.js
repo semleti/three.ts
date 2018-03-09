@@ -73,7 +73,7 @@ var EdgesGeometry = /** @class */ (function (_super) {
             }
         }
         // build geometry
-        _this.position = new Float32BufferAttribute(_this.vertices, 3);
+        _this.addAttribute('position', new Float32BufferAttribute(_this.vertices, 3));
         return _this;
     }
     return EdgesGeometry;

@@ -51,16 +51,6 @@ export class CylinderBufferGeometry extends BufferGeometry {
 		 openEnded? : boolean, thetaStart? : number, thetaLength? : number )
 	{
 		super();
-		this.parameters = {
-			radiusTop: radiusTop,
-			radiusBottom: radiusBottom,
-			height: height,
-			radialSegments: radialSegments,
-			heightSegments: heightSegments,
-			openEnded: openEnded,
-			thetaStart: thetaStart,
-			thetaLength: thetaLength
-		};
 		radiusTop = radiusTop !== undefined ? radiusTop : 1;
 		radiusBottom = radiusBottom !== undefined ? radiusBottom : 1;
 		height = height || 1;
@@ -72,6 +62,16 @@ export class CylinderBufferGeometry extends BufferGeometry {
 		thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
 		thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
 
+		this.parameters = {
+			radiusTop: radiusTop,
+			radiusBottom: radiusBottom,
+			height: height,
+			radialSegments: radialSegments,
+			heightSegments: heightSegments,
+			openEnded: openEnded,
+			thetaStart: thetaStart,
+			thetaLength: thetaLength
+		};
 		// helper variables
 
 		
@@ -96,7 +96,17 @@ export class CylinderBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'uv', new Float32BufferAttribute( this.uvs, 2 ) );
 	}
 
+	clone() : CylinderBufferGeometry {
+		return new CylinderBufferGeometry( this.parameters.radiusTop, this.parameters.radiusBottom, this.parameters.height, this.parameters.radialSegments, this.parameters.heightSegments,
+			this.parameters.openEnded, this.parameters.thetaStart, this.parameters.thetaLength ).copy(this);
+	}
 
+	copy( source : CylinderBufferGeometry) : CylinderBufferGeometry {
+		super.copy(source);
+		this.indices = source.indices;
+		this.vertices = source.vertices;
+		return this;
+	}
 	
 
 	
@@ -138,8 +148,9 @@ export class CylinderBufferGeometry extends BufferGeometry {
 				// vertex
 
 				vertex.x = radius * sinTheta;
-				vertex.y = - v * this.parameters.height + this.parameters.halfHeight;
+				vertex.y = - v * this.parameters.height + this.halfHeight;
 				vertex.z = radius * cosTheta;
+				
 				this.vertices.push( vertex.x, vertex.y, vertex.z );
 
 				// normal

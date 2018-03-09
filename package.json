@@ -2,12 +2,12 @@
   "name": "three.ts",
   "version": "0.0.1",
   "description": "TypeScript 3D library",
-  
   "repository": "semleti/three.ts",
   "main": "dist/three.js",
   "devDependencies": {
     "google-closure-compiler": "^20180204.0.0",
-    "rollup" : "^0.56.5"
+    "qunit": "^2.5.1",
+    "rollup": "^0.56.5"
   },
   "dependencies": {
     "google-closure-compiler": "^20180204.0.0"

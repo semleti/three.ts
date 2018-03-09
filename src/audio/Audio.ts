@@ -22,9 +22,10 @@ export class Audio extends Object3D {
 	hasPlaybackControl : boolean = true;
 	sourceType : string = 'empty';
 	filters : Array<any> = [];
+	listener : AudioListener;
 	constructor( listener : AudioListener ){
 		super();
-
+		this.listener = listener;
 
 		this.context = listener.context;
 
@@ -33,6 +34,15 @@ export class Audio extends Object3D {
 
 		
 
+	}
+
+	clone () : Audio {
+		return new Audio(this.listener).copy(this);
+	}
+
+	copy (source : Audio) : Audio {
+		super.copy(source);
+		return this;
 	}
 
 	getOutput () {

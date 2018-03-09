@@ -12,19 +12,23 @@ export class Light extends Object3D {
 	type : string = 'Light';
 	color : Color;
 	intensity : number;
-	isLight : boolean = true;
 	groundColor : Color;
 	distance : number;
 	angle : number;
 	decay : number;
 	penumbra : number;
 	shadow : LightShadow;
+	isLight : boolean = true;
 	constructor( color : Color, intensity : number ){
 		super();
 		this.color = new Color( color );
 		this.intensity = intensity !== undefined ? intensity : 1;
 	
 		this.receiveShadow = undefined;
+	}
+
+	clone() : Light{
+		return new Light(this.color, this.intensity).copy(this);
 	}
 
 	copy ( source : Light ) : Light {

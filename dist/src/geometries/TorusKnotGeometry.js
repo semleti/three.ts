@@ -130,6 +130,15 @@ var TorusKnotBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    TorusKnotBufferGeometry.prototype.clone = function () {
+        return new TorusKnotBufferGeometry(this.parameters.radius, this.parameters.tube, this.parameters.tubularSegments, this.parameters.radialSegments, this.parameters.p, this.parameters.q).copy(this);
+    };
+    TorusKnotBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        this.vertices = source.vertices;
+        return this;
+    };
     // this function calculates the current position on the torus curve
     TorusKnotBufferGeometry.prototype.calculatePositionOnCurve = function (u, p, q, radius, position) {
         var cu = Math.cos(u);

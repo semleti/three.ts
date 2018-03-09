@@ -100,6 +100,17 @@ export class CircleBufferGeometry extends BufferGeometry {
 	this.addAttribute( 'normal', new Float32BufferAttribute( this.normals, 3 ) );
 	this.addAttribute( 'uv', new Float32BufferAttribute(this.uvs, 2 ) );
 	}
+
+	clone() : CircleBufferGeometry {
+		return new CircleBufferGeometry(this.parameters.radius,this.parameters.segments,this.parameters.thetaStart,this.parameters.thetaLength).copy(this);
+	}
+
+	copy( source : CircleBufferGeometry) : CircleBufferGeometry {
+		super.copy(source);
+		this.indices = source.indices;
+		this.vertices = source.vertices;
+		return this;
+	}
 	
 
 }

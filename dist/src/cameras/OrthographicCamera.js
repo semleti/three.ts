@@ -32,6 +32,11 @@ var OrthographicCamera = /** @class */ (function (_super) {
         _this.updateProjectionMatrix();
         return _this;
     }
+    OrthographicCamera.prototype.clone = function () {
+        var cam = new OrthographicCamera(this.left, this.right, this.top, this.bottom, this.near, this.far);
+        cam.copy(this);
+        return cam;
+    };
     OrthographicCamera.prototype.copy = function (source, recursive) {
         _super.prototype.copy.call(this, source, recursive);
         this.left = source.left;

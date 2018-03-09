@@ -59,6 +59,15 @@ export class SpotLightHelper extends Object3D {
 		this.update();
 	}
 
+	clone () : SpotLightHelper {
+		return new SpotLightHelper(this.light,this.color).copy(this);
+	}
+
+	copy (source : SpotLightHelper) : SpotLightHelper {
+		super.copy(source);
+		return this;
+	}
+
 	dispose () : void {
 
 		this.cone.geometry.dispose();

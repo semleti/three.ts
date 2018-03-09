@@ -48,6 +48,13 @@ var SpotLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    SpotLightHelper.prototype.clone = function () {
+        return new SpotLightHelper(this.light, this.color).copy(this);
+    };
+    SpotLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     SpotLightHelper.prototype.dispose = function () {
         this.cone.geometry.dispose();
         this.cone.material.dispose();

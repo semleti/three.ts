@@ -15,6 +15,15 @@ export class ImmediateRenderObject extends Object3D {
 		this.render = function ( /* renderCallback */ ) {};
 	}
 
+	clone () : ImmediateRenderObject {
+		return new ImmediateRenderObject(this.material).copy(this);
+	}
+
+	copy (source : ImmediateRenderObject) : ImmediateRenderObject {
+		super.copy(source);
+		return this;
+	}
+
 	
 
 }

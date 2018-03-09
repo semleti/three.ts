@@ -17,7 +17,11 @@ export class Scene extends Object3D {
 		this.autoUpdate = true; // checked by the renderer
 	}
 
-	copy ( source : Scene, recursive : boolean ) : Scene {
+	clone() : Scene {
+		return new Scene().copy(this);
+	}
+
+	copy ( source : Scene, recursive? : boolean ) : Scene {
 
 		super.copy(source, recursive );
 

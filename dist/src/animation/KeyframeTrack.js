@@ -20,6 +20,8 @@ import { AnimationUtils } from './AnimationUtils';
  */
 var KeyframeTrack = /** @class */ (function () {
     function KeyframeTrack(name, times, values, interpolation) {
+        this.TimeBufferType = Float32Array;
+        this.ValueBufferType = Float32Array;
         this.DefaultInterpolation = InterpolateLinear;
         if (name === undefined)
             throw new Error('THREE.KeyframeTrack: track name is undefined');

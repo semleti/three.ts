@@ -25,6 +25,9 @@ var CubeCamera = /** @class */ (function (_super) {
         _this.type = 'CubeCamera';
         _this.fov = 90;
         _this.aspect = 1;
+        _this.near = near;
+        _this.far = far;
+        _this.cubeResolution = cubeResolution;
         _this.cameraPX = new PerspectiveCamera(_this.fov, _this.aspect, near, far);
         _this.cameraPX.up.set(0, -1, 0);
         _this.cameraPX.lookAt(1, 0, 0);
@@ -54,6 +57,13 @@ var CubeCamera = /** @class */ (function (_super) {
         _this.renderTarget.texture.name = "CubeCamera";
         return _this;
     }
+    CubeCamera.prototype.clone = function () {
+        return new CubeCamera(this.near, this.far, this.cubeResolution).copy(this);
+    };
+    CubeCamera.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     CubeCamera.prototype.update = function (renderer, scene) {
         if (this.parent === null)
             this.updateMatrixWorld();

@@ -25,6 +25,9 @@ var Light = /** @class */ (function (_super) {
         _this.receiveShadow = undefined;
         return _this;
     }
+    Light.prototype.clone = function () {
+        return new Light(this.color, this.intensity).copy(this);
+    };
     Light.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.color.copy(source.color);

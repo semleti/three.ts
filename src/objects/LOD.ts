@@ -15,6 +15,10 @@ export class LOD extends Object3D {
 		super();
 	}
 
+	clone() : LOD {
+		return new LOD().copy(this);
+	}
+
 	levels = [];
 	l;
 	copy ( source : LOD ) : LOD {

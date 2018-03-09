@@ -18,8 +18,10 @@ export class HemisphereLightHelper extends Object3D {
 
 	light : HemisphereLight;
 	color : Color;
+	size : number;
 	constructor (light : HemisphereLight, size : number, color : Color ){
 		super();
+		this.size = size;
 		this.light = light;
 		this.light.updateMatrixWorld();
 
@@ -42,6 +44,15 @@ export class HemisphereLightHelper extends Object3D {
 		this.add( new Mesh( geometry, this.material ) );
 
 		this.update();
+	}
+
+	clone () : HemisphereLightHelper {
+		return new HemisphereLightHelper(this.light, this.size,this.color).copy(this);
+	}
+
+	copy (source : HemisphereLightHelper) : HemisphereLightHelper {
+		super.copy(source);
+		return this;
 	}
 
 	dispose () : void {

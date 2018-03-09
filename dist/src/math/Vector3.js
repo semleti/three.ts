@@ -147,11 +147,9 @@ var Vector3 = /** @class */ (function () {
         }
         return this.applyQuaternion(quaternion.setFromEuler(euler));
     };
-    Vector3.prototype.applyAxisAngle = function () {
+    Vector3.prototype.applyAxisAngle = function (axis, angle) {
         var quaternion = new Quaternion();
-        return function applyAxisAngle(axis, angle) {
-            return this.applyQuaternion(quaternion.setFromAxisAngle(axis, angle));
-        };
+        return this.applyQuaternion(quaternion.setFromAxisAngle(axis, angle));
     };
     Vector3.prototype.applyMatrix3 = function (m) {
         var x = this.x, y = this.y, z = this.z;

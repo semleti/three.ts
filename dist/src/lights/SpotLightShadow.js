@@ -33,6 +33,13 @@ var SpotLightShadow = /** @class */ (function (_super) {
             camera.updateProjectionMatrix();
         }
     };
+    SpotLightShadow.prototype.clone = function () {
+        return new SpotLightShadow().copy(this);
+    };
+    SpotLightShadow.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return SpotLightShadow;
 }(LightShadow));
 export { SpotLightShadow };

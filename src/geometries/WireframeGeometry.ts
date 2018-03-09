@@ -15,8 +15,10 @@ export class WireframeGeometry extends BufferGeometry {
 
 	vertices : Array<number> = [];
 	position : Float32BufferAttribute;
+	geometry;
 	constructor( geometry : Geometry | BufferGeometry ){
 		super();
+		this.geometry = geometry;
 		let i, j, l, o, ol;
 		let edge = [ 0, 0 ], edges = {}, e, edge1, edge2;
 		let key, keys = [ 'a', 'b', 'c' ];
@@ -165,6 +167,16 @@ export class WireframeGeometry extends BufferGeometry {
 		}
 		// build geometry
 		this.position = new Float32BufferAttribute( this.vertices, 3 );
+	}
+
+	clone() : WireframeGeometry {
+		return new WireframeGeometry(this.geometry).copy(this);
+	}
+
+	copy( source : WireframeGeometry) : WireframeGeometry {
+		super.copy(source);
+		this.vertices = source.vertices;
+		return this;
 	}
 	
 }

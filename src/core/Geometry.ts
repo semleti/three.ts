@@ -606,6 +606,25 @@ export class Geometry extends EventDispatcher {
 
 	}
 
+	computeLineDistances () : void {
+
+		let d = 0;
+		let vertices = this.vertices;
+
+		for ( let i = 0, il = vertices.length; i < il; i ++ ) {
+
+			if ( i > 0 ) {
+
+				d += vertices[ i ].distanceTo( vertices[ i - 1 ] );
+
+			}
+
+			this.lineDistances[ i ] = d;
+
+		}
+
+	}
+
 	computeBoundingBox () : void {
 
 		if ( this.boundingBox === null ) {
@@ -930,10 +949,9 @@ export class Geometry extends EventDispatcher {
 		// standard Geometry serialization
 		data.uuid = this.uuid;
 		data.type = this.type;
-		data.name = '';
 		data.data = new Geometry.DataData();
 
-		if ( this.name !== '' ) data.name = this.name;
+		if ( this.name !== ''  ) data.name = this.name;
 
 		if ( this.parameters !== undefined ) {
 

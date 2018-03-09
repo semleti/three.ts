@@ -38,6 +38,15 @@ export class RectAreaLightHelper extends Object3D {
 		this.update();
 	}
 
+	clone () : RectAreaLightHelper {
+		return new RectAreaLightHelper(this.light,this.color).copy(this);
+	}
+
+	copy (source : RectAreaLightHelper) : RectAreaLightHelper {
+		super.copy(source);
+		return this;
+	}
+
 	dispose () : void {
 
 		this.children[ 0 ].geometry.dispose();

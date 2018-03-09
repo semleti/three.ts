@@ -11,6 +11,15 @@
                 "reveal": "always"
             },
             "problemMatcher": []
+        },
+        {
+            "label": "build TEST",
+            "command": "node .vscode/build-test.js",
+            "type": "shell",
+            "presentation": {
+                "reveal": "always"
+            },
+            "problemMatcher": []
         }
     ],
 }

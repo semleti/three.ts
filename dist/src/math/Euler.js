@@ -10,14 +10,6 @@ import { _Math } from './Math';
 var Euler = /** @class */ (function () {
     function Euler(x, y, z, order) {
         this.isEuler = true;
-        this.reorder = function () {
-            // WARNING: this discards revolution information -bhouston
-            var q = new Quaternion();
-            return function reorder(newOrder) {
-                q.setFromEuler(this);
-                return this.setFromQuaternion(q, newOrder);
-            };
-        }();
         this.onChangeCallback = function () { };
         this._x = x || 0;
         this._y = y || 0;
@@ -177,6 +169,12 @@ var Euler = /** @class */ (function () {
     Euler.prototype.setFromVector3 = function (v, order) {
         return this.set(v.x, v.y, v.z, order || this._order);
     };
+    // WARNING: this discards revolution information -bhouston
+    Euler.prototype.reorder = function (newOrder) {
+        var q = new Quaternion();
+        q.setFromEuler(this);
+        return this.setFromQuaternion(q, newOrder);
+    };
     Euler.prototype.equals = function (euler) {
         return (euler._x === this._x) && (euler._y === this._y) && (euler._z === this._z) && (euler._order === this._order);
     };
@@ -197,7 +195,7 @@ var Euler = /** @class */ (function () {
         array[offset] = this._x;
         array[offset + 1] = this._y;
         array[offset + 2] = this._z;
-        array[offset + 3] = parseInt(this._order);
+        array[offset + 3] = this._order;
         return array;
     };
     Euler.prototype.toVector3 = function (optionalResult) {

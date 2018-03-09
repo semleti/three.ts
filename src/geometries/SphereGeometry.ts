@@ -8,6 +8,7 @@ import { Geometry } from '../core/Geometry';
 import { BufferGeometry } from '../core/BufferGeometry';
 import { Float32BufferAttribute } from '../core/BufferAttribute';
 import { Vector3 } from '../math/Vector3';
+import { Sphere } from '../Three';
 
 // SphereGeometry
 
@@ -72,10 +73,10 @@ export class SphereBufferGeometry extends BufferGeometry {
 	
 		// buffers
 	
-		let indices = [];
-		let vertices = [];
-		let normals = [];
-		let uvs = [];
+		let indices : Array<number> = [];
+		let vertices : Array<number> = [];
+		let normals : Array<number> = [];
+		let uvs : Array<number> = [];
 	
 		// generate vertices, normals and uvs
 	
@@ -140,6 +141,13 @@ export class SphereBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'uv', new Float32BufferAttribute( uvs, 2 ) );
 	}
 
-	
+	clone() : SphereBufferGeometry {
+		return new SphereBufferGeometry(this.parameters.radius,this.parameters.widthSegments,this.parameters.heightSegments,this.parameters.phiStart,this.parameters.phiLength,this.parameters.thetaStart,this.parameters.thetaLength).copy(this);
+	}
+
+	copy( source : SphereBufferGeometry) : SphereBufferGeometry {
+		super.copy(source);
+		return this;
+	}
 
 }

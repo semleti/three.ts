@@ -45,6 +45,10 @@ export class SpotLight extends Light {
 
 	}
 
+	clone() : SpotLight {
+		return new SpotLight(this.color, this.intensity, this.distance, this.angle, this.penumbra, this.decay).copy(this);
+	}
+
 	copy ( source : SpotLight ) : SpotLight {
 
 		super.copy( source );

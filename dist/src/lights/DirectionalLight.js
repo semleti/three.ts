@@ -27,6 +27,9 @@ var DirectionalLight = /** @class */ (function (_super) {
         _this.shadow = new DirectionalLightShadow();
         return _this;
     }
+    DirectionalLight.prototype.clone = function () {
+        return new DirectionalLight(this.color, this.intensity).copy(this);
+    };
     DirectionalLight.prototype.copy = function (source) {
         _super.prototype.copy.call(this, source);
         this.target = source.target.clone();

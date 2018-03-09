@@ -80,6 +80,14 @@ var BoxBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(_this.uvs, 2));
         return _this;
     }
+    BoxBufferGeometry.prototype.clone = function () {
+        return new BoxBufferGeometry(this.parameters.width, this.parameters.height, this.parameters.depth, this.parameters.widthSegments, this.parameters.heightSegments, this.parameters.depthSegments).copy(this);
+    };
+    BoxBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.indices = source.indices;
+        return this;
+    };
     BoxBufferGeometry.prototype.buildPlane = function (u, v, w, udir, vdir, width, height, depth, gridX, gridY, materialIndex) {
         var segmentWidth = width / gridX;
         var segmentHeight = height / gridY;

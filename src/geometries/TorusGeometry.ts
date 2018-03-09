@@ -129,5 +129,13 @@ export class TorusBufferGeometry extends BufferGeometry {
 		this.addAttribute( 'uv', new Float32BufferAttribute( this.uvs, 2 ) );
 	}
 
+	clone() : TorusBufferGeometry {
+		return new TorusBufferGeometry(this.parameters.radius,this.parameters.tube,this.parameters.radialSegments,this.parameters.tubularSegments,this.parameters.arc).copy(this);
+	}
+
+	copy( source : TorusBufferGeometry) : TorusBufferGeometry {
+		super.copy(source);
+		return this;
+	}
 
 }

@@ -22,6 +22,7 @@ var WireframeGeometry = /** @class */ (function (_super) {
         _this.type = 'WireframeGeometry';
         // buffer
         _this.vertices = [];
+        _this.geometry = geometry;
         var i, j, l, o, ol;
         var edge = [0, 0], edges = {}, e, edge1, edge2;
         var key, keys = ['a', 'b', 'c'];
@@ -113,6 +114,14 @@ var WireframeGeometry = /** @class */ (function (_super) {
         _this.position = new Float32BufferAttribute(_this.vertices, 3);
         return _this;
     }
+    WireframeGeometry.prototype.clone = function () {
+        return new WireframeGeometry(this.geometry).copy(this);
+    };
+    WireframeGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        this.vertices = source.vertices;
+        return this;
+    };
     return WireframeGeometry;
 }(BufferGeometry));
 export { WireframeGeometry };

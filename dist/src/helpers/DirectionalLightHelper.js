@@ -23,6 +23,7 @@ var DirectionalLightHelper = /** @class */ (function (_super) {
     __extends(DirectionalLightHelper, _super);
     function DirectionalLightHelper(light, size, color) {
         var _this = _super.call(this) || this;
+        _this.size = size;
         _this.light = light;
         _this.light.updateMatrixWorld();
         _this.matrix = light.matrixWorld;
@@ -48,6 +49,13 @@ var DirectionalLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    DirectionalLightHelper.prototype.clone = function () {
+        return new DirectionalLightHelper(this.light, this.size, this.color).copy(this);
+    };
+    DirectionalLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     DirectionalLightHelper.prototype.dispose = function () {
         this.lightPlane.geometry.dispose();
         this.lightPlane.material.dispose();

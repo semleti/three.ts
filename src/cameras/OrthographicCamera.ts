@@ -31,11 +31,15 @@ export class OrthographicCamera extends Camera {
 
 		this.updateProjectionMatrix();
 
-}
+	}
 
+	clone() : OrthographicCamera{
+		let cam = new OrthographicCamera(this.left, this.right, this.top, this.bottom, this.near, this.far);
+		cam.copy(this);
+		return cam;
+	}
 
-
-	copy ( source : OrthographicCamera, recursive : boolean ) : OrthographicCamera {
+	copy ( source : OrthographicCamera, recursive? : boolean ) : OrthographicCamera {
 
 		super.copy(source, recursive );
 

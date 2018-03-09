@@ -17,6 +17,10 @@ export class RectAreaLight extends Light {
 		this.height = ( height !== undefined ) ? height : 10;
 	}
 
+	clone() : RectAreaLight {
+		return new RectAreaLight(this.color, this.intensity, this.width, this.height).copy(this);
+	}
+
 	copy ( source : RectAreaLight ) : RectAreaLight {
 
 		super.copy(source);

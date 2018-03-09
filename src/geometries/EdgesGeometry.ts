@@ -12,7 +12,6 @@ import { Vector3 } from '../math/Vector3';
 export class EdgesGeometry extends BufferGeometry {
 	type : string = 'EdgesGeometry';
 	vertices : Array<number> = [];
-	position : Float32BufferAttribute;
 	constructor( geometry : Geometry | BufferGeometry, thresholdAngle? : number ){
 		super();
 		thresholdAngle = ( thresholdAngle !== undefined ) ? thresholdAngle : 1;
@@ -102,7 +101,7 @@ export class EdgesGeometry extends BufferGeometry {
 		}
 
 		// build geometry
-		this.position = new Float32BufferAttribute( this.vertices, 3 );
+		this.addAttribute( 'position', new Float32BufferAttribute( this.vertices, 3 ) );
 
 	}
 }

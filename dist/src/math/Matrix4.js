@@ -14,19 +14,6 @@ import { Vector3 } from './Vector3';
 var Matrix4 = /** @class */ (function () {
     function Matrix4() {
         this.isMatrix4 = true;
-        this.applyToBufferAttribute = function () {
-            var v1 = new Vector3();
-            return function applyToBufferAttribute(attribute) {
-                for (var i = 0, l = attribute.count; i < l; i++) {
-                    v1.x = attribute.getX(i);
-                    v1.y = attribute.getY(i);
-                    v1.z = attribute.getZ(i);
-                    v1.applyMatrix4(this);
-                    attribute.setXYZ(i, v1.x, v1.y, v1.z);
-                }
-                return attribute;
-            };
-        }();
         this.elements = [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -334,6 +321,17 @@ var Matrix4 = /** @class */ (function () {
         te[11] *= s;
         te[15] *= s;
         return this;
+    };
+    Matrix4.prototype.applyToBufferAttribute = function (attribute) {
+        var v1 = new Vector3();
+        for (var i = 0, l = attribute.count; i < l; i++) {
+            v1.x = attribute.getX(i);
+            v1.y = attribute.getY(i);
+            v1.z = attribute.getZ(i);
+            v1.applyMatrix4(this);
+            attribute.setXYZ(i, v1.x, v1.y, v1.z);
+        }
+        return attribute;
     };
     Matrix4.prototype.determinant = function () {
         var te = this.elements;

@@ -25,6 +25,7 @@ var HemisphereLightHelper = /** @class */ (function (_super) {
     __extends(HemisphereLightHelper, _super);
     function HemisphereLightHelper(light, size, color) {
         var _this = _super.call(this) || this;
+        _this.size = size;
         _this.light = light;
         _this.light.updateMatrixWorld();
         _this.matrix = light.matrixWorld;
@@ -42,6 +43,13 @@ var HemisphereLightHelper = /** @class */ (function (_super) {
         _this.update();
         return _this;
     }
+    HemisphereLightHelper.prototype.clone = function () {
+        return new HemisphereLightHelper(this.light, this.size, this.color).copy(this);
+    };
+    HemisphereLightHelper.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     HemisphereLightHelper.prototype.dispose = function () {
         this.children[0].geometry.dispose();
         this.children[0].material.dispose();

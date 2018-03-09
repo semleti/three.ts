@@ -226,7 +226,7 @@ export class Vector3 {
 
 	}
 
-applyEuler( euler : Euler ) : Vector3 {
+	applyEuler( euler : Euler ) : Vector3 {
 
 		let quaternion = new Quaternion();
 		if ( ! ( euler && euler.isEuler ) ) {
@@ -239,16 +239,9 @@ applyEuler( euler : Euler ) : Vector3 {
 
 	}
 
-	applyAxisAngle () {
-
+	applyAxisAngle( axis : Vector3, angle : number ) : Vector3 {
 		let quaternion = new Quaternion();
-
-		return function applyAxisAngle( axis : Vector3, angle : number ) : Vector3 {
-
-			return this.applyQuaternion( quaternion.setFromAxisAngle( axis, angle ) );
-
-		};
-
+		return this.applyQuaternion( quaternion.setFromAxisAngle( axis, angle ) );
 	}
 
 	applyMatrix3 ( m : Matrix3 ) : Vector3 {

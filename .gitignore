@@ -3,3 +3,7 @@ src_original/
 
 #I don't want to include code already available elsewhere, let me know if you need those
 node_modules/
+
+#I haven't even looked at the examples, so I don't want to include them yet
+#Were needed for some unit tests (if needed, get them from three.js)
+examples/

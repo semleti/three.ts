@@ -23,6 +23,9 @@ var Scene = /** @class */ (function (_super) {
         _this.autoUpdate = true; // checked by the renderer
         return _this;
     }
+    Scene.prototype.clone = function () {
+        return new Scene().copy(this);
+    };
     Scene.prototype.copy = function (source, recursive) {
         _super.prototype.copy.call(this, source, recursive);
         if (source.background !== null)

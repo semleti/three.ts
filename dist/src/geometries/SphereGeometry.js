@@ -112,6 +112,13 @@ var SphereBufferGeometry = /** @class */ (function (_super) {
         _this.addAttribute('uv', new Float32BufferAttribute(uvs, 2));
         return _this;
     }
+    SphereBufferGeometry.prototype.clone = function () {
+        return new SphereBufferGeometry(this.parameters.radius, this.parameters.widthSegments, this.parameters.heightSegments, this.parameters.phiStart, this.parameters.phiLength, this.parameters.thetaStart, this.parameters.thetaLength).copy(this);
+    };
+    SphereBufferGeometry.prototype.copy = function (source) {
+        _super.prototype.copy.call(this, source);
+        return this;
+    };
     return SphereBufferGeometry;
 }(BufferGeometry));
 export { SphereBufferGeometry };
