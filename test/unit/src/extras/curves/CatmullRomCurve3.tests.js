@@ -54,7 +54,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "catmullrom check", ( assert ) => {
 
 				var curve = new CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 
 				var expectedPoints = [
 
@@ -90,7 +90,7 @@ export default QUnit.module( 'Extras', () => {
 
 				var curve = new CatmullRomCurve3( positions );
 
-				curve.type = 'chordal';
+				curve.curveType = 'chordal';
 
 				var expectedPoints = [
 					new Vector3( - 60, - 100, 60 ),
@@ -123,7 +123,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "centripetal basic check", ( assert ) => {
 
 				var curve = new CatmullRomCurve3( positions );
-				curve.type = 'centripetal';
+				curve.curveType = 'centripetal';
 
 				var expectedPoints = [
 					new Vector3( - 60, - 100, 60 ),
@@ -156,7 +156,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "closed catmullrom basic check", ( assert ) => {
 
 				var curve = new CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 				curve.closed = true;
 
 				var expectedPoints = [
@@ -188,12 +188,12 @@ export default QUnit.module( 'Extras', () => {
 			} );
 
 			//
-			// curve.type = 'catmullrom'; only from here on
+			// curve.curveType = 'catmullrom'; only from here on
 			//
 			QUnit.test( "getLength/getLengths", ( assert ) => {
 
 				var curve = new THREE.CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 
 				var length = curve.getLength();
 				var expectedLength = 551.549686276872;
@@ -222,7 +222,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "getPointAt", ( assert ) => {
 
 				var curve = new THREE.CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 
 				var expectedPoints = [
 					new THREE.Vector3( - 60, - 100, 60 ),
@@ -245,7 +245,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "getTangent/getTangentAt", ( assert ) => {
 
 				var curve = new THREE.CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 
 				var expectedTangents = [
 					new THREE.Vector3( 0, 1, 0 ),
@@ -304,7 +304,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "computeFrenetFrames", ( assert ) => {
 
 				var curve = new THREE.CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 
 				var expected = {
 					binormals: [
@@ -343,7 +343,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "getUtoTmapping", ( assert ) => {
 
 				var curve = new THREE.CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 
 				var start = curve.getUtoTmapping( 0, 0 );
 				var end = curve.getUtoTmapping( 0, curve.getLength() );
@@ -360,7 +360,7 @@ export default QUnit.module( 'Extras', () => {
 			QUnit.test( "getSpacedPoints", ( assert ) => {
 
 				var curve = new THREE.CatmullRomCurve3( positions );
-				curve.type = 'catmullrom';
+				curve.curveType = 'catmullrom';
 
 				var expectedPoints = [
 					new THREE.Vector3( - 60, - 100, 60 ),

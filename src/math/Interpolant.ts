@@ -240,7 +240,9 @@ export class Interpolant {
 		// empty
 	}
 
-	beforeStart_ = this.copySampleValue_;
-	afterEnd_ = this.copySampleValue_;
+	beforeStart_;
+	
+	//( N-1, tN-1, t ), returns this.resultBuffer
+	afterEnd_;
 }
 

@@ -38,7 +38,6 @@ export class ExtrudeGeometry extends Geometry {
 	//TODO: create class
 	constructor( shapes : Array<Shape>, options : any ){
 		super();
-	
 
 
 		this.parameters = {

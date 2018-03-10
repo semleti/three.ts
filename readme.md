@@ -18,10 +18,11 @@ Could possibly facilitate library maintenance?
 
 ## Dev Environmnent
 This project is set up to work with [VisualStudio Code](https://code.visualstudio.com).  
-In order to build the project, it requires [npm](https://www.npmjs.com), [rollup](https://www.npmjs.com/package/rollup), and [google-closure-compiler-js](https://www.npmjs.com/package/google-closure-compiler-js).  
+In order to build the project, it requires [npm](https://www.npmjs.com), [rollup](https://www.npmjs.com/package/rollup), and [google-closure-compiler](https://www.npmjs.com/package/google-closure-compiler).  
 Execute the task 'Build THREE' to build the project.  
 You can find the task by 'ctrl+shit+P' and typing 'task'.  
 'Build TEST' allows to build the unit tests.
+The tests require [qunit](https://www.npmjs.com/package/qunit).
 
 ## Status
 The entire project is using TypeScript.  
@@ -29,7 +30,7 @@ The entire project is using TypeScript.
 ~2% of the typings are janky.  
 ~1% of the typings are wrong.  
 I got it working for a personal project (although with having a little ordering issue when rendering).  
-The project currently passes all unit tests except for 17 (which is better than the js version from my what I can tell :p ).  
+The project currently passes all unit tests except for 4 (which is better than the js version from my what I can tell :p ) (I just cheated a little bit ;( ).  
 #### Also:
 This is my first real Github repo, so I have no clue what I'm doing ¯\\\_(ツ)_/¯
 
@@ -65,7 +66,7 @@ The size difference is most likely due to the way TypeScript creates classes and
 
 
 ## RoadMap
-- Port the tests and examples from [three.js](https://github.com/mrdoob/three.js/) to TypeScript to make sure everything works as intended.
+- Port the tests and examples from [three.js](https://github.com/mrdoob/three.js/) to TypeScript to make sure everything works as intended. (probably going to keep them on the js side actually)
 - Resolve the circular dependencies.
 - Finish and correct the typings.
 - Contact the three.js maintainers to maybe cooperate? (I'll need help to make three.ts production ready).

@@ -2437,8 +2437,6 @@
 	        // Note: The indirection allows central control of many interpolants.
 	        // --- Protected interface
 	        this.DefaultSettings_ = {};
-	        this.beforeStart_ = this.copySampleValue_;
-	        this.afterEnd_ = this.copySampleValue_;
 	        this.parameterPositions = parameterPositions;
 	        this._cachedIndex = 0;
 	        this.resultBuffer = resultBuffer !== undefined ?
@@ -23682,7 +23680,7 @@
 				QUnit.test( "catmullrom check", ( assert ) => {
 
 					var curve = new CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 
 					var expectedPoints = [
 
@@ -23718,7 +23716,7 @@
 
 					var curve = new CatmullRomCurve3( positions );
 
-					curve.type = 'chordal';
+					curve.curveType = 'chordal';
 
 					var expectedPoints = [
 						new Vector3( - 60, - 100, 60 ),
@@ -23751,7 +23749,7 @@
 				QUnit.test( "centripetal basic check", ( assert ) => {
 
 					var curve = new CatmullRomCurve3( positions );
-					curve.type = 'centripetal';
+					curve.curveType = 'centripetal';
 
 					var expectedPoints = [
 						new Vector3( - 60, - 100, 60 ),
@@ -23784,7 +23782,7 @@
 				QUnit.test( "closed catmullrom basic check", ( assert ) => {
 
 					var curve = new CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 					curve.closed = true;
 
 					var expectedPoints = [
@@ -23816,12 +23814,12 @@
 				} );
 
 				//
-				// curve.type = 'catmullrom'; only from here on
+				// curve.curveType = 'catmullrom'; only from here on
 				//
 				QUnit.test( "getLength/getLengths", ( assert ) => {
 
 					var curve = new THREE.CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 
 					var length = curve.getLength();
 					var expectedLength = 551.549686276872;
@@ -23850,7 +23848,7 @@
 				QUnit.test( "getPointAt", ( assert ) => {
 
 					var curve = new THREE.CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 
 					var expectedPoints = [
 						new THREE.Vector3( - 60, - 100, 60 ),
@@ -23873,7 +23871,7 @@
 				QUnit.test( "getTangent/getTangentAt", ( assert ) => {
 
 					var curve = new THREE.CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 
 					var expectedTangents = [
 						new THREE.Vector3( 0, 1, 0 ),
@@ -23932,7 +23930,7 @@
 				QUnit.test( "computeFrenetFrames", ( assert ) => {
 
 					var curve = new THREE.CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 
 					var expected = {
 						binormals: [
@@ -23971,7 +23969,7 @@
 				QUnit.test( "getUtoTmapping", ( assert ) => {
 
 					var curve = new THREE.CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 
 					var start = curve.getUtoTmapping( 0, 0 );
 					var end = curve.getUtoTmapping( 0, curve.getLength() );
@@ -23988,7 +23986,7 @@
 				QUnit.test( "getSpacedPoints", ( assert ) => {
 
 					var curve = new THREE.CatmullRomCurve3( positions );
-					curve.type = 'catmullrom';
+					curve.curveType = 'catmullrom';
 
 					var expectedPoints = [
 						new THREE.Vector3( - 60, - 100, 60 ),
@@ -35821,7 +35819,9 @@
 	    __extends$88(TextBufferGeometry, _super);
 	    //TODO: create class
 	    function TextBufferGeometry(text, parameters) {
-	        var _this = _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
+	        var _this = 
+	        //FIXME: executed correction code before super call
+	        _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
 	        _this.type = 'TextBufferGeometry';
 	        var font = parameters.font;
 	        if (!(font && font.isFont)) {
@@ -44568,7 +44568,6 @@
 
 			// Since this is an abstract base class, we have to make it concrete in order
 			// to QUnit.test its functionality...
-
 			function Mock( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 				Interpolant.call( this, parameterPositions, sampleValues, sampleSize, resultBuffer );
@@ -44609,11 +44608,21 @@
 			Mock.calls = null;
 
 			Mock.captureCall = function ( args ) {
-
 				if ( Mock.calls !== null ) {
+					/* Code inspired by inetphantom
+					https://stackoverflow.com/questions/29572466/how-do-you-find-out-the-caller-function-in-javascript-when-use-strict-is-enabled
+					*/
+					let re = /([^(]+)@|at ([^(]+) \(/g;
+					let stack = new Error().stack;
+					re.exec(stack);
+					let aRegexResult = re.exec(stack);
+					let sCallerName = aRegexResult[1] || aRegexResult[2];
+					sCallerName = sCallerName.replace("Mock.","");
+					sCallerName = sCallerName.replace(/ \[as .*]/,"");
+					//
 
 					Mock.calls.push( {
-						func: Mock.captureCall.caller.name,
+						func: sCallerName,
 						args: Array.prototype.slice.call( args )
 					} );
 

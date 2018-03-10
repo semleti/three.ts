@@ -84,7 +84,7 @@ function checkGeometryClone( geom ) {
 
 	var differingProp = getDifferingProp( geom, copy, excludedProperties );
 	QUnit.assert.ok( differingProp === undefined, 'properties are equal' );
-	
+
 	differingProp = getDifferingProp( copy, geom, excludedProperties );
 	QUnit.assert.ok( differingProp === undefined, 'properties are equal' );
 
@@ -139,21 +139,19 @@ function checkGeometryJsonWriting( geom, json ) {
 	// All parameters from geometry should be persisted.
 	var keys = Object.keys( params );
 	for ( var i = 0, l = keys.length; i < l; i ++ ) {
-	
+
 		QUnit.assert.equalKey( params, json, keys[ i ] );
 
 	}
 
 	// All parameters from json should be transfered to the geometry.
 	// json is flat. Ignore first level json properties that are not parameters.
-	var notParameters = [ "metadata", "uuid", "type", "data", "name" ];
+	var notParameters = [ "metadata", "uuid", "type" ];
 	var keys = Object.keys( json );
 	for ( var i = 0, l = keys.length; i < l; i ++ ) {
 
 		var key = keys[ i ];
-		if ( notParameters.indexOf( key ) === - 1 ){
-			QUnit.assert.equalKey( params, json, key );
-		}
+		if ( notParameters.indexOf( key ) === - 1 ) QUnit.assert.equalKey( params, json, key );
 
 	}
 
@@ -162,15 +160,10 @@ function checkGeometryJsonWriting( geom, json ) {
 // Check parsing and reconstruction of json geometry
 function checkGeometryJsonReading( json, geom ) {
 
-	//types not supported by loader
-	if(geom.type == "ParametricGeometry" || geom.type == "ParametricBufferGeometry" || geom.type == "TubeGeometry"
-	|| geom.type == "TubeBufferGeometry"  || geom.type == "WireframeGeometry")
-		return;
-
 	var wrap = [ json ];
 
 	var loader = new THREE.ObjectLoader();
-	var output = loader.parseGeometries( wrap);
+	var output = loader.parseGeometries( wrap );
 
 	QUnit.assert.ok( output[ geom.uuid ], 'geometry matching source uuid not in output' );
 	// QUnit.assert.smartEqual( output[ geom.uuid ], geom, 'Reconstruct geometry from ObjectLoader' );
@@ -204,32 +197,17 @@ function checkFinite( geom ) {
 
 	var vertices = geom.vertices || [];
 
-	if(geom.isBufferGeometry){
-		for(var i = 0, l = vertices.length; i < l; i++)
-		{
-			if ( ! ( isFinite( geom.vertices[i] ))) {
+	for ( var i = 0, l = vertices.length; i < l; i ++ ) {
 
-				allVerticesAreFinite = false;
+		var v = geom.vertices[ i ];
 
-				break;
+		if ( ! ( isFinite( v.x ) || isFinite( v.y ) || isFinite( v.z ) ) ) {
 
-			}
-		}
-	}
-	else
-	{
-		for ( var i = 0, l = vertices.length; i < l; i ++ ) {
-
-			var v = geom.vertices[ i ];
-			if ( ! ( isFinite( v.x ) || isFinite( v.y ) || isFinite( v.z ) ) ) {
-
-				allVerticesAreFinite = false;
-
-				break;
-
-			}
+			allVerticesAreFinite = false;
+			break;
 
 		}
+
 	}
 
 	// TODO Buffers, normal, etc.

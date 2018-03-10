@@ -16,7 +16,7 @@ export class IcosahedronGeometry extends Geometry {
 			radius: radius,
 			detail: detail
 		};
-	
+		
 		this.fromBufferGeometry( new IcosahedronBufferGeometry( radius, detail ) );
 		this.mergeVertices();
 	}
@@ -46,7 +46,6 @@ export class IcosahedronBufferGeometry extends PolyhedronBufferGeometry {
 	type : string = 'IcosahedronBufferGeometry';
 	constructor( radius : number, detail : number ){
 		super(IcosahedronBufferGeometry.vertices, IcosahedronBufferGeometry.indices,radius, detail);
-		
 
 
 		this.parameters = {

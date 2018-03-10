@@ -45,7 +45,7 @@ export class LatheBufferGeometry extends BufferGeometry {
 			phiStart: phiStart,
 			phiLength: phiLength
 		};
-	
+		
 		segments = Math.floor( segments ) || 12;
 		phiStart = phiStart || 0;
 		phiLength = phiLength || Math.PI * 2;

@@ -46,6 +46,7 @@ export class TextBufferGeometry extends ExtrudeBufferGeometry{
 	type : string = 'TextBufferGeometry';
 	//TODO: create class
 	constructor( text : string, parameters : any ) {
+		//FIXME: executed correction code before super call
 		super(parameters.font.generateShapes( text, parameters.size, parameters.curveSegments ), parameters || {} );
 
 		let font = parameters.font;

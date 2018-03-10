@@ -25,8 +25,6 @@ var Interpolant = /** @class */ (function () {
         // Note: The indirection allows central control of many interpolants.
         // --- Protected interface
         this.DefaultSettings_ = {};
-        this.beforeStart_ = this.copySampleValue_;
-        this.afterEnd_ = this.copySampleValue_;
         this.parameterPositions = parameterPositions;
         this._cachedIndex = 0;
         this.resultBuffer = resultBuffer !== undefined ?

@@ -18,7 +18,6 @@ export class EdgesGeometry extends BufferGeometry {
 		this.parameters = {
 			thresholdAngle: thresholdAngle
 		};
-	
 
 	
 

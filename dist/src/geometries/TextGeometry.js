@@ -51,7 +51,9 @@ var TextBufferGeometry = /** @class */ (function (_super) {
     __extends(TextBufferGeometry, _super);
     //TODO: create class
     function TextBufferGeometry(text, parameters) {
-        var _this = _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
+        var _this = 
+        //FIXME: executed correction code before super call
+        _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
         _this.type = 'TextBufferGeometry';
         var font = parameters.font;
         if (!(font && font.isFont)) {

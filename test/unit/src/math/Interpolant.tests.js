@@ -12,7 +12,6 @@ export default QUnit.module( 'Maths', () => {
 
 		// Since this is an abstract base class, we have to make it concrete in order
 		// to QUnit.test its functionality...
-
 		function Mock( parameterPositions, sampleValues, sampleSize, resultBuffer ) {
 
 			Interpolant.call( this, parameterPositions, sampleValues, sampleSize, resultBuffer );
@@ -53,11 +52,21 @@ export default QUnit.module( 'Maths', () => {
 		Mock.calls = null;
 
 		Mock.captureCall = function ( args ) {
-
 			if ( Mock.calls !== null ) {
+				/* Code inspired by inetphantom
+				https://stackoverflow.com/questions/29572466/how-do-you-find-out-the-caller-function-in-javascript-when-use-strict-is-enabled
+				*/
+				let re = /([^(]+)@|at ([^(]+) \(/g;
+				let stack = new Error().stack;
+				re.exec(stack);
+				let aRegexResult = re.exec(stack);
+				let sCallerName = aRegexResult[1] || aRegexResult[2];
+				sCallerName = sCallerName.replace("Mock.","");
+				sCallerName = sCallerName.replace(/ \[as .*]/,"");
+				//
 
 				Mock.calls.push( {
-					func: Mock.captureCall.caller.name,
+					func: sCallerName,
 					args: Array.prototype.slice.call( args )
 				} );
 
