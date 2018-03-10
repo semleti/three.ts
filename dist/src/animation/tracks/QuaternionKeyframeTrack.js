@@ -30,6 +30,7 @@ var QuaternionKeyframeTrack = /** @class */ (function (_super) {
     QuaternionKeyframeTrack.prototype.InterpolantFactoryMethodLinear = function (result) {
         return new QuaternionLinearInterpolant(this.times, this.values, this.getValueSize(), result);
     };
+    QuaternionKeyframeTrack.parse = undefined;
     return QuaternionKeyframeTrack;
 }(KeyframeTrack));
 export { QuaternionKeyframeTrack };

@@ -16,14 +16,14 @@ var Loader = /** @class */ (function () {
         this.onLoadProgress = function () { };
         this.onLoadComplete = function () { };
     }
-    Loader.initMaterials = function (materials, texturePath, crossOrigin) {
+    Loader.prototype.initMaterials = function (materials, texturePath, crossOrigin) {
         var array = [];
         for (var i = 0; i < materials.length; ++i) {
             array[i] = this.createMaterial(materials[i], texturePath, crossOrigin);
         }
         return array;
     };
-    Loader.createMaterial = function (m, texturePath, crossOrigin) {
+    Loader.prototype.createMaterial = function (m, texturePath, crossOrigin) {
         var BlendingMode = {
             NoBlending: NoBlending,
             NormalBlending: NormalBlending,

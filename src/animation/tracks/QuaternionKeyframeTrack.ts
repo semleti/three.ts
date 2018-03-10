@@ -25,5 +25,6 @@ export class QuaternionKeyframeTrack extends KeyframeTrack {
 		return new QuaternionLinearInterpolant( this.times, this.values, this.getValueSize(), result );
 	}
 
+	static parse = undefined;
 
 }

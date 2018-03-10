@@ -57,7 +57,7 @@ function rollupTest(){
         if(error)console.error(error);
         if(stderr)console.error(stderr);
         if(stdout)console.log(stdout);
-        console.log('rolled everything into "dist/Three.js": ' + timeDiff());
+        console.log('rolled everything into "test/unit/three.source.unit.js": ' + timeDiff());
     });
 }
 

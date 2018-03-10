@@ -23,6 +23,7 @@ var Cache = /** @class */ (function () {
         this.files = {};
     };
     Cache.enabled = false;
+    Cache.files = {};
     return Cache;
 }());
 export { Cache };

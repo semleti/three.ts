@@ -25,6 +25,7 @@ var VectorKeyframeTrack = /** @class */ (function (_super) {
         _this.ValueTypeName = 'vector';
         return _this;
     }
+    VectorKeyframeTrack.parse = undefined;
     return VectorKeyframeTrack;
 }(KeyframeTrack));
 export { VectorKeyframeTrack };

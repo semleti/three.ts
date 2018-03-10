@@ -308,7 +308,7 @@ var JSONLoader = /** @class */ (function () {
             return { geometry: geometry };
         }
         else {
-            var materials = Loader.initMaterials(json.materials, texturePath, this.crossOrigin);
+            var materials = Loader.prototype.initMaterials(json.materials, texturePath, this.crossOrigin);
             return { geometry: geometry, materials: materials };
         }
     };

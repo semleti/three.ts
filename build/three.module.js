@@ -4959,7 +4959,7 @@ var Material = /** @class */ (function (_super) {
         return data;
     };
     Material.prototype.clone = function () {
-        return new Material().copy(this);
+        return new this.constructor().copy(this);
     };
     Material.prototype.copy = function (source) {
         this.name = source.name;
@@ -15107,6 +15107,87 @@ var __extends$24 = (this && this.__extends) || (function () {
     };
 })();
 /**
+ * @author mikael emtinger / http://gomo.se/
+ * @author alteredq / http://alteredqualia.com/
+ */
+var LensFlare = /** @class */ (function (_super) {
+    __extends$24(LensFlare, _super);
+    function LensFlare(texture, size, distance, blending, color) {
+        var _this = _super.call(this) || this;
+        _this.isLensFlare = true;
+        _this.lensFlares = [];
+        _this.positionScreen = new Vector3();
+        _this.customUpdateCallback = undefined;
+        if (texture !== undefined) {
+            _this.add(texture, size, distance, blending, color);
+        }
+        return _this;
+    }
+    LensFlare.prototype.copy = function (source, recursive) {
+        _super.prototype.copy.call(this, source, recursive);
+        this.positionScreen.copy(source.positionScreen);
+        this.customUpdateCallback = source.customUpdateCallback;
+        for (var i = 0, l = source.lensFlares.length; i < l; i++) {
+            this.lensFlares.push(source.lensFlares[i]);
+        }
+        return this;
+    };
+    LensFlare.prototype.add = function (texture, size, distance, blending, color, opacity) {
+        if (size === undefined)
+            size = -1;
+        if (distance === undefined)
+            distance = 0;
+        if (opacity === undefined)
+            opacity = 1;
+        if (color === undefined)
+            color = new Color(0xffffff);
+        if (blending === undefined)
+            blending = NormalBlending;
+        distance = Math.min(distance, Math.max(0, distance));
+        this.lensFlares.push({
+            texture: texture,
+            size: size,
+            distance: distance,
+            x: 0, y: 0, z: 0,
+            scale: 1,
+            rotation: 0,
+            opacity: opacity,
+            color: color,
+            blending: blending // blending
+        });
+        return this;
+    };
+    /*
+     * Update lens flares update positions on all flares based on the screen position
+     * Set myLensFlare.customUpdateCallback to alter the flares in your project specific way.
+     */
+    LensFlare.prototype.updateLensFlares = function () {
+        var f, fl = this.lensFlares.length;
+        var flare;
+        var vecX = -this.positionScreen.x * 2;
+        var vecY = -this.positionScreen.y * 2;
+        for (f = 0; f < fl; f++) {
+            flare = this.lensFlares[f];
+            flare.x = this.positionScreen.x + vecX * flare.distance;
+            flare.y = this.positionScreen.y + vecY * flare.distance;
+            flare.wantedRotation = flare.x * Math.PI * 0.25;
+            flare.rotation += (flare.wantedRotation - flare.rotation) * 0.25;
+        }
+    };
+    return LensFlare;
+}(Object3D));
+
+var __extends$25 = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+/**
  * @author alteredq / http://alteredqualia.com/
  *
  * parameters = {
@@ -15119,7 +15200,7 @@ var __extends$24 = (this && this.__extends) || (function () {
  * }
  */
 var SpriteMaterial = /** @class */ (function (_super) {
-    __extends$24(SpriteMaterial, _super);
+    __extends$25(SpriteMaterial, _super);
     function SpriteMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.type = 'SpriteMaterial';
@@ -15142,7 +15223,7 @@ var SpriteMaterial = /** @class */ (function (_super) {
     return SpriteMaterial;
 }(Material));
 
-var __extends$25 = (this && this.__extends) || (function () {
+var __extends$26 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15157,7 +15238,7 @@ var __extends$25 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var Sprite = /** @class */ (function (_super) {
-    __extends$25(Sprite, _super);
+    __extends$26(Sprite, _super);
     function Sprite(material) {
         var _this = _super.call(this) || this;
         _this.type = 'Sprite';
@@ -15198,7 +15279,7 @@ var Sprite = /** @class */ (function (_super) {
     return Sprite;
 }(Object3D));
 
-var __extends$26 = (this && this.__extends) || (function () {
+var __extends$27 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15214,7 +15295,7 @@ var __extends$26 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var LOD = /** @class */ (function (_super) {
-    __extends$26(LOD, _super);
+    __extends$27(LOD, _super);
     function LOD() {
         var _this = _super.call(this) || this;
         _this.type = 'LOD';
@@ -15305,7 +15386,7 @@ var LOD = /** @class */ (function (_super) {
 }(Object3D));
 (function (LOD) {
     var Data = /** @class */ (function (_super) {
-        __extends$26(Data, _super);
+        __extends$27(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -15313,7 +15394,7 @@ var LOD = /** @class */ (function (_super) {
     }(Object3D.Data));
     LOD.Data = Data;
     var Obj = /** @class */ (function (_super) {
-        __extends$26(Obj, _super);
+        __extends$27(Obj, _super);
         function Obj() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -15418,7 +15499,7 @@ var Skeleton = /** @class */ (function () {
     return Skeleton;
 }());
 
-var __extends$27 = (this && this.__extends) || (function () {
+var __extends$28 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15434,7 +15515,7 @@ var __extends$27 = (this && this.__extends) || (function () {
  * @author ikerr / http://verold.com
  */
 var Bone = /** @class */ (function (_super) {
-    __extends$27(Bone, _super);
+    __extends$28(Bone, _super);
     function Bone() {
         var _this = _super.call(this) || this;
         _this.type = 'Bone';
@@ -15451,7 +15532,7 @@ var Bone = /** @class */ (function (_super) {
     return Bone;
 }(Object3D));
 
-var __extends$28 = (this && this.__extends) || (function () {
+var __extends$29 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15467,7 +15548,7 @@ var __extends$28 = (this && this.__extends) || (function () {
  * @author ikerr / http://verold.com
  */
 var SkinnedMesh = /** @class */ (function (_super) {
-    __extends$28(SkinnedMesh, _super);
+    __extends$29(SkinnedMesh, _super);
     function SkinnedMesh(geometry, material) {
         var _this = _super.call(this, geometry, material) || this;
         _this.type = 'SkinnedMesh';
@@ -15583,7 +15664,7 @@ var SkinnedMesh = /** @class */ (function (_super) {
     return SkinnedMesh;
 }(Mesh));
 
-var __extends$29 = (this && this.__extends) || (function () {
+var __extends$30 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15607,7 +15688,7 @@ var __extends$29 = (this && this.__extends) || (function () {
  * }
  */
 var LineBasicMaterial = /** @class */ (function (_super) {
-    __extends$29(LineBasicMaterial, _super);
+    __extends$30(LineBasicMaterial, _super);
     function LineBasicMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.type = 'LineBasicMaterial';
@@ -15631,7 +15712,7 @@ var LineBasicMaterial = /** @class */ (function (_super) {
     return LineBasicMaterial;
 }(Material));
 
-var __extends$30 = (this && this.__extends) || (function () {
+var __extends$31 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15645,7 +15726,7 @@ var __extends$30 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var Line = /** @class */ (function (_super) {
-    __extends$30(Line, _super);
+    __extends$31(Line, _super);
     function Line(geometry, material, mode) {
         var _this = _super.call(this) || this;
         _this.isLine = true;
@@ -15801,7 +15882,7 @@ var Line = /** @class */ (function (_super) {
     return Line;
 }(Object3D));
 
-var __extends$31 = (this && this.__extends) || (function () {
+var __extends$32 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15815,7 +15896,7 @@ var __extends$31 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var LineSegments = /** @class */ (function (_super) {
-    __extends$31(LineSegments, _super);
+    __extends$32(LineSegments, _super);
     function LineSegments(geometry, material) {
         var _this = _super.call(this, geometry, material) || this;
         _this.type = 'LineSegments';
@@ -15859,7 +15940,7 @@ var LineSegments = /** @class */ (function (_super) {
     return LineSegments;
 }(Line));
 
-var __extends$32 = (this && this.__extends) || (function () {
+var __extends$33 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15873,7 +15954,7 @@ var __extends$32 = (this && this.__extends) || (function () {
  * @author mgreter / http://github.com/mgreter
  */
 var LineLoop = /** @class */ (function (_super) {
-    __extends$32(LineLoop, _super);
+    __extends$33(LineLoop, _super);
     function LineLoop(geometry, material) {
         var _this = _super.call(this, geometry, material) || this;
         _this.type = 'LineLoop';
@@ -15883,7 +15964,7 @@ var LineLoop = /** @class */ (function (_super) {
     return LineLoop;
 }(Line));
 
-var __extends$33 = (this && this.__extends) || (function () {
+var __extends$34 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15907,7 +15988,7 @@ var __extends$33 = (this && this.__extends) || (function () {
  * }
  */
 var PointsMaterial = /** @class */ (function (_super) {
-    __extends$33(PointsMaterial, _super);
+    __extends$34(PointsMaterial, _super);
     function PointsMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.type = 'PointsMaterial';
@@ -15931,7 +16012,7 @@ var PointsMaterial = /** @class */ (function (_super) {
     return PointsMaterial;
 }(Material));
 
-var __extends$34 = (this && this.__extends) || (function () {
+var __extends$35 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -15945,7 +16026,7 @@ var __extends$34 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var Points = /** @class */ (function (_super) {
-    __extends$34(Points, _super);
+    __extends$35(Points, _super);
     function Points(geometry, material) {
         var _this = _super.call(this) || this;
         _this.type = 'Points';
@@ -16029,7 +16110,7 @@ var Points = /** @class */ (function (_super) {
     return Points;
 }(Object3D));
 
-var __extends$35 = (this && this.__extends) || (function () {
+var __extends$36 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16043,7 +16124,7 @@ var __extends$35 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var Group = /** @class */ (function (_super) {
-    __extends$35(Group, _super);
+    __extends$36(Group, _super);
     function Group() {
         var _this = _super.call(this) || this;
         _this.type = 'Group';
@@ -16063,7 +16144,7 @@ var Group = /** @class */ (function (_super) {
 /**
  * @author mrdoob / http://mrdoob.com/
  */
-var __extends$36 = (this && this.__extends) || (function () {
+var __extends$37 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16074,7 +16155,7 @@ var __extends$36 = (this && this.__extends) || (function () {
     };
 })();
 var VideoTexture = /** @class */ (function (_super) {
-    __extends$36(VideoTexture, _super);
+    __extends$37(VideoTexture, _super);
     function VideoTexture(video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy) {
         var _this = _super.call(this, video, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy) || this;
         _this.generateMipmaps = false;
@@ -16093,7 +16174,7 @@ var VideoTexture = /** @class */ (function (_super) {
 /**
  * @author alteredq / http://alteredqualia.com/
  */
-var __extends$37 = (this && this.__extends) || (function () {
+var __extends$38 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16104,7 +16185,7 @@ var __extends$37 = (this && this.__extends) || (function () {
     };
 })();
 var CompressedTexture = /** @class */ (function (_super) {
-    __extends$37(CompressedTexture, _super);
+    __extends$38(CompressedTexture, _super);
     function CompressedTexture(mipmaps, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, encoding) {
         var _this = _super.call(this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding) || this;
         _this.isCompressedTexture = true;
@@ -16125,7 +16206,7 @@ var CompressedTexture = /** @class */ (function (_super) {
  * @author Matt DesLauriers / @mattdesl
  * @author atix / arthursilber.de
  */
-var __extends$38 = (this && this.__extends) || (function () {
+var __extends$39 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16136,7 +16217,7 @@ var __extends$38 = (this && this.__extends) || (function () {
     };
 })();
 var DepthTexture = /** @class */ (function (_super) {
-    __extends$38(DepthTexture, _super);
+    __extends$39(DepthTexture, _super);
     function DepthTexture(width, height, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, format) {
         var _this = _super.call(this, null, mapping, wrapS, wrapT, magFilter !== undefined ? magFilter : NearestFilter, minFilter !== undefined ? minFilter : NearestFilter, format !== undefined ? format : DepthFormat, type, anisotropy) || this;
         _this.isDepthTexture = true;
@@ -16162,7 +16243,7 @@ var DepthTexture = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$39 = (this && this.__extends) || (function () {
+var __extends$40 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16173,7 +16254,7 @@ var __extends$39 = (this && this.__extends) || (function () {
     };
 })();
 var WireframeGeometry = /** @class */ (function (_super) {
-    __extends$39(WireframeGeometry, _super);
+    __extends$40(WireframeGeometry, _super);
     function WireframeGeometry(geometry) {
         var _this = _super.call(this) || this;
         _this.type = 'WireframeGeometry';
@@ -16289,7 +16370,7 @@ var WireframeGeometry = /** @class */ (function (_super) {
  * Parametric Surfaces Geometry
  * based on the brilliant article by @prideout http://prideout.net/blog/?p=44
  */
-var __extends$40 = (this && this.__extends) || (function () {
+var __extends$41 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16301,7 +16382,7 @@ var __extends$40 = (this && this.__extends) || (function () {
 })();
 // ParametricGeometry
 var ParametricGeometry = /** @class */ (function (_super) {
-    __extends$40(ParametricGeometry, _super);
+    __extends$41(ParametricGeometry, _super);
     function ParametricGeometry(func, slices, stacks) {
         var _this = _super.call(this) || this;
         _this.type = 'ParametricGeometry';
@@ -16318,7 +16399,7 @@ var ParametricGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // ParametricBufferGeometry
 var ParametricBufferGeometry = /** @class */ (function (_super) {
-    __extends$40(ParametricBufferGeometry, _super);
+    __extends$41(ParametricBufferGeometry, _super);
     function ParametricBufferGeometry(func, slices, stacks) {
         var _this = _super.call(this) || this;
         _this.type = 'ParametricBufferGeometry';
@@ -16410,7 +16491,7 @@ var ParametricBufferGeometry = /** @class */ (function (_super) {
  * @author WestLangley / http://github.com/WestLangley
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$41 = (this && this.__extends) || (function () {
+var __extends$42 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16422,7 +16503,7 @@ var __extends$41 = (this && this.__extends) || (function () {
 })();
 // PolyhedronGeometry
 var PolyhedronGeometry = /** @class */ (function (_super) {
-    __extends$41(PolyhedronGeometry, _super);
+    __extends$42(PolyhedronGeometry, _super);
     function PolyhedronGeometry(vertices, indices, radius, detail) {
         var _this = _super.call(this) || this;
         _this.type = 'PolyhedronGeometry';
@@ -16440,7 +16521,7 @@ var PolyhedronGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // PolyhedronBufferGeometry
 var PolyhedronBufferGeometry = /** @class */ (function (_super) {
-    __extends$41(PolyhedronBufferGeometry, _super);
+    __extends$42(PolyhedronBufferGeometry, _super);
     function PolyhedronBufferGeometry(vertices, indices, radius, detail) {
         var _this = _super.call(this) || this;
         _this.type = 'PolyhedronBufferGeometry';
@@ -16635,7 +16716,7 @@ var PolyhedronBufferGeometry = /** @class */ (function (_super) {
  * @author timothypratley / https://github.com/timothypratley
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$42 = (this && this.__extends) || (function () {
+var __extends$43 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16647,7 +16728,7 @@ var __extends$42 = (this && this.__extends) || (function () {
 })();
 // TetrahedronGeometry
 var TetrahedronGeometry = /** @class */ (function (_super) {
-    __extends$42(TetrahedronGeometry, _super);
+    __extends$43(TetrahedronGeometry, _super);
     function TetrahedronGeometry(radius, detail) {
         var _this = _super.call(this) || this;
         _this.type = 'TetrahedronGeometry';
@@ -16663,7 +16744,7 @@ var TetrahedronGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // TetrahedronBufferGeometry
 var TetrahedronBufferGeometry = /** @class */ (function (_super) {
-    __extends$42(TetrahedronBufferGeometry, _super);
+    __extends$43(TetrahedronBufferGeometry, _super);
     function TetrahedronBufferGeometry(radius, detail) {
         var _this = _super.call(this, TetrahedronBufferGeometry.vertices, TetrahedronBufferGeometry.indices, radius, detail) || this;
         _this.type = 'TetrahedronBufferGeometry';
@@ -16686,7 +16767,7 @@ var TetrahedronBufferGeometry = /** @class */ (function (_super) {
  * @author timothypratley / https://github.com/timothypratley
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$43 = (this && this.__extends) || (function () {
+var __extends$44 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16698,7 +16779,7 @@ var __extends$43 = (this && this.__extends) || (function () {
 })();
 // OctahedronGeometry
 var OctahedronGeometry = /** @class */ (function (_super) {
-    __extends$43(OctahedronGeometry, _super);
+    __extends$44(OctahedronGeometry, _super);
     function OctahedronGeometry(radius, detail) {
         var _this = _super.call(this) || this;
         _this.type = 'OctahedronGeometry';
@@ -16714,7 +16795,7 @@ var OctahedronGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // OctahedronBufferGeometry
 var OctahedronBufferGeometry = /** @class */ (function (_super) {
-    __extends$43(OctahedronBufferGeometry, _super);
+    __extends$44(OctahedronBufferGeometry, _super);
     function OctahedronBufferGeometry(radius, detail) {
         var _this = _super.call(this, OctahedronBufferGeometry.vertices, OctahedronBufferGeometry.indices, radius, detail) || this;
         _this.type = 'OctahedronBufferGeometry';
@@ -16740,7 +16821,7 @@ var OctahedronBufferGeometry = /** @class */ (function (_super) {
  * @author timothypratley / https://github.com/timothypratley
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$44 = (this && this.__extends) || (function () {
+var __extends$45 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16752,7 +16833,7 @@ var __extends$44 = (this && this.__extends) || (function () {
 })();
 // IcosahedronGeometry
 var IcosahedronGeometry = /** @class */ (function (_super) {
-    __extends$44(IcosahedronGeometry, _super);
+    __extends$45(IcosahedronGeometry, _super);
     function IcosahedronGeometry(radius, detail) {
         var _this = _super.call(this) || this;
         _this.type = 'IcosahedronGeometry';
@@ -16768,7 +16849,7 @@ var IcosahedronGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // IcosahedronBufferGeometry
 var IcosahedronBufferGeometry = /** @class */ (function (_super) {
-    __extends$44(IcosahedronBufferGeometry, _super);
+    __extends$45(IcosahedronBufferGeometry, _super);
     function IcosahedronBufferGeometry(radius, detail) {
         var _this = _super.call(this, IcosahedronBufferGeometry.vertices, IcosahedronBufferGeometry.indices, radius, detail) || this;
         _this.type = 'IcosahedronBufferGeometry';
@@ -16797,7 +16878,7 @@ var IcosahedronBufferGeometry = /** @class */ (function (_super) {
  * @author Abe Pazos / https://hamoid.com
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$45 = (this && this.__extends) || (function () {
+var __extends$46 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16809,7 +16890,7 @@ var __extends$45 = (this && this.__extends) || (function () {
 })();
 // DodecahedronGeometry
 var DodecahedronGeometry = /** @class */ (function (_super) {
-    __extends$45(DodecahedronGeometry, _super);
+    __extends$46(DodecahedronGeometry, _super);
     function DodecahedronGeometry(radius, detail) {
         var _this = _super.call(this) || this;
         _this.type = 'DodecahedronGeometry';
@@ -16825,7 +16906,7 @@ var DodecahedronGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // DodecahedronBufferGeometry
 var DodecahedronBufferGeometry = /** @class */ (function (_super) {
-    __extends$45(DodecahedronBufferGeometry, _super);
+    __extends$46(DodecahedronBufferGeometry, _super);
     function DodecahedronBufferGeometry(radius, detail) {
         var _this = _super.call(this, DodecahedronBufferGeometry.vertices, DodecahedronBufferGeometry.indices, radius, detail) || this;
         _this.type = 'DodecahedronBufferGeometry';
@@ -16879,7 +16960,7 @@ var DodecahedronBufferGeometry = /** @class */ (function (_super) {
  * @author Mugen87 / https://github.com/Mugen87
  *
  */
-var __extends$46 = (this && this.__extends) || (function () {
+var __extends$47 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -16891,7 +16972,7 @@ var __extends$46 = (this && this.__extends) || (function () {
 })();
 // TubeGeometry
 var TubeGeometry = /** @class */ (function (_super) {
-    __extends$46(TubeGeometry, _super);
+    __extends$47(TubeGeometry, _super);
     function TubeGeometry(path, tubularSegments, radius, radialSegments, closed, taper) {
         var _this = _super.call(this) || this;
         _this.type = 'TubeGeometry';
@@ -16926,7 +17007,7 @@ var TubeGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // TubeBufferGeometry
 var TubeBufferGeometry = /** @class */ (function (_super) {
-    __extends$46(TubeBufferGeometry, _super);
+    __extends$47(TubeBufferGeometry, _super);
     function TubeBufferGeometry(path, tubularSegments, radius, radialSegments, closed) {
         var _this = _super.call(this) || this;
         _this.type = 'TubeBufferGeometry';
@@ -17045,7 +17126,7 @@ var TubeBufferGeometry = /** @class */ (function (_super) {
  *
  * based on http://www.blackpawn.com/texts/pqtorus/
  */
-var __extends$47 = (this && this.__extends) || (function () {
+var __extends$48 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -17057,7 +17138,7 @@ var __extends$47 = (this && this.__extends) || (function () {
 })();
 // TorusKnotGeometry
 var TorusKnotGeometry = /** @class */ (function (_super) {
-    __extends$47(TorusKnotGeometry, _super);
+    __extends$48(TorusKnotGeometry, _super);
     function TorusKnotGeometry(radius, tube, tubularSegments, radialSegments, p, q, heightScale) {
         var _this = _super.call(this) || this;
         _this.type = 'TorusKnotGeometry';
@@ -17079,7 +17160,7 @@ var TorusKnotGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // TorusKnotBufferGeometry
 var TorusKnotBufferGeometry = /** @class */ (function (_super) {
-    __extends$47(TorusKnotBufferGeometry, _super);
+    __extends$48(TorusKnotBufferGeometry, _super);
     function TorusKnotBufferGeometry(radius, tube, tubularSegments, radialSegments, p, q) {
         var _this = _super.call(this) || this;
         _this.type = 'TorusKnotBufferGeometry'; // buffers
@@ -17193,7 +17274,7 @@ var TorusKnotBufferGeometry = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$48 = (this && this.__extends) || (function () {
+var __extends$49 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -17205,7 +17286,7 @@ var __extends$48 = (this && this.__extends) || (function () {
 })();
 // TorusGeometry
 var TorusGeometry = /** @class */ (function (_super) {
-    __extends$48(TorusGeometry, _super);
+    __extends$49(TorusGeometry, _super);
     function TorusGeometry(radius, tube, radialSegments, tubularSegments, arc) {
         var _this = _super.call(this) || this;
         _this.type = 'TorusGeometry';
@@ -17224,7 +17305,7 @@ var TorusGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // TorusBufferGeometry
 var TorusBufferGeometry = /** @class */ (function (_super) {
-    __extends$48(TorusBufferGeometry, _super);
+    __extends$49(TorusBufferGeometry, _super);
     function TorusBufferGeometry(radius, tube, radialSegments, tubularSegments, arc) {
         var _this = _super.call(this) || this;
         _this.type = 'TorusBufferGeometry';
@@ -17300,7 +17381,7 @@ var TorusBufferGeometry = /** @class */ (function (_super) {
     return TorusBufferGeometry;
 }(BufferGeometry));
 
-var __extends$49 = (this && this.__extends) || (function () {
+var __extends$50 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -17770,7 +17851,7 @@ function removeNode(p) {
         p.nextZ.prevZ = p.prevZ;
 }
 var Node = /** @class */ (function (_super) {
-    __extends$49(Node, _super);
+    __extends$50(Node, _super);
     function Node(i, x, y) {
         var _this = _super.call(this) || this;
         // previous and next vertice nodes in a polygon ring
@@ -17879,7 +17960,7 @@ function addContour(vertices, contour) {
  *
  * }
  */
-var __extends$50 = (this && this.__extends) || (function () {
+var __extends$51 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -17891,7 +17972,7 @@ var __extends$50 = (this && this.__extends) || (function () {
 })();
 // ExtrudeGeometry
 var ExtrudeGeometry = /** @class */ (function (_super) {
-    __extends$50(ExtrudeGeometry, _super);
+    __extends$51(ExtrudeGeometry, _super);
     //TODO: create class
     function ExtrudeGeometry(shapes, options) {
         var _this = _super.call(this) || this;
@@ -17953,7 +18034,7 @@ var ExtrudeGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // ExtrudeBufferGeometry
 var ExtrudeBufferGeometry = /** @class */ (function (_super) {
-    __extends$50(ExtrudeBufferGeometry, _super);
+    __extends$51(ExtrudeBufferGeometry, _super);
     function ExtrudeBufferGeometry(shapes, options) {
         var _this = _super.call(this) || this;
         _this.type = 'ExtrudeBufferGeometry';
@@ -18381,7 +18462,7 @@ var ExtrudeBufferGeometry = /** @class */ (function (_super) {
  *  bevelSize: <float> // how far from text outline is bevel
  * }
  */
-var __extends$51 = (this && this.__extends) || (function () {
+var __extends$52 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -18393,7 +18474,7 @@ var __extends$51 = (this && this.__extends) || (function () {
 })();
 // TextGeometry
 var TextGeometry = /** @class */ (function (_super) {
-    __extends$51(TextGeometry, _super);
+    __extends$52(TextGeometry, _super);
     //TODO: create class
     function TextGeometry(text, parameters) {
         var _this = _super.call(this) || this;
@@ -18410,10 +18491,12 @@ var TextGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // TextBufferGeometry
 var TextBufferGeometry = /** @class */ (function (_super) {
-    __extends$51(TextBufferGeometry, _super);
+    __extends$52(TextBufferGeometry, _super);
     //TODO: create class
     function TextBufferGeometry(text, parameters) {
-        var _this = _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
+        var _this = 
+        //FIXME: executed correction code before super call
+        _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
         _this.type = 'TextBufferGeometry';
         var font = parameters.font;
         if (!(font && font.isFont)) {
@@ -18440,7 +18523,7 @@ var TextBufferGeometry = /** @class */ (function (_super) {
  * @author benaadams / https://twitter.com/ben_a_adams
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$52 = (this && this.__extends) || (function () {
+var __extends$53 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -18452,7 +18535,7 @@ var __extends$52 = (this && this.__extends) || (function () {
 })();
 // SphereGeometry
 var SphereGeometry = /** @class */ (function (_super) {
-    __extends$52(SphereGeometry, _super);
+    __extends$53(SphereGeometry, _super);
     function SphereGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'SphereGeometry';
@@ -18473,7 +18556,7 @@ var SphereGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // SphereBufferGeometry
 var SphereBufferGeometry = /** @class */ (function (_super) {
-    __extends$52(SphereBufferGeometry, _super);
+    __extends$53(SphereBufferGeometry, _super);
     function SphereBufferGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'SphereBufferGeometry';
@@ -18558,7 +18641,7 @@ var SphereBufferGeometry = /** @class */ (function (_super) {
  * @author Kaleb Murphy
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$53 = (this && this.__extends) || (function () {
+var __extends$54 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -18570,7 +18653,7 @@ var __extends$53 = (this && this.__extends) || (function () {
 })();
 // RingGeometry
 var RingGeometry = /** @class */ (function (_super) {
-    __extends$53(RingGeometry, _super);
+    __extends$54(RingGeometry, _super);
     function RingGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'RingGeometry';
@@ -18590,7 +18673,7 @@ var RingGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // RingBufferGeometry
 var RingBufferGeometry = /** @class */ (function (_super) {
-    __extends$53(RingBufferGeometry, _super);
+    __extends$54(RingBufferGeometry, _super);
     function RingBufferGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'RingBufferGeometry';
@@ -18669,7 +18752,7 @@ var RingBufferGeometry = /** @class */ (function (_super) {
  * @author bhouston / http://clara.io
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$54 = (this && this.__extends) || (function () {
+var __extends$55 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -18681,7 +18764,7 @@ var __extends$54 = (this && this.__extends) || (function () {
 })();
 // LatheGeometry
 var LatheGeometry = /** @class */ (function (_super) {
-    __extends$54(LatheGeometry, _super);
+    __extends$55(LatheGeometry, _super);
     function LatheGeometry(points, segments, phiStart, phiLength) {
         var _this = _super.call(this) || this;
         _this.type = 'LatheGeometry';
@@ -18699,7 +18782,7 @@ var LatheGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // LatheBufferGeometry
 var LatheBufferGeometry = /** @class */ (function (_super) {
-    __extends$54(LatheBufferGeometry, _super);
+    __extends$55(LatheBufferGeometry, _super);
     function LatheBufferGeometry(points, segments, phiStart, phiLength) {
         var _this = _super.call(this) || this;
         _this.type = 'LatheBufferGeometry';
@@ -18795,7 +18878,7 @@ var LatheBufferGeometry = /** @class */ (function (_super) {
  * @author jonobr1 / http://jonobr1.com
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$55 = (this && this.__extends) || (function () {
+var __extends$56 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -18807,7 +18890,7 @@ var __extends$55 = (this && this.__extends) || (function () {
 })();
 // ShapeGeometry
 var ShapeGeometry = /** @class */ (function (_super) {
-    __extends$55(ShapeGeometry, _super);
+    __extends$56(ShapeGeometry, _super);
     function ShapeGeometry(shapes, curveSegments) {
         var _this = _super.call(this) || this;
         _this.type = 'ShapeGeometry';
@@ -18832,7 +18915,7 @@ var ShapeGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // ShapeBufferGeometry
 var ShapeBufferGeometry = /** @class */ (function (_super) {
-    __extends$55(ShapeBufferGeometry, _super);
+    __extends$56(ShapeBufferGeometry, _super);
     function ShapeBufferGeometry(shapes, curveSegments) {
         var _this = _super.call(this) || this;
         _this.type = 'ShapeBufferGeometry';
@@ -18944,7 +19027,7 @@ function toJSON(shapes, data) {
  * @author WestLangley / http://github.com/WestLangley
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$56 = (this && this.__extends) || (function () {
+var __extends$57 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -18955,7 +19038,7 @@ var __extends$56 = (this && this.__extends) || (function () {
     };
 })();
 var EdgesGeometry = /** @class */ (function (_super) {
-    __extends$56(EdgesGeometry, _super);
+    __extends$57(EdgesGeometry, _super);
     function EdgesGeometry(geometry, thresholdAngle) {
         var _this = _super.call(this) || this;
         _this.type = 'EdgesGeometry';
@@ -19021,7 +19104,7 @@ var EdgesGeometry = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$57 = (this && this.__extends) || (function () {
+var __extends$58 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19033,7 +19116,7 @@ var __extends$57 = (this && this.__extends) || (function () {
 })();
 // CylinderGeometry
 var CylinderGeometry = /** @class */ (function (_super) {
-    __extends$57(CylinderGeometry, _super);
+    __extends$58(CylinderGeometry, _super);
     function CylinderGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'CylinderGeometry';
@@ -19055,7 +19138,7 @@ var CylinderGeometry = /** @class */ (function (_super) {
 }(Geometry));
 // CylinderBufferGeometry
 var CylinderBufferGeometry = /** @class */ (function (_super) {
-    __extends$57(CylinderBufferGeometry, _super);
+    __extends$58(CylinderBufferGeometry, _super);
     function CylinderBufferGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'CylinderBufferGeometry';
@@ -19234,7 +19317,7 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
 /**
  * @author abelnation / http://github.com/abelnation
  */
-var __extends$58 = (this && this.__extends) || (function () {
+var __extends$59 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19246,7 +19329,7 @@ var __extends$58 = (this && this.__extends) || (function () {
 })();
 // ConeGeometry
 var ConeGeometry = /** @class */ (function (_super) {
-    __extends$58(ConeGeometry, _super);
+    __extends$59(ConeGeometry, _super);
     function ConeGeometry(radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) {
         var _this = _super.call(this, 0, radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) || this;
         _this.type = 'ConeGeometry';
@@ -19265,7 +19348,7 @@ var ConeGeometry = /** @class */ (function (_super) {
 }(CylinderGeometry));
 // ConeBufferGeometry
 var ConeBufferGeometry = /** @class */ (function (_super) {
-    __extends$58(ConeBufferGeometry, _super);
+    __extends$59(ConeBufferGeometry, _super);
     function ConeBufferGeometry(radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) {
         var _this = _super.call(this, 0, radius, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) || this;
         _this.type = 'ConeBufferGeometry';
@@ -19288,7 +19371,7 @@ var ConeBufferGeometry = /** @class */ (function (_super) {
  * @author Mugen87 / https://github.com/Mugen87
  * @author hughes
  */
-var __extends$59 = (this && this.__extends) || (function () {
+var __extends$60 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19300,7 +19383,7 @@ var __extends$59 = (this && this.__extends) || (function () {
 })();
 // CircleGeometry
 var CircleGeometry = /** @class */ (function (_super) {
-    __extends$59(CircleGeometry, _super);
+    __extends$60(CircleGeometry, _super);
     function CircleGeometry(radius, segments, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'CircleGeometry';
@@ -19317,7 +19400,7 @@ var CircleGeometry = /** @class */ (function (_super) {
     return CircleGeometry;
 }(Geometry));
 var CircleBufferGeometry = /** @class */ (function (_super) {
-    __extends$59(CircleBufferGeometry, _super);
+    __extends$60(CircleBufferGeometry, _super);
     function CircleBufferGeometry(radius, segments, thetaStart, thetaLength) {
         var _this = _super.call(this) || this;
         _this.type = 'CircleBufferGeometry';
@@ -19434,7 +19517,7 @@ var Geometries = Object.freeze({
  *  opacity: <float>
  * }
  */
-var __extends$60 = (this && this.__extends) || (function () {
+var __extends$61 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19445,7 +19528,7 @@ var __extends$60 = (this && this.__extends) || (function () {
     };
 })();
 var ShadowMaterial = /** @class */ (function (_super) {
-    __extends$60(ShadowMaterial, _super);
+    __extends$61(ShadowMaterial, _super);
     function ShadowMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.type = 'ShadowMaterial';
@@ -19460,7 +19543,7 @@ var ShadowMaterial = /** @class */ (function (_super) {
     return ShadowMaterial;
 }(Material));
 
-var __extends$61 = (this && this.__extends) || (function () {
+var __extends$62 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19474,7 +19557,7 @@ var __extends$61 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var RawShaderMaterial = /** @class */ (function (_super) {
-    __extends$61(RawShaderMaterial, _super);
+    __extends$62(RawShaderMaterial, _super);
     function RawShaderMaterial(parameters) {
         var _this = _super.call(this, parameters) || this;
         _this.type = 'RawShaderMaterial';
@@ -19484,7 +19567,7 @@ var RawShaderMaterial = /** @class */ (function (_super) {
     return RawShaderMaterial;
 }(ShaderMaterial));
 
-var __extends$62 = (this && this.__extends) || (function () {
+var __extends$63 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19545,7 +19628,7 @@ var __extends$62 = (this && this.__extends) || (function () {
  * }
  */
 var MeshStandardMaterial = /** @class */ (function (_super) {
-    __extends$62(MeshStandardMaterial, _super);
+    __extends$63(MeshStandardMaterial, _super);
     function MeshStandardMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.isMeshStandardMaterial = true;
@@ -19624,7 +19707,7 @@ var MeshStandardMaterial = /** @class */ (function (_super) {
     return MeshStandardMaterial;
 }(Material));
 
-var __extends$63 = (this && this.__extends) || (function () {
+var __extends$64 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19642,7 +19725,7 @@ var __extends$63 = (this && this.__extends) || (function () {
  * }
  */
 var MeshPhysicalMaterial = /** @class */ (function (_super) {
-    __extends$63(MeshPhysicalMaterial, _super);
+    __extends$64(MeshPhysicalMaterial, _super);
     function MeshPhysicalMaterial(parameters) {
         var _this = _super.call(this, parameters) || this;
         _this.isMeshPhysicalMaterial = true;
@@ -19665,7 +19748,7 @@ var MeshPhysicalMaterial = /** @class */ (function (_super) {
     return MeshPhysicalMaterial;
 }(MeshStandardMaterial));
 
-var __extends$64 = (this && this.__extends) || (function () {
+var __extends$65 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19725,7 +19808,7 @@ var __extends$64 = (this && this.__extends) || (function () {
  * }
  */
 var MeshPhongMaterial = /** @class */ (function (_super) {
-    __extends$64(MeshPhongMaterial, _super);
+    __extends$65(MeshPhongMaterial, _super);
     function MeshPhongMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.type = 'MeshPhongMaterial';
@@ -19802,7 +19885,7 @@ var MeshPhongMaterial = /** @class */ (function (_super) {
     return MeshPhongMaterial;
 }(Material));
 
-var __extends$65 = (this && this.__extends) || (function () {
+var __extends$66 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19820,7 +19903,7 @@ var __extends$65 = (this && this.__extends) || (function () {
  * }
  */
 var MeshToonMaterial = /** @class */ (function (_super) {
-    __extends$65(MeshToonMaterial, _super);
+    __extends$66(MeshToonMaterial, _super);
     function MeshToonMaterial(parameters) {
         var _this = _super.call(this, parameters) || this;
         _this.isMeshToonMaterial = true;
@@ -19838,7 +19921,7 @@ var MeshToonMaterial = /** @class */ (function (_super) {
     return MeshToonMaterial;
 }(MeshPhongMaterial));
 
-var __extends$66 = (this && this.__extends) || (function () {
+var __extends$67 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19874,7 +19957,7 @@ var __extends$66 = (this && this.__extends) || (function () {
  * }
  */
 var MeshNormalMaterial = /** @class */ (function (_super) {
-    __extends$66(MeshNormalMaterial, _super);
+    __extends$67(MeshNormalMaterial, _super);
     function MeshNormalMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.type = 'MeshNormalMaterial';
@@ -19915,7 +19998,7 @@ var MeshNormalMaterial = /** @class */ (function (_super) {
     return MeshNormalMaterial;
 }(Material));
 
-var __extends$67 = (this && this.__extends) || (function () {
+var __extends$68 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -19963,7 +20046,7 @@ var __extends$67 = (this && this.__extends) || (function () {
  * }
  */
 var MeshLambertMaterial = /** @class */ (function (_super) {
-    __extends$67(MeshLambertMaterial, _super);
+    __extends$68(MeshLambertMaterial, _super);
     function MeshLambertMaterial(parameters) {
         var _this = _super.call(this) || this;
         _this.type = 'MeshLambertMaterial';
@@ -20036,7 +20119,7 @@ var MeshLambertMaterial = /** @class */ (function (_super) {
  *  gapSize: <float>
  * }
  */
-var __extends$68 = (this && this.__extends) || (function () {
+var __extends$69 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -20047,7 +20130,7 @@ var __extends$68 = (this && this.__extends) || (function () {
     };
 })();
 var LineDashedMaterial = /** @class */ (function (_super) {
-    __extends$68(LineDashedMaterial, _super);
+    __extends$69(LineDashedMaterial, _super);
     function LineDashedMaterial(parameters) {
         var _this = _super.call(this, parameters) || this;
         _this.type = 'LineDashedMaterial';
@@ -20115,6 +20198,7 @@ var Cache = /** @class */ (function () {
         this.files = {};
     };
     Cache.enabled = false;
+    Cache.files = {};
     return Cache;
 }());
 
@@ -20914,7 +20998,7 @@ var Curve = /** @class */ (function () {
     Curve.Data = Data;
 })(Curve || (Curve = {}));
 
-var __extends$69 = (this && this.__extends) || (function () {
+var __extends$70 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -20925,7 +21009,7 @@ var __extends$69 = (this && this.__extends) || (function () {
     };
 })();
 var EllipseCurve = /** @class */ (function (_super) {
-    __extends$69(EllipseCurve, _super);
+    __extends$70(EllipseCurve, _super);
     function EllipseCurve(aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation) {
         var _this = _super.call(this) || this;
         _this.type = 'EllipseCurve';
@@ -21020,7 +21104,7 @@ var EllipseCurve = /** @class */ (function (_super) {
 }(Curve));
 (function (EllipseCurve) {
     var Data = /** @class */ (function (_super) {
-        __extends$69(Data, _super);
+        __extends$70(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21029,7 +21113,7 @@ var EllipseCurve = /** @class */ (function (_super) {
     EllipseCurve.Data = Data;
 })(EllipseCurve || (EllipseCurve = {}));
 
-var __extends$70 = (this && this.__extends) || (function () {
+var __extends$71 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21040,7 +21124,7 @@ var __extends$70 = (this && this.__extends) || (function () {
     };
 })();
 var ArcCurve = /** @class */ (function (_super) {
-    __extends$70(ArcCurve, _super);
+    __extends$71(ArcCurve, _super);
     function ArcCurve(aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise) {
         var _this = _super.call(this, aX, aY, aRadius, aStartAngle, aEndAngle, aClockwise) || this;
         _this.type = 'ArcCurve';
@@ -21050,7 +21134,7 @@ var ArcCurve = /** @class */ (function (_super) {
     return ArcCurve;
 }(EllipseCurve));
 
-var __extends$71 = (this && this.__extends) || (function () {
+var __extends$72 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21123,7 +21207,7 @@ var CubicPoly = /** @class */ (function () {
 var tmp = new Vector3();
 var px = new CubicPoly(), py = new CubicPoly(), pz = new CubicPoly();
 var CatmullRomCurve3 = /** @class */ (function (_super) {
-    __extends$71(CatmullRomCurve3, _super);
+    __extends$72(CatmullRomCurve3, _super);
     function CatmullRomCurve3(points, closed, curveType, tension) {
         var _this = _super.call(this) || this;
         _this.type = 'CatmullRomCurve3';
@@ -21232,7 +21316,7 @@ var CatmullRomCurve3 = /** @class */ (function (_super) {
 }(Curve));
 (function (CatmullRomCurve3) {
     var Data = /** @class */ (function (_super) {
-        __extends$71(Data, _super);
+        __extends$72(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21289,7 +21373,7 @@ function CubicBezier(t, p0, p1, p2, p3) {
         CubicBezierP3(t, p3);
 }
 
-var __extends$72 = (this && this.__extends) || (function () {
+var __extends$73 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21300,7 +21384,7 @@ var __extends$72 = (this && this.__extends) || (function () {
     };
 })();
 var CubicBezierCurve = /** @class */ (function (_super) {
-    __extends$72(CubicBezierCurve, _super);
+    __extends$73(CubicBezierCurve, _super);
     function CubicBezierCurve(v0, v1, v2, v3) {
         var _this = _super.call(this) || this;
         _this.type = 'CubicBezierCurve';
@@ -21345,7 +21429,7 @@ var CubicBezierCurve = /** @class */ (function (_super) {
 }(Curve));
 (function (CubicBezierCurve) {
     var Data = /** @class */ (function (_super) {
-        __extends$72(Data, _super);
+        __extends$73(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21354,7 +21438,7 @@ var CubicBezierCurve = /** @class */ (function (_super) {
     CubicBezierCurve.Data = Data;
 })(CubicBezierCurve || (CubicBezierCurve = {}));
 
-var __extends$73 = (this && this.__extends) || (function () {
+var __extends$74 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21365,7 +21449,7 @@ var __extends$73 = (this && this.__extends) || (function () {
     };
 })();
 var CubicBezierCurve3 = /** @class */ (function (_super) {
-    __extends$73(CubicBezierCurve3, _super);
+    __extends$74(CubicBezierCurve3, _super);
     function CubicBezierCurve3(v0, v1, v2, v3) {
         var _this = _super.call(this) || this;
         _this.type = 'CubicBezierCurve3';
@@ -21410,7 +21494,7 @@ var CubicBezierCurve3 = /** @class */ (function (_super) {
 }(Curve));
 (function (CubicBezierCurve3) {
     var Data = /** @class */ (function (_super) {
-        __extends$73(Data, _super);
+        __extends$74(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21419,7 +21503,7 @@ var CubicBezierCurve3 = /** @class */ (function (_super) {
     CubicBezierCurve3.Data = Data;
 })(CubicBezierCurve3 || (CubicBezierCurve3 = {}));
 
-var __extends$74 = (this && this.__extends) || (function () {
+var __extends$75 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21430,7 +21514,7 @@ var __extends$74 = (this && this.__extends) || (function () {
     };
 })();
 var LineCurve = /** @class */ (function (_super) {
-    __extends$74(LineCurve, _super);
+    __extends$75(LineCurve, _super);
     function LineCurve(v1, v2) {
         var _this = _super.call(this) || this;
         _this.type = 'LineCurve';
@@ -21480,7 +21564,7 @@ var LineCurve = /** @class */ (function (_super) {
 }(Curve));
 (function (LineCurve) {
     var Data = /** @class */ (function (_super) {
-        __extends$74(Data, _super);
+        __extends$75(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21489,7 +21573,7 @@ var LineCurve = /** @class */ (function (_super) {
     LineCurve.Data = Data;
 })(LineCurve || (LineCurve = {}));
 
-var __extends$75 = (this && this.__extends) || (function () {
+var __extends$76 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21500,7 +21584,7 @@ var __extends$75 = (this && this.__extends) || (function () {
     };
 })();
 var LineCurve3 = /** @class */ (function (_super) {
-    __extends$75(LineCurve3, _super);
+    __extends$76(LineCurve3, _super);
     function LineCurve3(v1, v2) {
         var _this = _super.call(this) || this;
         _this.type = 'LineCurve3';
@@ -21546,7 +21630,7 @@ var LineCurve3 = /** @class */ (function (_super) {
 }(Curve));
 (function (LineCurve3) {
     var Data = /** @class */ (function (_super) {
-        __extends$75(Data, _super);
+        __extends$76(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21555,7 +21639,7 @@ var LineCurve3 = /** @class */ (function (_super) {
     LineCurve3.Data = Data;
 })(LineCurve3 || (LineCurve3 = {}));
 
-var __extends$76 = (this && this.__extends) || (function () {
+var __extends$77 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21566,7 +21650,7 @@ var __extends$76 = (this && this.__extends) || (function () {
     };
 })();
 var QuadraticBezierCurve = /** @class */ (function (_super) {
-    __extends$76(QuadraticBezierCurve, _super);
+    __extends$77(QuadraticBezierCurve, _super);
     function QuadraticBezierCurve(v0, v1, v2) {
         var _this = _super.call(this) || this;
         _this.type = 'QuadraticBezierCurve';
@@ -21607,7 +21691,7 @@ var QuadraticBezierCurve = /** @class */ (function (_super) {
 }(Curve));
 (function (QuadraticBezierCurve) {
     var Data = /** @class */ (function (_super) {
-        __extends$76(Data, _super);
+        __extends$77(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21616,7 +21700,7 @@ var QuadraticBezierCurve = /** @class */ (function (_super) {
     QuadraticBezierCurve.Data = Data;
 })(QuadraticBezierCurve || (QuadraticBezierCurve = {}));
 
-var __extends$77 = (this && this.__extends) || (function () {
+var __extends$78 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21627,7 +21711,7 @@ var __extends$77 = (this && this.__extends) || (function () {
     };
 })();
 var QuadraticBezierCurve3 = /** @class */ (function (_super) {
-    __extends$77(QuadraticBezierCurve3, _super);
+    __extends$78(QuadraticBezierCurve3, _super);
     function QuadraticBezierCurve3(v0, v1, v2) {
         var _this = _super.call(this) || this;
         _this.type = 'QuadraticBezierCurve3';
@@ -21668,7 +21752,7 @@ var QuadraticBezierCurve3 = /** @class */ (function (_super) {
 }(Curve));
 (function (QuadraticBezierCurve3) {
     var Data = /** @class */ (function (_super) {
-        __extends$77(Data, _super);
+        __extends$78(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21677,7 +21761,7 @@ var QuadraticBezierCurve3 = /** @class */ (function (_super) {
     QuadraticBezierCurve3.Data = Data;
 })(QuadraticBezierCurve3 || (QuadraticBezierCurve3 = {}));
 
-var __extends$78 = (this && this.__extends) || (function () {
+var __extends$79 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21688,7 +21772,7 @@ var __extends$78 = (this && this.__extends) || (function () {
     };
 })();
 var SplineCurve = /** @class */ (function (_super) {
-    __extends$78(SplineCurve, _super);
+    __extends$79(SplineCurve, _super);
     function SplineCurve(points) {
         var _this = _super.call(this) || this;
         _this.type = 'SplineCurve';
@@ -21740,7 +21824,7 @@ var SplineCurve = /** @class */ (function (_super) {
 }(Curve));
 (function (SplineCurve) {
     var Data = /** @class */ (function (_super) {
-        __extends$78(Data, _super);
+        __extends$79(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21764,7 +21848,7 @@ var Curves = Object.freeze({
 	get SplineCurve () { return SplineCurve; }
 });
 
-var __extends$79 = (this && this.__extends) || (function () {
+var __extends$80 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21783,7 +21867,7 @@ var __extends$79 = (this && this.__extends) || (function () {
  *  curves, but retains the api of a curve
  **************************************************************/
 var CurvePath = /** @class */ (function (_super) {
-    __extends$79(CurvePath, _super);
+    __extends$80(CurvePath, _super);
     function CurvePath() {
         var _this = _super.call(this) || this;
         _this.type = 'CurvePath';
@@ -21926,7 +22010,7 @@ var CurvePath = /** @class */ (function (_super) {
 }(Curve));
 (function (CurvePath) {
     var Data = /** @class */ (function (_super) {
-        __extends$79(Data, _super);
+        __extends$80(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -21935,7 +22019,7 @@ var CurvePath = /** @class */ (function (_super) {
     CurvePath.Data = Data;
 })(CurvePath || (CurvePath = {}));
 
-var __extends$80 = (this && this.__extends) || (function () {
+var __extends$81 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -21950,7 +22034,7 @@ var __extends$80 = (this && this.__extends) || (function () {
  * Creates free form 2d path using series of points, lines or curves.
  **/
 var Path = /** @class */ (function (_super) {
-    __extends$80(Path, _super);
+    __extends$81(Path, _super);
     function Path(points) {
         var _this = _super.call(this) || this;
         _this.type = 'Path';
@@ -22035,7 +22119,7 @@ var Path = /** @class */ (function (_super) {
 }(CurvePath));
 (function (Path) {
     var Data = /** @class */ (function (_super) {
-        __extends$80(Data, _super);
+        __extends$81(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -22044,7 +22128,7 @@ var Path = /** @class */ (function (_super) {
     Path.Data = Data;
 })(Path || (Path = {}));
 
-var __extends$81 = (this && this.__extends) || (function () {
+var __extends$82 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22064,7 +22148,7 @@ var __extends$81 = (this && this.__extends) || (function () {
 // STEP 3a - Extract points from each shape, turn to vertices
 // STEP 3b - Triangulate each shape, add faces.
 var Shape = /** @class */ (function (_super) {
-    __extends$81(Shape, _super);
+    __extends$82(Shape, _super);
     function Shape(points) {
         var _this = _super.call(this, points) || this;
         _this.uuid = _Math.generateUUID();
@@ -22119,7 +22203,7 @@ var Shape = /** @class */ (function (_super) {
 }(Path));
 (function (Shape) {
     var Data = /** @class */ (function (_super) {
-        __extends$81(Data, _super);
+        __extends$82(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -22128,7 +22212,7 @@ var Shape = /** @class */ (function (_super) {
     Shape.Data = Data;
 })(Shape || (Shape = {}));
 
-var __extends$82 = (this && this.__extends) || (function () {
+var __extends$83 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22143,7 +22227,7 @@ var __extends$82 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var Light = /** @class */ (function (_super) {
-    __extends$82(Light, _super);
+    __extends$83(Light, _super);
     function Light(color, intensity) {
         var _this = _super.call(this) || this;
         _this.type = 'Light';
@@ -22184,7 +22268,7 @@ var Light = /** @class */ (function (_super) {
 }(Object3D));
 (function (Light) {
     var Data = /** @class */ (function (_super) {
-        __extends$82(Data, _super);
+        __extends$83(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -22192,7 +22276,7 @@ var Light = /** @class */ (function (_super) {
     }(Object3D.Data));
     Light.Data = Data;
     var Obj = /** @class */ (function (_super) {
-        __extends$82(Obj, _super);
+        __extends$83(Obj, _super);
         function Obj() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -22201,7 +22285,7 @@ var Light = /** @class */ (function (_super) {
     Light.Obj = Obj;
 })(Light || (Light = {}));
 
-var __extends$83 = (this && this.__extends) || (function () {
+var __extends$84 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22215,7 +22299,7 @@ var __extends$83 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var HemisphereLight = /** @class */ (function (_super) {
-    __extends$83(HemisphereLight, _super);
+    __extends$84(HemisphereLight, _super);
     function HemisphereLight(skyColor, groundColor, intensity) {
         var _this = _super.call(this, skyColor, intensity) || this;
         _this.type = 'HemisphereLight';
@@ -22282,7 +22366,7 @@ var LightShadow = /** @class */ (function () {
     LightShadow.Data = Data;
 })(LightShadow || (LightShadow = {}));
 
-var __extends$84 = (this && this.__extends) || (function () {
+var __extends$85 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22296,7 +22380,7 @@ var __extends$84 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var SpotLightShadow = /** @class */ (function (_super) {
-    __extends$84(SpotLightShadow, _super);
+    __extends$85(SpotLightShadow, _super);
     function SpotLightShadow() {
         var _this = _super.call(this, new PerspectiveCamera(50, 1, 0.5, 500)) || this;
         _this.isSpotLightShadow = true;
@@ -22324,7 +22408,7 @@ var SpotLightShadow = /** @class */ (function (_super) {
     return SpotLightShadow;
 }(LightShadow));
 
-var __extends$85 = (this && this.__extends) || (function () {
+var __extends$86 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22338,7 +22422,7 @@ var __extends$85 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var SpotLight = /** @class */ (function (_super) {
-    __extends$85(SpotLight, _super);
+    __extends$86(SpotLight, _super);
     function SpotLight(color, intensity, distance, angle, penumbra, decay) {
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'SpotLight';
@@ -22383,7 +22467,7 @@ var SpotLight = /** @class */ (function (_super) {
     return SpotLight;
 }(Light));
 
-var __extends$86 = (this && this.__extends) || (function () {
+var __extends$87 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22397,7 +22481,7 @@ var __extends$86 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var PointLight = /** @class */ (function (_super) {
-    __extends$86(PointLight, _super);
+    __extends$87(PointLight, _super);
     function PointLight(color, intensity, distance, decay) {
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'PointLight';
@@ -22434,7 +22518,7 @@ var PointLight = /** @class */ (function (_super) {
     return PointLight;
 }(Light));
 
-var __extends$87 = (this && this.__extends) || (function () {
+var __extends$88 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22448,7 +22532,7 @@ var __extends$87 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var DirectionalLightShadow = /** @class */ (function (_super) {
-    __extends$87(DirectionalLightShadow, _super);
+    __extends$88(DirectionalLightShadow, _super);
     function DirectionalLightShadow() {
         return _super.call(this, new OrthographicCamera(-5, 5, 5, -5, 0.5, 500)) || this;
     }
@@ -22462,7 +22546,7 @@ var DirectionalLightShadow = /** @class */ (function (_super) {
     return DirectionalLightShadow;
 }(LightShadow));
 
-var __extends$88 = (this && this.__extends) || (function () {
+var __extends$89 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22477,7 +22561,7 @@ var __extends$88 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var DirectionalLight = /** @class */ (function (_super) {
-    __extends$88(DirectionalLight, _super);
+    __extends$89(DirectionalLight, _super);
     function DirectionalLight(color, intensity) {
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'DirectionalLight';
@@ -22500,7 +22584,7 @@ var DirectionalLight = /** @class */ (function (_super) {
     return DirectionalLight;
 }(Light));
 
-var __extends$89 = (this && this.__extends) || (function () {
+var __extends$90 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22514,7 +22598,7 @@ var __extends$89 = (this && this.__extends) || (function () {
  * @author mrdoob / http://mrdoob.com/
  */
 var AmbientLight = /** @class */ (function (_super) {
-    __extends$89(AmbientLight, _super);
+    __extends$90(AmbientLight, _super);
     function AmbientLight(color, intensity) {
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'AmbientLight';
@@ -22531,7 +22615,7 @@ var AmbientLight = /** @class */ (function (_super) {
     return AmbientLight;
 }(Light));
 
-var __extends$90 = (this && this.__extends) || (function () {
+var __extends$91 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22545,7 +22629,7 @@ var __extends$90 = (this && this.__extends) || (function () {
  * @author abelnation / http://github.com/abelnation
  */
 var RectAreaLight = /** @class */ (function (_super) {
-    __extends$90(RectAreaLight, _super);
+    __extends$91(RectAreaLight, _super);
     function RectAreaLight(color, intensity, width, height) {
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'RectAreaLight';
@@ -22573,7 +22657,7 @@ var RectAreaLight = /** @class */ (function (_super) {
 }(Light));
 (function (RectAreaLight) {
     var Data = /** @class */ (function (_super) {
-        __extends$90(Data, _super);
+        __extends$91(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -22581,7 +22665,7 @@ var RectAreaLight = /** @class */ (function (_super) {
     }(Light.Data));
     RectAreaLight.Data = Data;
     var Obj = /** @class */ (function (_super) {
-        __extends$90(Obj, _super);
+        __extends$91(Obj, _super);
         function Obj() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -22617,14 +22701,14 @@ var Interpolant = /** @class */ (function () {
         // Note: The indirection allows central control of many interpolants.
         // --- Protected interface
         this.DefaultSettings_ = {};
-        this.beforeStart_ = this.copySampleValue_;
-        this.afterEnd_ = this.copySampleValue_;
         this.parameterPositions = parameterPositions;
         this._cachedIndex = 0;
         this.resultBuffer = resultBuffer !== undefined ?
             resultBuffer : new sampleValues.constructor(sampleSize);
         this.sampleValues = sampleValues;
         this.valueSize = sampleSize;
+        this.beforeStart_ = this.copySampleValue_;
+        this.afterEnd_ = this.copySampleValue_;
     }
     Interpolant.prototype.evaluate = function (t) {
         var pp = this.parameterPositions, i1 = this._cachedIndex, t1 = pp[i1], t0 = pp[i1 - 1];
@@ -22742,7 +22826,7 @@ var Interpolant = /** @class */ (function () {
     return Interpolant;
 }());
 
-var __extends$91 = (this && this.__extends) || (function () {
+var __extends$92 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22762,7 +22846,7 @@ var __extends$91 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var CubicInterpolant = /** @class */ (function (_super) {
-    __extends$91(CubicInterpolant, _super);
+    __extends$92(CubicInterpolant, _super);
     function CubicInterpolant(parameterPositions, sampleValues, sampleSize, resultBuffer) {
         var _this = _super.call(this, parameterPositions, sampleValues, sampleSize, resultBuffer) || this;
         _this.DefaultSettings_ = {
@@ -22839,7 +22923,7 @@ var CubicInterpolant = /** @class */ (function (_super) {
     return CubicInterpolant;
 }(Interpolant));
 
-var __extends$92 = (this && this.__extends) || (function () {
+var __extends$93 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22853,7 +22937,7 @@ var __extends$92 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var LinearInterpolant = /** @class */ (function (_super) {
-    __extends$92(LinearInterpolant, _super);
+    __extends$93(LinearInterpolant, _super);
     function LinearInterpolant(parameterPositions, sampleValues, sampleSize, resultBuffer) {
         return _super.call(this, parameterPositions, sampleValues, sampleSize, resultBuffer) || this;
     }
@@ -22869,7 +22953,7 @@ var LinearInterpolant = /** @class */ (function (_super) {
     return LinearInterpolant;
 }(Interpolant));
 
-var __extends$93 = (this && this.__extends) || (function () {
+var __extends$94 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -22887,7 +22971,7 @@ var __extends$93 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var DiscreteInterpolant = /** @class */ (function (_super) {
-    __extends$93(DiscreteInterpolant, _super);
+    __extends$94(DiscreteInterpolant, _super);
     function DiscreteInterpolant(parameterPositions, sampleValues, sampleSize, resultBuffer) {
         return _super.call(this, parameterPositions, sampleValues, sampleSize, resultBuffer) || this;
     }
@@ -23037,17 +23121,13 @@ var KeyframeTrack = /** @class */ (function () {
             json.values = values;
         }
         // derived classes can define a static parse method
-        /*if ( trackType.parse !== undefined ) {
-
-            return trackType.parse( json );
-
-        } else {
-
+        if (trackType.parse !== undefined) {
+            return trackType.parse(json);
+        }
+        else {
             // by default, we assume a constructor compatible with the base
-            return new trackType( json.name, json.times, json.values, json.interpolation );
-
-        }*/
-        return null;
+            return new trackType(json.name, json.times, json.values, json.interpolation);
+        }
     };
     KeyframeTrack.toJSON = function (track) {
         var trackType = track;
@@ -23293,7 +23373,7 @@ var KeyframeTrack = /** @class */ (function () {
     KeyframeTrack.Data = Data;
 })(KeyframeTrack || (KeyframeTrack = {}));
 
-var __extends$94 = (this && this.__extends) || (function () {
+var __extends$95 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -23313,16 +23393,17 @@ var __extends$94 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var VectorKeyframeTrack = /** @class */ (function (_super) {
-    __extends$94(VectorKeyframeTrack, _super);
+    __extends$95(VectorKeyframeTrack, _super);
     function VectorKeyframeTrack(name, times, values, interpolation) {
         var _this = _super.call(this, name, times, values, interpolation) || this;
         _this.ValueTypeName = 'vector';
         return _this;
     }
+    VectorKeyframeTrack.parse = undefined;
     return VectorKeyframeTrack;
 }(KeyframeTrack));
 
-var __extends$95 = (this && this.__extends) || (function () {
+var __extends$96 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -23338,7 +23419,7 @@ var __extends$95 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var QuaternionLinearInterpolant = /** @class */ (function (_super) {
-    __extends$95(QuaternionLinearInterpolant, _super);
+    __extends$96(QuaternionLinearInterpolant, _super);
     function QuaternionLinearInterpolant(parameterPositions, sampleValues, sampleSize, resultBuffer) {
         return _super.call(this, parameterPositions, sampleValues, sampleSize, resultBuffer) || this;
     }
@@ -23352,7 +23433,7 @@ var QuaternionLinearInterpolant = /** @class */ (function (_super) {
     return QuaternionLinearInterpolant;
 }(Interpolant));
 
-var __extends$96 = (this && this.__extends) || (function () {
+var __extends$97 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -23371,7 +23452,7 @@ var __extends$96 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var QuaternionKeyframeTrack = /** @class */ (function (_super) {
-    __extends$96(QuaternionKeyframeTrack, _super);
+    __extends$97(QuaternionKeyframeTrack, _super);
     // ValueBufferType is inherited
     //DefaultInterpolation: InterpolateLinear;
     function QuaternionKeyframeTrack(name, times, values, interpolation) {
@@ -23382,10 +23463,11 @@ var QuaternionKeyframeTrack = /** @class */ (function (_super) {
     QuaternionKeyframeTrack.prototype.InterpolantFactoryMethodLinear = function (result) {
         return new QuaternionLinearInterpolant(this.times, this.values, this.getValueSize(), result);
     };
+    QuaternionKeyframeTrack.parse = undefined;
     return QuaternionKeyframeTrack;
 }(KeyframeTrack));
 
-var __extends$97 = (this && this.__extends) || (function () {
+var __extends$98 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -23404,7 +23486,7 @@ var __extends$97 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var NumberKeyframeTrack = /** @class */ (function (_super) {
-    __extends$97(NumberKeyframeTrack, _super);
+    __extends$98(NumberKeyframeTrack, _super);
     function NumberKeyframeTrack(name, times, values, interpolation) {
         var _this = _super.call(this, name, times, values, interpolation) || this;
         _this.ValueTypeName = 'number';
@@ -23413,7 +23495,7 @@ var NumberKeyframeTrack = /** @class */ (function (_super) {
     return NumberKeyframeTrack;
 }(KeyframeTrack));
 
-var __extends$98 = (this && this.__extends) || (function () {
+var __extends$99 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -23614,7 +23696,7 @@ var AnimationClip = /** @class */ (function () {
 }());
 (function (AnimationClip) {
     var Data = /** @class */ (function (_super) {
-        __extends$98(Data, _super);
+        __extends$99(Data, _super);
         function Data() {
             return _super !== null && _super.apply(this, arguments) || this;
         }
@@ -23862,14 +23944,14 @@ var Loader = /** @class */ (function () {
         this.onLoadProgress = function () { };
         this.onLoadComplete = function () { };
     }
-    Loader.initMaterials = function (materials, texturePath, crossOrigin) {
+    Loader.prototype.initMaterials = function (materials, texturePath, crossOrigin) {
         var array = [];
         for (var i = 0; i < materials.length; ++i) {
             array[i] = this.createMaterial(materials[i], texturePath, crossOrigin);
         }
         return array;
     };
-    Loader.createMaterial = function (m, texturePath, crossOrigin) {
+    Loader.prototype.createMaterial = function (m, texturePath, crossOrigin) {
         var BlendingMode = {
             NoBlending: NoBlending,
             NormalBlending: NormalBlending,
@@ -24443,7 +24525,7 @@ var JSONLoader = /** @class */ (function () {
             return { geometry: geometry };
         }
         else {
-            var materials = Loader.initMaterials(json.materials, texturePath, this.crossOrigin);
+            var materials = Loader.prototype.initMaterials(json.materials, texturePath, this.crossOrigin);
             return { geometry: geometry, materials: materials };
         }
     };
@@ -25379,7 +25461,7 @@ var StereoCamera = /** @class */ (function () {
     return StereoCamera;
 }());
 
-var __extends$99 = (this && this.__extends) || (function () {
+var __extends$100 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -25396,7 +25478,7 @@ var __extends$99 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var CubeCamera = /** @class */ (function (_super) {
-    __extends$99(CubeCamera, _super);
+    __extends$100(CubeCamera, _super);
     function CubeCamera(near, far, cubeResolution) {
         var _this = _super.call(this) || this;
         _this.type = 'CubeCamera';
@@ -25477,7 +25559,7 @@ var CubeCamera = /** @class */ (function (_super) {
 /**
  * @author mrdoob / http://mrdoob.com/
  */
-var __extends$100 = (this && this.__extends) || (function () {
+var __extends$101 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -25488,7 +25570,7 @@ var __extends$100 = (this && this.__extends) || (function () {
     };
 })();
 var AudioListener = /** @class */ (function (_super) {
-    __extends$100(AudioListener, _super);
+    __extends$101(AudioListener, _super);
     function AudioListener() {
         var _this = _super.call(this) || this;
         _this.type = 'AudioListener';
@@ -25570,7 +25652,7 @@ var AudioListener = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author Reece Aaron Lecrivain / http://reecenotes.com/
  */
-var __extends$101 = (this && this.__extends) || (function () {
+var __extends$102 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -25581,7 +25663,7 @@ var __extends$101 = (this && this.__extends) || (function () {
     };
 })();
 var Audio = /** @class */ (function (_super) {
-    __extends$101(Audio, _super);
+    __extends$102(Audio, _super);
     function Audio(listener) {
         var _this = _super.call(this) || this;
         _this.type = 'Audio';
@@ -25763,7 +25845,7 @@ var Audio = /** @class */ (function (_super) {
 /**
  * @author mrdoob / http://mrdoob.com/
  */
-var __extends$102 = (this && this.__extends) || (function () {
+var __extends$103 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -25774,7 +25856,7 @@ var __extends$102 = (this && this.__extends) || (function () {
     };
 })();
 var PositionalAudio = /** @class */ (function (_super) {
-    __extends$102(PositionalAudio, _super);
+    __extends$103(PositionalAudio, _super);
     function PositionalAudio(listener) {
         var _this = _super.call(this, listener) || this;
         _this.panner = _this.context.createPanner();
@@ -25841,7 +25923,7 @@ var AudioAnalyser = /** @class */ (function () {
     return AudioAnalyser;
 }());
 
-var __extends$103 = (this && this.__extends) || (function () {
+var __extends$104 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -25861,7 +25943,7 @@ var __extends$103 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var StringKeyframeTrack = /** @class */ (function (_super) {
-    __extends$103(StringKeyframeTrack, _super);
+    __extends$104(StringKeyframeTrack, _super);
     function StringKeyframeTrack(name, times, values, interpolation) {
         var _this = _super.call(this, name, times, values, interpolation) || this;
         _this.ValueTypeName = 'string';
@@ -25874,7 +25956,7 @@ var StringKeyframeTrack = /** @class */ (function (_super) {
     return StringKeyframeTrack;
 }(KeyframeTrack));
 
-var __extends$104 = (this && this.__extends) || (function () {
+var __extends$105 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -25894,7 +25976,7 @@ var __extends$104 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var ColorKeyframeTrack = /** @class */ (function (_super) {
-    __extends$104(ColorKeyframeTrack, _super);
+    __extends$105(ColorKeyframeTrack, _super);
     function ColorKeyframeTrack(name, times, values, interpolation) {
         var _this = _super.call(this, name, times, values, interpolation) || this;
         _this.ValueTypeName = 'color';
@@ -25903,7 +25985,7 @@ var ColorKeyframeTrack = /** @class */ (function (_super) {
     return ColorKeyframeTrack;
 }(KeyframeTrack));
 
-var __extends$105 = (this && this.__extends) || (function () {
+var __extends$106 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -25923,7 +26005,7 @@ var __extends$105 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var BooleanKeyframeTrack = /** @class */ (function (_super) {
-    __extends$105(BooleanKeyframeTrack, _super);
+    __extends$106(BooleanKeyframeTrack, _super);
     function BooleanKeyframeTrack(name, times, values) {
         var _this = _super.call(this, name, times, values, null) || this;
         _this.ValueTypeName = 'bool';
@@ -26050,7 +26132,7 @@ var PropertyMixer = /** @class */ (function () {
     return PropertyMixer;
 }());
 
-var __extends$106 = (this && this.__extends) || (function () {
+var __extends$107 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -26167,6 +26249,19 @@ var PropertyBinding = /** @class */ (function () {
                 }
             ]
         ];
+        this.getValue = function getValue_unbound(targetArray, offset) {
+            this.bind();
+            this.getValue(targetArray, offset);
+            // Note: This class uses a State pattern on a per-method basis:
+            // 'bind' sets 'this.getValue' / 'setValue' and shadows the
+            // prototype version of these methods with one that represents
+            // the bound state. When the property is not found, the methods
+            // become no-ops.
+        };
+        this.setValue = function setValue_unbound(sourceArray, offset) {
+            this.bind();
+            this.setValue(sourceArray, offset);
+        };
         this._getValue_unbound = this.getValue;
         this._setValue_unbound = this.setValue;
         this.path = path;
@@ -26299,19 +26394,6 @@ var PropertyBinding = /** @class */ (function () {
     PropertyBinding.prototype.setValue_fromArray_setMatrixWorldNeedsUpdate = function (buffer, offset) {
         this.resolvedProperty.fromArray(buffer, offset);
         this.targetObject.matrixWorldNeedsUpdate = true;
-    };
-    PropertyBinding.prototype.getValue_unbound = function (targetArray, offset) {
-        this.bind();
-        this.getValue(targetArray, offset);
-        // Note: This class uses a State pattern on a per-method basis:
-        // 'bind' sets 'this.getValue' / 'setValue' and shadows the
-        // prototype version of these methods with one that represents
-        // the bound state. When the property is not found, the methods
-        // become no-ops.
-    };
-    PropertyBinding.prototype.setValue_unbound = function (sourceArray, offset) {
-        this.bind();
-        this.setValue(sourceArray, offset);
     };
     // create getter / setter pair for a property in the scene graph
     PropertyBinding.prototype.bind = function () {
@@ -26521,7 +26603,7 @@ var PropertyBinding = /** @class */ (function () {
     }());
     PropertyBinding.ParsedPath = ParsedPath;
     var Composite = /** @class */ (function (_super) {
-        __extends$106(Composite, _super);
+        __extends$107(Composite, _super);
         function Composite(targetGroup, path, optionalParsedPath) {
             var _this = _super.call(this, null, path, optionalParsedPath) || this;
             _this.getValue = function (array, offset) {
@@ -27172,7 +27254,7 @@ var AnimationAction = /** @class */ (function () {
     AnimationAction.InterpolantSettings = InterpolantSettings;
 })(AnimationAction || (AnimationAction = {}));
 
-var __extends$107 = (this && this.__extends) || (function () {
+var __extends$108 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -27192,7 +27274,7 @@ var __extends$107 = (this && this.__extends) || (function () {
  * @author tschw
  */
 var AnimationMixer = /** @class */ (function (_super) {
-    __extends$107(AnimationMixer, _super);
+    __extends$108(AnimationMixer, _super);
     function AnimationMixer(root) {
         var _this = _super.call(this) || this;
         _this._accuIndex = 0;
@@ -27580,7 +27662,7 @@ var Uniform = /** @class */ (function () {
     return Uniform;
 }());
 
-var __extends$108 = (this && this.__extends) || (function () {
+var __extends$109 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -27594,7 +27676,7 @@ var __extends$108 = (this && this.__extends) || (function () {
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 var InstancedBufferGeometry = /** @class */ (function (_super) {
-    __extends$108(InstancedBufferGeometry, _super);
+    __extends$109(InstancedBufferGeometry, _super);
     function InstancedBufferGeometry() {
         var _this = _super.call(this) || this;
         _this.type = 'InstancedBufferGeometry';
@@ -27756,7 +27838,7 @@ var InterleavedBuffer = /** @class */ (function () {
     return InterleavedBuffer;
 }());
 
-var __extends$109 = (this && this.__extends) || (function () {
+var __extends$110 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -27770,7 +27852,7 @@ var __extends$109 = (this && this.__extends) || (function () {
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 var InstancedInterleavedBuffer = /** @class */ (function (_super) {
-    __extends$109(InstancedInterleavedBuffer, _super);
+    __extends$110(InstancedInterleavedBuffer, _super);
     function InstancedInterleavedBuffer(array, stride, meshPerAttribute) {
         var _this = _super.call(this, array, stride) || this;
         _this.isInstancedInterleavedBuffer = true;
@@ -27785,7 +27867,7 @@ var InstancedInterleavedBuffer = /** @class */ (function (_super) {
     return InstancedInterleavedBuffer;
 }(InterleavedBuffer));
 
-var __extends$110 = (this && this.__extends) || (function () {
+var __extends$111 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -27799,7 +27881,7 @@ var __extends$110 = (this && this.__extends) || (function () {
  * @author benaadams / https://twitter.com/ben_a_adams
  */
 var InstancedBufferAttribute = /** @class */ (function (_super) {
-    __extends$110(InstancedBufferAttribute, _super);
+    __extends$111(InstancedBufferAttribute, _super);
     function InstancedBufferAttribute(array, itemSize, meshPerAttribute) {
         var _this = _super.call(this, array, itemSize) || this;
         _this.isInstancedBufferAttribute = true;
@@ -28141,7 +28223,7 @@ var Box2 = /** @class */ (function () {
     return Box2;
 }());
 
-var __extends$111 = (this && this.__extends) || (function () {
+var __extends$112 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28155,7 +28237,7 @@ var __extends$111 = (this && this.__extends) || (function () {
  * @author alteredq / http://alteredqualia.com/
  */
 var ImmediateRenderObject = /** @class */ (function (_super) {
-    __extends$111(ImmediateRenderObject, _super);
+    __extends$112(ImmediateRenderObject, _super);
     function ImmediateRenderObject(material) {
         var _this = _super.call(this) || this;
         _this.isImmediateRenderObject = true;
@@ -28177,7 +28259,7 @@ var ImmediateRenderObject = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
  */
-var __extends$112 = (this && this.__extends) || (function () {
+var __extends$113 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28188,7 +28270,7 @@ var __extends$112 = (this && this.__extends) || (function () {
     };
 })();
 var VertexNormalsHelper = /** @class */ (function (_super) {
-    __extends$112(VertexNormalsHelper, _super);
+    __extends$113(VertexNormalsHelper, _super);
     function VertexNormalsHelper(object, size, hex, linewidth) {
         var _this = _super.call(this, VertexNormalsHelper.constructGeom(object), new LineBasicMaterial({ color: hex || 0xff0000, linewidth: linewidth || 1 })) || this;
         _this.object = object;
@@ -28265,7 +28347,7 @@ var VertexNormalsHelper = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
  */
-var __extends$113 = (this && this.__extends) || (function () {
+var __extends$114 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28276,7 +28358,7 @@ var __extends$113 = (this && this.__extends) || (function () {
     };
 })();
 var SpotLightHelper = /** @class */ (function (_super) {
-    __extends$113(SpotLightHelper, _super);
+    __extends$114(SpotLightHelper, _super);
     function SpotLightHelper(light, color) {
         var _this = _super.call(this) || this;
         _this.light = light;
@@ -28342,7 +28424,7 @@ var SpotLightHelper = /** @class */ (function (_super) {
  * @author ikerr / http://verold.com
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$114 = (this && this.__extends) || (function () {
+var __extends$115 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28363,7 +28445,7 @@ function getBoneList(object) {
     return boneList;
 }
 var SkeletonHelper = /** @class */ (function (_super) {
-    __extends$114(SkeletonHelper, _super);
+    __extends$115(SkeletonHelper, _super);
     function SkeletonHelper(object) {
         var _this = _super.call(this, SkeletonHelper.constructGeom(object), new LineBasicMaterial({ vertexColors: VertexColors, depthTest: false, depthWrite: false, transparent: true })) || this;
         _this.root = object;
@@ -28423,7 +28505,7 @@ var SkeletonHelper = /** @class */ (function (_super) {
  * @author alteredq / http://alteredqualia.com/
  * @author mrdoob / http://mrdoob.com/
  */
-var __extends$115 = (this && this.__extends) || (function () {
+var __extends$116 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28434,7 +28516,7 @@ var __extends$115 = (this && this.__extends) || (function () {
     };
 })();
 var PointLightHelper = /** @class */ (function (_super) {
-    __extends$115(PointLightHelper, _super);
+    __extends$116(PointLightHelper, _super);
     function PointLightHelper(light, sphereSize, color) {
         var _this = _super.call(this, new SphereBufferGeometry(sphereSize, 4, 2), new MeshBasicMaterial({ wireframe: true, fog: false })) || this;
         _this.light = light;
@@ -28500,7 +28582,7 @@ var PointLightHelper = /** @class */ (function (_super) {
  * @author Mugen87 / http://github.com/Mugen87
  * @author WestLangley / http://github.com/WestLangley
  */
-var __extends$116 = (this && this.__extends) || (function () {
+var __extends$117 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28511,7 +28593,7 @@ var __extends$116 = (this && this.__extends) || (function () {
     };
 })();
 var RectAreaLightHelper = /** @class */ (function (_super) {
-    __extends$116(RectAreaLightHelper, _super);
+    __extends$117(RectAreaLightHelper, _super);
     function RectAreaLightHelper(light, color) {
         var _this = _super.call(this) || this;
         _this.light = light;
@@ -28576,7 +28658,7 @@ var RectAreaLightHelper = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / https://github.com/Mugen87
  */
-var __extends$117 = (this && this.__extends) || (function () {
+var __extends$118 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28587,7 +28669,7 @@ var __extends$117 = (this && this.__extends) || (function () {
     };
 })();
 var HemisphereLightHelper = /** @class */ (function (_super) {
-    __extends$117(HemisphereLightHelper, _super);
+    __extends$118(HemisphereLightHelper, _super);
     function HemisphereLightHelper(light, size, color) {
         var _this = _super.call(this) || this;
         _this.size = size;
@@ -28645,7 +28727,7 @@ var HemisphereLightHelper = /** @class */ (function (_super) {
 /**
  * @author mrdoob / http://mrdoob.com/
  */
-var __extends$118 = (this && this.__extends) || (function () {
+var __extends$119 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28656,7 +28738,7 @@ var __extends$118 = (this && this.__extends) || (function () {
     };
 })();
 var GridHelper = /** @class */ (function (_super) {
-    __extends$118(GridHelper, _super);
+    __extends$119(GridHelper, _super);
     function GridHelper(size, divisions, color1, color2) {
         return _super.call(this, GridHelper.constructGeom(divisions || 10, size = size || 10, new Color(color1 !== undefined ? color1 : 0x444444), new Color(color2 !== undefined ? color2 : 0x888888)), { vertexColors: VertexColors }) || this;
     }
@@ -28691,7 +28773,7 @@ var GridHelper = /** @class */ (function (_super) {
  * @author Mugen87 / http://github.com/Mugen87
  * @author Hectate / http://www.github.com/Hectate
  */
-var __extends$119 = (this && this.__extends) || (function () {
+var __extends$120 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28702,7 +28784,7 @@ var __extends$119 = (this && this.__extends) || (function () {
     };
 })();
 var PolarGridHelper = /** @class */ (function (_super) {
-    __extends$119(PolarGridHelper, _super);
+    __extends$120(PolarGridHelper, _super);
     function PolarGridHelper(radius, radials, circles, divisions, color1, color2) {
         return _super.call(this, PolarGridHelper.constructGeom(radius || 10, radials || 16, circles || 8, divisions || 64, new Color(color1 !== undefined ? color1 : 0x444444), new Color(color2 !== undefined ? color2 : 0x888888)), new LineBasicMaterial({ vertexColors: VertexColors })) || this;
     }
@@ -28753,7 +28835,7 @@ var PolarGridHelper = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
  */
-var __extends$120 = (this && this.__extends) || (function () {
+var __extends$121 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28764,7 +28846,7 @@ var __extends$120 = (this && this.__extends) || (function () {
     };
 })();
 var FaceNormalsHelper = /** @class */ (function (_super) {
-    __extends$120(FaceNormalsHelper, _super);
+    __extends$121(FaceNormalsHelper, _super);
     function FaceNormalsHelper(object, size, hex, linewidth) {
         var _this = _super.call(this, FaceNormalsHelper.constructGeom(object), new LineBasicMaterial({ color: hex || 0xffff00, linewidth: linewidth || 1 })) || this;
         _this.size = (size !== undefined) ? size : 1;
@@ -28825,7 +28907,7 @@ var FaceNormalsHelper = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author WestLangley / http://github.com/WestLangley
  */
-var __extends$121 = (this && this.__extends) || (function () {
+var __extends$122 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28836,7 +28918,7 @@ var __extends$121 = (this && this.__extends) || (function () {
     };
 })();
 var DirectionalLightHelper = /** @class */ (function (_super) {
-    __extends$121(DirectionalLightHelper, _super);
+    __extends$122(DirectionalLightHelper, _super);
     function DirectionalLightHelper(light, size, color) {
         var _this = _super.call(this) || this;
         _this.size = size;
@@ -28909,7 +28991,7 @@ var DirectionalLightHelper = /** @class */ (function (_super) {
  * 	- based on frustum visualization in lightgl.js shadowmap example
  *		http://evanw.github.com/lightgl.js/tests/shadowmap.html
  */
-var __extends$122 = (this && this.__extends) || (function () {
+var __extends$123 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -28920,7 +29002,7 @@ var __extends$122 = (this && this.__extends) || (function () {
     };
 })();
 var CameraHelper = /** @class */ (function (_super) {
-    __extends$122(CameraHelper, _super);
+    __extends$123(CameraHelper, _super);
     function CameraHelper(camera) {
         var _this = _super.call(this, CameraHelper.constructGeom(), new LineBasicMaterial({ color: 0xffffff, vertexColors: FaceColors })) || this;
         _this.camera = camera;
@@ -29048,7 +29130,7 @@ var CameraHelper = /** @class */ (function (_super) {
  * @author mrdoob / http://mrdoob.com/
  * @author Mugen87 / http://github.com/Mugen87
  */
-var __extends$123 = (this && this.__extends) || (function () {
+var __extends$124 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -29059,7 +29141,7 @@ var __extends$123 = (this && this.__extends) || (function () {
     };
 })();
 var BoxHelper = /** @class */ (function (_super) {
-    __extends$123(BoxHelper, _super);
+    __extends$124(BoxHelper, _super);
     function BoxHelper(object, color) {
         var _this = _super.call(this, BoxHelper.constructGeom(), new LineBasicMaterial({ color: color || 0xffff00 })) || this;
         _this.object = object;
@@ -29142,7 +29224,7 @@ var BoxHelper = /** @class */ (function (_super) {
 /**
  * @author WestLangley / http://github.com/WestLangley
  */
-var __extends$124 = (this && this.__extends) || (function () {
+var __extends$125 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -29153,7 +29235,7 @@ var __extends$124 = (this && this.__extends) || (function () {
     };
 })();
 var Box3Helper = /** @class */ (function (_super) {
-    __extends$124(Box3Helper, _super);
+    __extends$125(Box3Helper, _super);
     function Box3Helper(box, hex) {
         var _this = _super.call(this, box, hex) || this;
         _this.type = 'Box3Helper';
@@ -29183,7 +29265,7 @@ var Box3Helper = /** @class */ (function (_super) {
 /**
  * @author WestLangley / http://github.com/WestLangley
  */
-var __extends$125 = (this && this.__extends) || (function () {
+var __extends$126 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -29194,7 +29276,7 @@ var __extends$125 = (this && this.__extends) || (function () {
     };
 })();
 var PlaneHelper = /** @class */ (function (_super) {
-    __extends$125(PlaneHelper, _super);
+    __extends$126(PlaneHelper, _super);
     function PlaneHelper(plane, size, hex) {
         var _this = _super.call(this, PlaneHelper.constructGeom(), new LineBasicMaterial({ color: hex || 0xffff00 })) || this;
         _this.type = 'PlaneHelper';
@@ -29242,7 +29324,7 @@ var PlaneHelper = /** @class */ (function (_super) {
  *  headLength - Number
  *  headWidth - Number
  */
-var __extends$126 = (this && this.__extends) || (function () {
+var __extends$127 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -29254,7 +29336,7 @@ var __extends$126 = (this && this.__extends) || (function () {
 })();
 var lineGeometry, coneGeometry;
 var ArrowHelper = /** @class */ (function (_super) {
-    __extends$126(ArrowHelper, _super);
+    __extends$127(ArrowHelper, _super);
     function ArrowHelper(dir, origin, length, color, headLength, headWidth) {
         var _this = _super.call(this) || this;
         _this.dir = dir;
@@ -29333,7 +29415,7 @@ var ArrowHelper = /** @class */ (function (_super) {
  * @author sroucheray / http://sroucheray.org/
  * @author mrdoob / http://mrdoob.com/
  */
-var __extends$127 = (this && this.__extends) || (function () {
+var __extends$128 = (this && this.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
         function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
@@ -29344,7 +29426,7 @@ var __extends$127 = (this && this.__extends) || (function () {
     };
 })();
 var AxesHelper = /** @class */ (function (_super) {
-    __extends$127(AxesHelper, _super);
+    __extends$128(AxesHelper, _super);
     function AxesHelper(size) {
         return _super.call(this, AxesHelper.constructGeom(size || 1), { vertexColors: VertexColors }) || this;
     }
@@ -29366,6 +29448,33 @@ var AxesHelper = /** @class */ (function (_super) {
     };
     return AxesHelper;
 }(LineSegments));
+
+/**
+ * @author alteredq / http://alteredqualia.com/
+ */
+var SceneUtils;
+(function (SceneUtils) {
+    function createMultiMaterialObject(geometry, materials) {
+        var group = new Group();
+        for (var i = 0, l = materials.length; i < l; i++) {
+            group.add(new Mesh(geometry, materials[i]));
+        }
+        return group;
+    }
+    SceneUtils.createMultiMaterialObject = createMultiMaterialObject;
+    function detach(child, parent, scene) {
+        child.applyMatrix(parent.matrixWorld);
+        parent.remove(child);
+        scene.add(child);
+    }
+    SceneUtils.detach = detach;
+    function attach(child, scene, parent) {
+        child.applyMatrix(new Matrix4().getInverse(parent.matrixWorld));
+        scene.remove(child);
+        parent.add(child);
+    }
+    SceneUtils.attach = attach;
+})(SceneUtils || (SceneUtils = {}));
 
 /**
  * @author mrdoob / http://mrdoob.com/
@@ -30408,20 +30517,22 @@ function CanvasRenderer() {
     this.setSize = function () { };
 }
 //
-var SceneUtils = {
-    createMultiMaterialObject: function () {
-        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-    },
-    detach: function () {
-        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-    },
-    attach: function () {
-        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-    }
-};
+//export let SceneUtils = {
+//	createMultiMaterialObject: function ( /* geometry, materials */ ) {
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//	},
+//	detach: function ( /* child, parent, scene */ ) {
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//	},
+//	attach: function ( /* child, scene, parent */ ) {
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//	}
+//};
 //
-function LensFlare() {
-    console.error('THREE.LensFlare has been moved to /examples/js/objects/Lensflare');
-}
+/*export function LensFlare() {
 
-export { WebGLRenderTargetCube, WebGLRenderTarget, WebGLRenderer, ShaderLib, UniformsLib, UniformsUtils, ShaderChunk, FogExp2, Fog, Scene, Sprite, LOD, SkinnedMesh, Skeleton, Bone, Mesh, LineSegments, LineLoop, Line, Points, Group, VideoTexture, DataTexture, CompressedTexture, CubeTexture, CanvasTexture, DepthTexture, Texture, CompressedTextureLoader, DataTextureLoader, CubeTextureLoader, TextureLoader, ObjectLoader, MaterialLoader, BufferGeometryLoader, DefaultLoadingManager, LoadingManager, JSONLoader, ImageLoader, ImageBitmapLoader, FontLoader, FileLoader, Loader, LoaderUtils, Cache, AudioLoader, SpotLightShadow, SpotLight, PointLight, RectAreaLight, HemisphereLight, DirectionalLightShadow, DirectionalLight, AmbientLight, LightShadow, Light, StereoCamera, PerspectiveCamera, OrthographicCamera, CubeCamera, ArrayCamera, Camera, AudioListener, PositionalAudio, AudioContext, AudioAnalyser, Audio, KeyframeTrack, VectorKeyframeTrack, StringKeyframeTrack, QuaternionKeyframeTrack, NumberKeyframeTrack, ColorKeyframeTrack, BooleanKeyframeTrack, PropertyMixer, PropertyBinding, AnimationUtils, AnimationObjectGroup, AnimationMixer, AnimationClip, Uniform, InstancedBufferGeometry, BufferGeometry, Geometry, InterleavedBufferAttribute, InstancedInterleavedBuffer, InterleavedBuffer, InstancedBufferAttribute, Face3, Object3D, Raycaster, Layers, EventDispatcher, Clock, QuaternionLinearInterpolant, LinearInterpolant, DiscreteInterpolant, CubicInterpolant, Interpolant, Triangle, _Math as Math, Spherical, Cylindrical, Plane, Frustum, Sphere, Ray, Matrix4, Matrix3, Box3, Box2, Line3, Euler, Vector4, Vector3, Vector2, Quaternion, Color, ImmediateRenderObject, VertexNormalsHelper, SpotLightHelper, SkeletonHelper, PointLightHelper, RectAreaLightHelper, HemisphereLightHelper, GridHelper, PolarGridHelper, FaceNormalsHelper, DirectionalLightHelper, CameraHelper, BoxHelper, Box3Helper, PlaneHelper, ArrowHelper, AxesHelper, Shape, Path, ShapePath, Font, CurvePath, Curve, ShapeUtils, WebGLUtils, WireframeGeometry, ParametricGeometry, ParametricBufferGeometry, TetrahedronGeometry, TetrahedronBufferGeometry, OctahedronGeometry, OctahedronBufferGeometry, IcosahedronGeometry, IcosahedronBufferGeometry, DodecahedronGeometry, DodecahedronBufferGeometry, PolyhedronGeometry, PolyhedronBufferGeometry, TubeGeometry, TubeBufferGeometry, TorusKnotGeometry, TorusKnotBufferGeometry, TorusGeometry, TorusBufferGeometry, TextGeometry, TextBufferGeometry, SphereGeometry, SphereBufferGeometry, RingGeometry, RingBufferGeometry, PlaneGeometry, PlaneBufferGeometry, LatheGeometry, LatheBufferGeometry, ShapeGeometry, ShapeBufferGeometry, ExtrudeGeometry, ExtrudeBufferGeometry, EdgesGeometry, ConeGeometry, ConeBufferGeometry, CylinderGeometry, CylinderBufferGeometry, CircleGeometry, CircleBufferGeometry, BoxGeometry, BoxBufferGeometry, ShadowMaterial, SpriteMaterial, RawShaderMaterial, ShaderMaterial, PointsMaterial, MeshPhysicalMaterial, MeshStandardMaterial, MeshPhongMaterial, MeshToonMaterial, MeshNormalMaterial, MeshLambertMaterial, MeshDepthMaterial, MeshDistanceMaterial, MeshBasicMaterial, LineDashedMaterial, LineBasicMaterial, Material, BufferAttribute, Int8BufferAttribute, Uint8BufferAttribute, Uint8ClampedBufferAttribute, Int16BufferAttribute, Uint16BufferAttribute, Int32BufferAttribute, Uint32BufferAttribute, Float32BufferAttribute, Float64BufferAttribute, ArcCurve, CatmullRomCurve3, CubicBezierCurve, CubicBezierCurve3, EllipseCurve, LineCurve, LineCurve3, QuadraticBezierCurve, QuadraticBezierCurve3, SplineCurve, REVISION, MOUSE, CullFaceNone, CullFaceBack, CullFaceFront, CullFaceFrontBack, FrontFaceDirectionCW, FrontFaceDirectionCCW, BasicShadowMap, PCFShadowMap, PCFSoftShadowMap, FrontSide, BackSide, DoubleSide, FlatShading, SmoothShading, NoColors, FaceColors, VertexColors, NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending, CustomBlending, AddEquation, SubtractEquation, ReverseSubtractEquation, MinEquation, MaxEquation, ZeroFactor, OneFactor, SrcColorFactor, OneMinusSrcColorFactor, SrcAlphaFactor, OneMinusSrcAlphaFactor, DstAlphaFactor, OneMinusDstAlphaFactor, DstColorFactor, OneMinusDstColorFactor, SrcAlphaSaturateFactor, NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, EqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth, MultiplyOperation, MixOperation, AddOperation, NoToneMapping, LinearToneMapping, ReinhardToneMapping, Uncharted2ToneMapping, CineonToneMapping, UVMapping, CubeReflectionMapping, CubeRefractionMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping, SphericalReflectionMapping, CubeUVReflectionMapping, CubeUVRefractionMapping, RepeatWrapping, ClampToEdgeWrapping, MirroredRepeatWrapping, NearestFilter, NearestMipMapNearestFilter, NearestMipMapLinearFilter, LinearFilter, LinearMipMapNearestFilter, LinearMipMapLinearFilter, UnsignedByteType, ByteType, ShortType, UnsignedShortType, IntType, UnsignedIntType, FloatType, HalfFloatType, UnsignedShort4444Type, UnsignedShort5551Type, UnsignedShort565Type, UnsignedInt248Type, AlphaFormat, RGBFormat, RGBAFormat, LuminanceFormat, LuminanceAlphaFormat, RGBEFormat, DepthFormat, DepthStencilFormat, RGB_S3TC_DXT1_Format, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT3_Format, RGBA_S3TC_DXT5_Format, RGB_PVRTC_4BPPV1_Format, RGB_PVRTC_2BPPV1_Format, RGBA_PVRTC_4BPPV1_Format, RGBA_PVRTC_2BPPV1_Format, RGB_ETC1_Format, RGBA_ASTC_4x4_Format, RGBA_ASTC_5x4_Format, RGBA_ASTC_5x5_Format, RGBA_ASTC_6x5_Format, RGBA_ASTC_6x6_Format, RGBA_ASTC_8x5_Format, RGBA_ASTC_8x6_Format, RGBA_ASTC_8x8_Format, RGBA_ASTC_10x5_Format, RGBA_ASTC_10x6_Format, RGBA_ASTC_10x8_Format, RGBA_ASTC_10x10_Format, RGBA_ASTC_12x10_Format, RGBA_ASTC_12x12_Format, LoopOnce, LoopRepeat, LoopPingPong, InterpolateDiscrete, InterpolateLinear, InterpolateSmooth, ZeroCurvatureEnding, ZeroSlopeEnding, WrapAroundEnding, TrianglesDrawMode, TriangleStripDrawMode, TriangleFanDrawMode, LinearEncoding, sRGBEncoding, GammaEncoding, RGBEEncoding, LogLuvEncoding, RGBM7Encoding, RGBM16Encoding, RGBDEncoding, BasicDepthPacking, RGBADepthPacking, BoxGeometry as CubeGeometry, Face4, LineStrip, LinePieces, MeshFaceMaterial, MultiMaterial, PointCloud, Particle, ParticleSystem, PointCloudMaterial, ParticleBasicMaterial, ParticleSystemMaterial, Vertex, DynamicBufferAttribute, Int8Attribute, Uint8Attribute, Uint8ClampedAttribute, Int16Attribute, Uint16Attribute, Int32Attribute, Uint32Attribute, Float32Attribute, Float64Attribute, ClosedSplineCurve3, SplineCurve3, Spline, AxisHelper, BoundingBoxHelper, EdgesHelper, WireframeHelper, XHRLoader, BinaryTextureLoader, GeometryUtils, ImageUtils, Projector, CanvasRenderer, SceneUtils, LensFlare };
+    console.error( 'THREE.LensFlare has been moved to /examples/js/objects/Lensflare' );
+
+}*/
+
+export { WebGLRenderTargetCube, WebGLRenderTarget, WebGLRenderer, ShaderLib, UniformsLib, UniformsUtils, ShaderChunk, FogExp2, Fog, Scene, LensFlare, Sprite, LOD, SkinnedMesh, Skeleton, Bone, Mesh, LineSegments, LineLoop, Line, Points, Group, VideoTexture, DataTexture, CompressedTexture, CubeTexture, CanvasTexture, DepthTexture, Texture, CompressedTextureLoader, DataTextureLoader, CubeTextureLoader, TextureLoader, ObjectLoader, MaterialLoader, BufferGeometryLoader, DefaultLoadingManager, LoadingManager, JSONLoader, ImageLoader, ImageBitmapLoader, FontLoader, FileLoader, Loader, LoaderUtils, Cache, AudioLoader, SpotLightShadow, SpotLight, PointLight, RectAreaLight, HemisphereLight, DirectionalLightShadow, DirectionalLight, AmbientLight, LightShadow, Light, StereoCamera, PerspectiveCamera, OrthographicCamera, CubeCamera, ArrayCamera, Camera, AudioListener, PositionalAudio, AudioContext, AudioAnalyser, Audio, KeyframeTrack, VectorKeyframeTrack, StringKeyframeTrack, QuaternionKeyframeTrack, NumberKeyframeTrack, ColorKeyframeTrack, BooleanKeyframeTrack, PropertyMixer, PropertyBinding, AnimationUtils, AnimationObjectGroup, AnimationMixer, AnimationClip, Uniform, InstancedBufferGeometry, BufferGeometry, Geometry, InterleavedBufferAttribute, InstancedInterleavedBuffer, InterleavedBuffer, InstancedBufferAttribute, Face3, Object3D, Raycaster, Layers, EventDispatcher, Clock, QuaternionLinearInterpolant, LinearInterpolant, DiscreteInterpolant, CubicInterpolant, Interpolant, Triangle, _Math as Math, Spherical, Cylindrical, Plane, Frustum, Sphere, Ray, Matrix4, Matrix3, Box3, Box2, Line3, Euler, Vector4, Vector3, Vector2, Quaternion, Color, ImmediateRenderObject, VertexNormalsHelper, SpotLightHelper, SkeletonHelper, PointLightHelper, RectAreaLightHelper, HemisphereLightHelper, GridHelper, PolarGridHelper, FaceNormalsHelper, DirectionalLightHelper, CameraHelper, BoxHelper, Box3Helper, PlaneHelper, ArrowHelper, AxesHelper, Shape, Path, ShapePath, Font, CurvePath, Curve, ShapeUtils, SceneUtils, WebGLUtils, WireframeGeometry, ParametricGeometry, ParametricBufferGeometry, TetrahedronGeometry, TetrahedronBufferGeometry, OctahedronGeometry, OctahedronBufferGeometry, IcosahedronGeometry, IcosahedronBufferGeometry, DodecahedronGeometry, DodecahedronBufferGeometry, PolyhedronGeometry, PolyhedronBufferGeometry, TubeGeometry, TubeBufferGeometry, TorusKnotGeometry, TorusKnotBufferGeometry, TorusGeometry, TorusBufferGeometry, TextGeometry, TextBufferGeometry, SphereGeometry, SphereBufferGeometry, RingGeometry, RingBufferGeometry, PlaneGeometry, PlaneBufferGeometry, LatheGeometry, LatheBufferGeometry, ShapeGeometry, ShapeBufferGeometry, ExtrudeGeometry, ExtrudeBufferGeometry, EdgesGeometry, ConeGeometry, ConeBufferGeometry, CylinderGeometry, CylinderBufferGeometry, CircleGeometry, CircleBufferGeometry, BoxGeometry, BoxBufferGeometry, ShadowMaterial, SpriteMaterial, RawShaderMaterial, ShaderMaterial, PointsMaterial, MeshPhysicalMaterial, MeshStandardMaterial, MeshPhongMaterial, MeshToonMaterial, MeshNormalMaterial, MeshLambertMaterial, MeshDepthMaterial, MeshDistanceMaterial, MeshBasicMaterial, LineDashedMaterial, LineBasicMaterial, Material, BufferAttribute, Int8BufferAttribute, Uint8BufferAttribute, Uint8ClampedBufferAttribute, Int16BufferAttribute, Uint16BufferAttribute, Int32BufferAttribute, Uint32BufferAttribute, Float32BufferAttribute, Float64BufferAttribute, ArcCurve, CatmullRomCurve3, CubicBezierCurve, CubicBezierCurve3, EllipseCurve, LineCurve, LineCurve3, QuadraticBezierCurve, QuadraticBezierCurve3, SplineCurve, REVISION, MOUSE, CullFaceNone, CullFaceBack, CullFaceFront, CullFaceFrontBack, FrontFaceDirectionCW, FrontFaceDirectionCCW, BasicShadowMap, PCFShadowMap, PCFSoftShadowMap, FrontSide, BackSide, DoubleSide, FlatShading, SmoothShading, NoColors, FaceColors, VertexColors, NoBlending, NormalBlending, AdditiveBlending, SubtractiveBlending, MultiplyBlending, CustomBlending, AddEquation, SubtractEquation, ReverseSubtractEquation, MinEquation, MaxEquation, ZeroFactor, OneFactor, SrcColorFactor, OneMinusSrcColorFactor, SrcAlphaFactor, OneMinusSrcAlphaFactor, DstAlphaFactor, OneMinusDstAlphaFactor, DstColorFactor, OneMinusDstColorFactor, SrcAlphaSaturateFactor, NeverDepth, AlwaysDepth, LessDepth, LessEqualDepth, EqualDepth, GreaterEqualDepth, GreaterDepth, NotEqualDepth, MultiplyOperation, MixOperation, AddOperation, NoToneMapping, LinearToneMapping, ReinhardToneMapping, Uncharted2ToneMapping, CineonToneMapping, UVMapping, CubeReflectionMapping, CubeRefractionMapping, EquirectangularReflectionMapping, EquirectangularRefractionMapping, SphericalReflectionMapping, CubeUVReflectionMapping, CubeUVRefractionMapping, RepeatWrapping, ClampToEdgeWrapping, MirroredRepeatWrapping, NearestFilter, NearestMipMapNearestFilter, NearestMipMapLinearFilter, LinearFilter, LinearMipMapNearestFilter, LinearMipMapLinearFilter, UnsignedByteType, ByteType, ShortType, UnsignedShortType, IntType, UnsignedIntType, FloatType, HalfFloatType, UnsignedShort4444Type, UnsignedShort5551Type, UnsignedShort565Type, UnsignedInt248Type, AlphaFormat, RGBFormat, RGBAFormat, LuminanceFormat, LuminanceAlphaFormat, RGBEFormat, DepthFormat, DepthStencilFormat, RGB_S3TC_DXT1_Format, RGBA_S3TC_DXT1_Format, RGBA_S3TC_DXT3_Format, RGBA_S3TC_DXT5_Format, RGB_PVRTC_4BPPV1_Format, RGB_PVRTC_2BPPV1_Format, RGBA_PVRTC_4BPPV1_Format, RGBA_PVRTC_2BPPV1_Format, RGB_ETC1_Format, RGBA_ASTC_4x4_Format, RGBA_ASTC_5x4_Format, RGBA_ASTC_5x5_Format, RGBA_ASTC_6x5_Format, RGBA_ASTC_6x6_Format, RGBA_ASTC_8x5_Format, RGBA_ASTC_8x6_Format, RGBA_ASTC_8x8_Format, RGBA_ASTC_10x5_Format, RGBA_ASTC_10x6_Format, RGBA_ASTC_10x8_Format, RGBA_ASTC_10x10_Format, RGBA_ASTC_12x10_Format, RGBA_ASTC_12x12_Format, LoopOnce, LoopRepeat, LoopPingPong, InterpolateDiscrete, InterpolateLinear, InterpolateSmooth, ZeroCurvatureEnding, ZeroSlopeEnding, WrapAroundEnding, TrianglesDrawMode, TriangleStripDrawMode, TriangleFanDrawMode, LinearEncoding, sRGBEncoding, GammaEncoding, RGBEEncoding, LogLuvEncoding, RGBM7Encoding, RGBM16Encoding, RGBDEncoding, BasicDepthPacking, RGBADepthPacking, BoxGeometry as CubeGeometry, Face4, LineStrip, LinePieces, MeshFaceMaterial, MultiMaterial, PointCloud, Particle, ParticleSystem, PointCloudMaterial, ParticleBasicMaterial, ParticleSystemMaterial, Vertex, DynamicBufferAttribute, Int8Attribute, Uint8Attribute, Uint8ClampedAttribute, Int16Attribute, Uint16Attribute, Int32Attribute, Uint32Attribute, Float32Attribute, Float64Attribute, ClosedSplineCurve3, SplineCurve3, Spline, AxisHelper, BoundingBoxHelper, EdgesHelper, WireframeHelper, XHRLoader, BinaryTextureLoader, GeometryUtils, ImageUtils, Projector, CanvasRenderer };

@@ -31,6 +31,8 @@ export class Interpolant {
 			resultBuffer : new sampleValues.constructor( sampleSize );
 		this.sampleValues = sampleValues;
 		this.valueSize = sampleSize;
+		this.beforeStart_ = this.copySampleValue_;
+		this.afterEnd_ = this.copySampleValue_;
 	}
 	
 	evaluate ( t : number ) : number {

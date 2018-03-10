@@ -1754,32 +1754,32 @@ export function CanvasRenderer() {
 
 //
 
-export let SceneUtils = {
+//export let SceneUtils = {
 
-	createMultiMaterialObject: function ( /* geometry, materials */ ) {
+//	createMultiMaterialObject: function ( /* geometry, materials */ ) {
 
-		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
 
-	},
+//	},
 
-	detach: function ( /* child, parent, scene */ ) {
+//	detach: function ( /* child, parent, scene */ ) {
 
-		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
 
-	},
+//	},
 
-	attach: function ( /* child, scene, parent */ ) {
+//	attach: function ( /* child, scene, parent */ ) {
 
-		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
 
-	}
+//	}
 
-};
+//};
 
 //
 
-export function LensFlare() {
+/*export function LensFlare() {
 
 	console.error( 'THREE.LensFlare has been moved to /examples/js/objects/Lensflare' );
 
-}
+}*/

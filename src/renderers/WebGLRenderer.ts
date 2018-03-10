@@ -762,7 +762,6 @@ export class WebGLRenderer {
 	renderBufferDirect ( camera : PerspectiveCamera, fog : Fog, geometry : BufferGeometry, material : any, object : any, group : any ) : void {
 
 		let frontFaceCW = ( object.isMesh && object.matrixWorld.determinant() < 0 );
-
 		this.state.setMaterial( material, frontFaceCW );
 
 		let program = this.setProgram( camera, fog, material, object );
@@ -1544,7 +1543,7 @@ export class WebGLRenderer {
 
 		let parameters = this.programCache.getParameters(
 			material, lights.state, shadowsArray, fog, this._clipping.numPlanes, this._clipping.numIntersection, object );
-
+		
 		let code = this.programCache.getProgramCode( material, parameters );
 
 		let program = materialProperties.program;
@@ -1578,7 +1577,7 @@ export class WebGLRenderer {
 		}
 
 		if ( programChange ) {
-
+			
 			if ( parameters.shaderID ) {
 
 				let shader = ShaderLib[ parameters.shaderID ];
@@ -1602,7 +1601,6 @@ export class WebGLRenderer {
 			}
 
 			material.onBeforeCompile( materialProperties.shader );
-
 			program = this.programCache.acquireProgram( material, materialProperties.shader, parameters, code );
 
 			materialProperties.program = program;

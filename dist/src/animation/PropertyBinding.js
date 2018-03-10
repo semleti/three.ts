@@ -115,6 +115,19 @@ var PropertyBinding = /** @class */ (function () {
                 }
             ]
         ];
+        this.getValue = function getValue_unbound(targetArray, offset) {
+            this.bind();
+            this.getValue(targetArray, offset);
+            // Note: This class uses a State pattern on a per-method basis:
+            // 'bind' sets 'this.getValue' / 'setValue' and shadows the
+            // prototype version of these methods with one that represents
+            // the bound state. When the property is not found, the methods
+            // become no-ops.
+        };
+        this.setValue = function setValue_unbound(sourceArray, offset) {
+            this.bind();
+            this.setValue(sourceArray, offset);
+        };
         this._getValue_unbound = this.getValue;
         this._setValue_unbound = this.setValue;
         this.path = path;
@@ -249,19 +262,6 @@ var PropertyBinding = /** @class */ (function () {
     PropertyBinding.prototype.setValue_fromArray_setMatrixWorldNeedsUpdate = function (buffer, offset) {
         this.resolvedProperty.fromArray(buffer, offset);
         this.targetObject.matrixWorldNeedsUpdate = true;
-    };
-    PropertyBinding.prototype.getValue_unbound = function (targetArray, offset) {
-        this.bind();
-        this.getValue(targetArray, offset);
-        // Note: This class uses a State pattern on a per-method basis:
-        // 'bind' sets 'this.getValue' / 'setValue' and shadows the
-        // prototype version of these methods with one that represents
-        // the bound state. When the property is not found, the methods
-        // become no-ops.
-    };
-    PropertyBinding.prototype.setValue_unbound = function (sourceArray, offset) {
-        this.bind();
-        this.setValue(sourceArray, offset);
     };
     // create getter / setter pair for a property in the scene graph
     PropertyBinding.prototype.bind = function () {

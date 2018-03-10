@@ -15,5 +15,6 @@ export class VectorKeyframeTrack extends KeyframeTrack {
 	constructor( name : string, times : Array<number>, values : Array<any>, interpolation : number ){
 		super( name, times, values, interpolation );
 	}
+	static parse = undefined;
 
 }

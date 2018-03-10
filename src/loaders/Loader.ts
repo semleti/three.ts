@@ -69,7 +69,7 @@ export class Loader {
 
 	crossOrigin = undefined;
 
-	static initMaterials ( materials, texturePath, crossOrigin ) {
+	initMaterials ( materials, texturePath, crossOrigin ) {
 
 		let array = [];
 
@@ -83,7 +83,7 @@ export class Loader {
 
 	}
 
-	static createMaterial( m, texturePath, crossOrigin ) {
+	createMaterial( m, texturePath, crossOrigin ) {
 
 		let BlendingMode = {
 			NoBlending: NoBlending,

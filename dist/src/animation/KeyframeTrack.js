@@ -46,17 +46,13 @@ var KeyframeTrack = /** @class */ (function () {
             json.values = values;
         }
         // derived classes can define a static parse method
-        /*if ( trackType.parse !== undefined ) {
-
-            return trackType.parse( json );
-
-        } else {
-
+        if (trackType.parse !== undefined) {
+            return trackType.parse(json);
+        }
+        else {
             // by default, we assume a constructor compatible with the base
-            return new trackType( json.name, json.times, json.values, json.interpolation );
-
-        }*/
-        return null;
+            return new trackType(json.name, json.times, json.values, json.interpolation);
+        }
     };
     KeyframeTrack.toJSON = function (track) {
         var trackType = track;

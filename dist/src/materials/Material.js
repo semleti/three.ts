@@ -240,7 +240,7 @@ var Material = /** @class */ (function (_super) {
         return data;
     };
     Material.prototype.clone = function () {
-        return new Material().copy(this);
+        return new this.constructor().copy(this);
     };
     Material.prototype.copy = function (source) {
         this.name = source.name;

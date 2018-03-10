@@ -60,7 +60,7 @@ function rollup(){
         if(error)console.error(error);
         if(stderr)console.error(stderr);
         if(stdout)console.log(stdout);
-        console.log('rolled everything into "dist/Three.js": ' + timeDiff());
+        console.log('rolled everything into "build/Three.js": ' + timeDiff());
         removeExtends();
     });
 }
@@ -68,29 +68,29 @@ function rollup(){
 //reduce file size by removing multiple __extends$\d declarations
 function removeExtends() {
     console.log('\nremoving extends...');
-    var data = fs.readFileSync('dist/three.js', 'utf-8');
+    var data = fs.readFileSync('build/three.js', 'utf-8');
     //remove all subsequent __extends$\d declarations
     data = data.replace(/\s*var __extends\$\d+ = \(this && this\.__extends\) \|\| \(function \(\) \{\s*var extendStatics = Object\.setPrototypeOf \|\|\s*\(\{ __proto__: \[\] \} instanceof Array && function \(d, b\) \{ d\.__proto__ = b; \}\) \|\|\s*function \(d, b\) \{ for \(var p in b\) if \(b\.hasOwnProperty\(p\)\) d\[p\] = b\[p\]; \};\s*return function \(d, b\) \{\s*extendStatics\(d, b\);\s*function __\(\) \{ this\.constructor = d; \}\s*d\.prototype = b === null \? Object\.create\(b\) : \(__\.prototype = b\.prototype, new __\(\)\);\s*\};\s*\}\)\(\);/gim, '');
     //rename all calls from __extends$\d to __extends
     data = data.replace(/__extends\$\d+\(/gim, '__extends(');
   
-    fs.writeFileSync('dist/three.js', data, 'utf-8');
+    fs.writeFileSync('build/three.js', data, 'utf-8');
   
-    console.log('removed multiple __extends declarations in "dist/three.js": ' + timeDiff());
+    console.log('removed multiple __extends declarations in "build/three.js": ' + timeDiff());
     closure();
 }
 
 //reduce filesize by using google-closure
 function closure(){
     console.log('\ncompiling using google-closure...');
-    var cmd = 'google-closure-compiler --js dist/three.js --js_output_file dist/three.min.js --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT';
-    //var cmd = 'google-closure-compiler --js dist/three.js --js_output_file dist/three.min.js --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT --compilation_level=ADVANCED_OPTIMIZATIONS';
+    var cmd = 'google-closure-compiler --js build/three.js --js_output_file build/three.min.js --warning_level=VERBOSE --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT';
+    //var cmd = 'google-closure-compiler --js build/three.js --js_output_file build/three.min.js --jscomp_off=globalThis --jscomp_off=checkTypes --externs utils/build/externs.js --language_in=ECMASCRIPT5_STRICT --compilation_level=ADVANCED_OPTIMIZATIONS';
     exec(cmd, function(error, stdout, stderr) {
         // command output is in stdout
         if(error)console.error(error);
         if(stderr)console.error(stderr);
         if(stdout)console.log(stdout);
-        console.log('minified using google-closure-compiler into "dist/three.min.js: ' + timeDiff());
+        console.log('minified using google-closure-compiler into "build/three.min.js: ' + timeDiff());
         end();
     });
 }
@@ -98,7 +98,7 @@ function closure(){
 
 
 function end(){
-    console.log("\nfinished building THREE: " + Math.trunc(fs.statSync("dist/three.min.js").size / 1024.0) + "Ko " + (new Date().getTime() - timeStart) / 1000 + "s")
+    console.log("\nfinished building THREE: " + Math.trunc(fs.statSync("build/three.min.js").size / 1024.0) + "Ko " + (new Date().getTime() - timeStart) / 1000 + "s")
 }
 
 function timeDiff(){

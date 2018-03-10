@@ -6,7 +6,7 @@ export abstract class Cache{
 
 	static enabled : boolean = false;
 
-	static files: {}
+	static files = {};
 
 	static add ( key, file ) {
 

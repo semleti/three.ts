@@ -213,7 +213,6 @@ export class WebGLProgram {
 		this.renderer = renderer;
 	
 		let defines = material.defines;
-	
 		let vertexShader = shader.vertexShader;
 		let fragmentShader = shader.fragmentShader;
 	

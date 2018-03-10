@@ -1100,18 +1100,20 @@ export function CanvasRenderer() {
     this.setSize = function () { };
 }
 //
-export var SceneUtils = {
-    createMultiMaterialObject: function () {
-        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-    },
-    detach: function () {
-        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-    },
-    attach: function () {
-        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-    }
-};
+//export let SceneUtils = {
+//	createMultiMaterialObject: function ( /* geometry, materials */ ) {
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//	},
+//	detach: function ( /* child, parent, scene */ ) {
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//	},
+//	attach: function ( /* child, scene, parent */ ) {
+//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+//	}
+//};
 //
-export function LensFlare() {
-    console.error('THREE.LensFlare has been moved to /examples/js/objects/Lensflare');
-}
+/*export function LensFlare() {
+
+    console.error( 'THREE.LensFlare has been moved to /examples/js/objects/Lensflare' );
+
+}*/

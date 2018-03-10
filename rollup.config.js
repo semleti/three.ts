@@ -33,12 +33,12 @@ export default {
 		{
 			format: 'umd',
 			name: 'THREE',
-			file: 'dist/three.js',
+			file: 'build/three.js',
 			indent: '\t'
 		},
 		{
 			format: 'es',
-			file: 'dist/three.module.js',
+			file: 'build/three.module.js',
 			indent: '\t'
 		}
 	],

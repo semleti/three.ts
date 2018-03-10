@@ -560,7 +560,7 @@ export class JSONLoader {
 
 		} else {
 
-			let materials = Loader.initMaterials( json.materials, texturePath, this.crossOrigin );
+			let materials = Loader.prototype.initMaterials( json.materials, texturePath, this.crossOrigin );
 
 			return { geometry: geometry, materials: materials };
 

@@ -31,6 +31,8 @@ var Interpolant = /** @class */ (function () {
             resultBuffer : new sampleValues.constructor(sampleSize);
         this.sampleValues = sampleValues;
         this.valueSize = sampleSize;
+        this.beforeStart_ = this.copySampleValue_;
+        this.afterEnd_ = this.copySampleValue_;
     }
     Interpolant.prototype.evaluate = function (t) {
         var pp = this.parameterPositions, i1 = this._cachedIndex, t1 = pp[i1], t0 = pp[i1 - 1];

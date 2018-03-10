@@ -4892,7 +4892,7 @@
 	        return data;
 	    };
 	    Material.prototype.clone = function () {
-	        return new Material().copy(this);
+	        return new this.constructor().copy(this);
 	    };
 	    Material.prototype.copy = function (source) {
 	        this.name = source.name;
@@ -14857,6 +14857,76 @@
 	    Scene.Obj = Obj;
 	})(exports.Scene || (exports.Scene = {}));
 	/**
+	 * @author mikael emtinger / http://gomo.se/
+	 * @author alteredq / http://alteredqualia.com/
+	 */
+	var LensFlare = /** @class */ (function (_super) {
+	    __extends(LensFlare, _super);
+	    function LensFlare(texture, size, distance, blending, color) {
+	        var _this = _super.call(this) || this;
+	        _this.isLensFlare = true;
+	        _this.lensFlares = [];
+	        _this.positionScreen = new Vector3();
+	        _this.customUpdateCallback = undefined;
+	        if (texture !== undefined) {
+	            _this.add(texture, size, distance, blending, color);
+	        }
+	        return _this;
+	    }
+	    LensFlare.prototype.copy = function (source, recursive) {
+	        _super.prototype.copy.call(this, source, recursive);
+	        this.positionScreen.copy(source.positionScreen);
+	        this.customUpdateCallback = source.customUpdateCallback;
+	        for (var i = 0, l = source.lensFlares.length; i < l; i++) {
+	            this.lensFlares.push(source.lensFlares[i]);
+	        }
+	        return this;
+	    };
+	    LensFlare.prototype.add = function (texture, size, distance, blending, color, opacity) {
+	        if (size === undefined)
+	            size = -1;
+	        if (distance === undefined)
+	            distance = 0;
+	        if (opacity === undefined)
+	            opacity = 1;
+	        if (color === undefined)
+	            color = new exports.Color(0xffffff);
+	        if (blending === undefined)
+	            blending = NormalBlending;
+	        distance = Math.min(distance, Math.max(0, distance));
+	        this.lensFlares.push({
+	            texture: texture,
+	            size: size,
+	            distance: distance,
+	            x: 0, y: 0, z: 0,
+	            scale: 1,
+	            rotation: 0,
+	            opacity: opacity,
+	            color: color,
+	            blending: blending // blending
+	        });
+	        return this;
+	    };
+	    /*
+	     * Update lens flares update positions on all flares based on the screen position
+	     * Set myLensFlare.customUpdateCallback to alter the flares in your project specific way.
+	     */
+	    LensFlare.prototype.updateLensFlares = function () {
+	        var f, fl = this.lensFlares.length;
+	        var flare;
+	        var vecX = -this.positionScreen.x * 2;
+	        var vecY = -this.positionScreen.y * 2;
+	        for (f = 0; f < fl; f++) {
+	            flare = this.lensFlares[f];
+	            flare.x = this.positionScreen.x + vecX * flare.distance;
+	            flare.y = this.positionScreen.y + vecY * flare.distance;
+	            flare.wantedRotation = flare.x * Math.PI * 0.25;
+	            flare.rotation += (flare.wantedRotation - flare.rotation) * 0.25;
+	        }
+	    };
+	    return LensFlare;
+	}(exports.Object3D));
+	/**
 	 * @author alteredq / http://alteredqualia.com/
 	 *
 	 * parameters = {
@@ -17881,7 +17951,9 @@
 	    __extends(TextBufferGeometry, _super);
 	    //TODO: create class
 	    function TextBufferGeometry(text, parameters) {
-	        var _this = _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
+	        var _this = 
+	        //FIXME: executed correction code before super call
+	        _super.call(this, parameters.font.generateShapes(text, parameters.size, parameters.curveSegments), parameters || {}) || this;
 	        _this.type = 'TextBufferGeometry';
 	        var font = parameters.font;
 	        if (!(font && font.isFont)) {
@@ -19406,6 +19478,7 @@
 	        this.files = {};
 	    };
 	    Cache.enabled = false;
+	    Cache.files = {};
 	    return Cache;
 	}());
 
@@ -21666,14 +21739,14 @@
 	        // Note: The indirection allows central control of many interpolants.
 	        // --- Protected interface
 	        this.DefaultSettings_ = {};
-	        this.beforeStart_ = this.copySampleValue_;
-	        this.afterEnd_ = this.copySampleValue_;
 	        this.parameterPositions = parameterPositions;
 	        this._cachedIndex = 0;
 	        this.resultBuffer = resultBuffer !== undefined ?
 	            resultBuffer : new sampleValues.constructor(sampleSize);
 	        this.sampleValues = sampleValues;
 	        this.valueSize = sampleSize;
+	        this.beforeStart_ = this.copySampleValue_;
+	        this.afterEnd_ = this.copySampleValue_;
 	    }
 	    Interpolant.prototype.evaluate = function (t) {
 	        var pp = this.parameterPositions, i1 = this._cachedIndex, t1 = pp[i1], t0 = pp[i1 - 1];
@@ -22053,17 +22126,13 @@
 	            json.values = values;
 	        }
 	        // derived classes can define a static parse method
-	        /*if ( trackType.parse !== undefined ) {
-
-	            return trackType.parse( json );
-
-	        } else {
-
+	        if (trackType.parse !== undefined) {
+	            return trackType.parse(json);
+	        }
+	        else {
 	            // by default, we assume a constructor compatible with the base
-	            return new trackType( json.name, json.times, json.values, json.interpolation );
-
-	        }*/
-	        return null;
+	            return new trackType(json.name, json.times, json.values, json.interpolation);
+	        }
 	    };
 	    KeyframeTrack.toJSON = function (track) {
 	        var trackType = track;
@@ -22324,6 +22393,7 @@
 	        _this.ValueTypeName = 'vector';
 	        return _this;
 	    }
+	    VectorKeyframeTrack.parse = undefined;
 	    return VectorKeyframeTrack;
 	}(exports.KeyframeTrack));
 	/**
@@ -22365,6 +22435,7 @@
 	    QuaternionKeyframeTrack.prototype.InterpolantFactoryMethodLinear = function (result) {
 	        return new QuaternionLinearInterpolant(this.times, this.values, this.getValueSize(), result);
 	    };
+	    QuaternionKeyframeTrack.parse = undefined;
 	    return QuaternionKeyframeTrack;
 	}(exports.KeyframeTrack));
 	/**
@@ -22823,14 +22894,14 @@
 	        this.onLoadProgress = function () { };
 	        this.onLoadComplete = function () { };
 	    }
-	    Loader.initMaterials = function (materials, texturePath, crossOrigin) {
+	    Loader.prototype.initMaterials = function (materials, texturePath, crossOrigin) {
 	        var array = [];
 	        for (var i = 0; i < materials.length; ++i) {
 	            array[i] = this.createMaterial(materials[i], texturePath, crossOrigin);
 	        }
 	        return array;
 	    };
-	    Loader.createMaterial = function (m, texturePath, crossOrigin) {
+	    Loader.prototype.createMaterial = function (m, texturePath, crossOrigin) {
 	        var BlendingMode = {
 	            NoBlending: NoBlending,
 	            NormalBlending: NormalBlending,
@@ -23404,7 +23475,7 @@
 	            return { geometry: geometry };
 	        }
 	        else {
-	            var materials = Loader.initMaterials(json.materials, texturePath, this.crossOrigin);
+	            var materials = Loader.prototype.initMaterials(json.materials, texturePath, this.crossOrigin);
 	            return { geometry: geometry, materials: materials };
 	        }
 	    };
@@ -25042,6 +25113,19 @@
 	                }
 	            ]
 	        ];
+	        this.getValue = function getValue_unbound(targetArray, offset) {
+	            this.bind();
+	            this.getValue(targetArray, offset);
+	            // Note: This class uses a State pattern on a per-method basis:
+	            // 'bind' sets 'this.getValue' / 'setValue' and shadows the
+	            // prototype version of these methods with one that represents
+	            // the bound state. When the property is not found, the methods
+	            // become no-ops.
+	        };
+	        this.setValue = function setValue_unbound(sourceArray, offset) {
+	            this.bind();
+	            this.setValue(sourceArray, offset);
+	        };
 	        this._getValue_unbound = this.getValue;
 	        this._setValue_unbound = this.setValue;
 	        this.path = path;
@@ -25174,19 +25258,6 @@
 	    PropertyBinding.prototype.setValue_fromArray_setMatrixWorldNeedsUpdate = function (buffer, offset) {
 	        this.resolvedProperty.fromArray(buffer, offset);
 	        this.targetObject.matrixWorldNeedsUpdate = true;
-	    };
-	    PropertyBinding.prototype.getValue_unbound = function (targetArray, offset) {
-	        this.bind();
-	        this.getValue(targetArray, offset);
-	        // Note: This class uses a State pattern on a per-method basis:
-	        // 'bind' sets 'this.getValue' / 'setValue' and shadows the
-	        // prototype version of these methods with one that represents
-	        // the bound state. When the property is not found, the methods
-	        // become no-ops.
-	    };
-	    PropertyBinding.prototype.setValue_unbound = function (sourceArray, offset) {
-	        this.bind();
-	        this.setValue(sourceArray, offset);
 	    };
 	    // create getter / setter pair for a property in the scene graph
 	    PropertyBinding.prototype.bind = function () {
@@ -28027,6 +28098,29 @@
 	    return AxesHelper;
 	}(LineSegments));
 
+	(function (SceneUtils) {
+	    function createMultiMaterialObject(geometry, materials) {
+	        var group = new Group();
+	        for (var i = 0, l = materials.length; i < l; i++) {
+	            group.add(new Mesh(geometry, materials[i]));
+	        }
+	        return group;
+	    }
+	    SceneUtils.createMultiMaterialObject = createMultiMaterialObject;
+	    function detach(child, parent, scene) {
+	        child.applyMatrix(parent.matrixWorld);
+	        parent.remove(child);
+	        scene.add(child);
+	    }
+	    SceneUtils.detach = detach;
+	    function attach(child, scene, parent) {
+	        child.applyMatrix(new Matrix4().getInverse(parent.matrixWorld));
+	        scene.remove(child);
+	        parent.add(child);
+	    }
+	    SceneUtils.attach = attach;
+	})(exports.SceneUtils || (exports.SceneUtils = {}));
+
 	/**
 	 * @author mrdoob / http://mrdoob.com/
 	 */
@@ -29068,21 +29162,23 @@
 	    this.setSize = function () { };
 	}
 	//
-	var SceneUtils = {
-	    createMultiMaterialObject: function () {
-	        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-	    },
-	    detach: function () {
-	        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-	    },
-	    attach: function () {
-	        console.error('THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils');
-	    }
-	};
+	//export let SceneUtils = {
+	//	createMultiMaterialObject: function ( /* geometry, materials */ ) {
+	//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+	//	},
+	//	detach: function ( /* child, parent, scene */ ) {
+	//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+	//	},
+	//	attach: function ( /* child, scene, parent */ ) {
+	//		console.error( 'THREE.SceneUtils has been moved to /examples/js/utils/SceneUtils' );
+	//	}
+	//};
 	//
-	function LensFlare() {
-	    console.error('THREE.LensFlare has been moved to /examples/js/objects/Lensflare');
-	}
+	/*export function LensFlare() {
+
+	    console.error( 'THREE.LensFlare has been moved to /examples/js/objects/Lensflare' );
+
+	}*/
 
 	exports.WebGLRenderTargetCube = WebGLRenderTargetCube;
 	exports.WebGLRenderTarget = WebGLRenderTarget;
@@ -29093,6 +29189,7 @@
 	exports.ShaderChunk = ShaderChunk;
 	exports.FogExp2 = FogExp2;
 	exports.Fog = Fog;
+	exports.LensFlare = LensFlare;
 	exports.Sprite = Sprite;
 	exports.SkinnedMesh = SkinnedMesh;
 	exports.Skeleton = Skeleton;
@@ -29447,8 +29544,6 @@
 	exports.ImageUtils = ImageUtils;
 	exports.Projector = Projector;
 	exports.CanvasRenderer = CanvasRenderer;
-	exports.SceneUtils = SceneUtils;
-	exports.LensFlare = LensFlare;
 
 	Object.defineProperty(exports, '__esModule', { value: true });
 

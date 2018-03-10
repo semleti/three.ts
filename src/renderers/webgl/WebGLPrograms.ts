@@ -113,7 +113,6 @@ export class WebGLPrograms {
 	}
 
 	getParameters ( material : any, lights : any, shadows : any, fog : any, nClipPlanes : number, nClipIntersection : number, object : any ) {
-
 		let shaderID = this.shaderIDs[ material.type ];
 
 		// heuristics to create shader parameters according to lights in the scene

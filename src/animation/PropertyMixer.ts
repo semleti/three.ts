@@ -146,7 +146,6 @@ export class PropertyMixer {
 			stride = this.valueSize,
 
 			originalValueOffset = stride * 3;
-
 		binding.getValue( buffer, originalValueOffset );
 
 		// accu[0..1] := orig -- initially detect changes against the original

@@ -2443,6 +2443,8 @@
 	            resultBuffer : new sampleValues.constructor(sampleSize);
 	        this.sampleValues = sampleValues;
 	        this.valueSize = sampleSize;
+	        this.beforeStart_ = this.copySampleValue_;
+	        this.afterEnd_ = this.copySampleValue_;
 	    }
 	    Interpolant.prototype.evaluate = function (t) {
 	        var pp = this.parameterPositions, i1 = this._cachedIndex, t1 = pp[i1], t0 = pp[i1 - 1];
@@ -2707,6 +2709,19 @@
 	                }
 	            ]
 	        ];
+	        this.getValue = function getValue_unbound(targetArray, offset) {
+	            this.bind();
+	            this.getValue(targetArray, offset);
+	            // Note: This class uses a State pattern on a per-method basis:
+	            // 'bind' sets 'this.getValue' / 'setValue' and shadows the
+	            // prototype version of these methods with one that represents
+	            // the bound state. When the property is not found, the methods
+	            // become no-ops.
+	        };
+	        this.setValue = function setValue_unbound(sourceArray, offset) {
+	            this.bind();
+	            this.setValue(sourceArray, offset);
+	        };
 	        this._getValue_unbound = this.getValue;
 	        this._setValue_unbound = this.setValue;
 	        this.path = path;
@@ -2839,19 +2854,6 @@
 	    PropertyBinding.prototype.setValue_fromArray_setMatrixWorldNeedsUpdate = function (buffer, offset) {
 	        this.resolvedProperty.fromArray(buffer, offset);
 	        this.targetObject.matrixWorldNeedsUpdate = true;
-	    };
-	    PropertyBinding.prototype.getValue_unbound = function (targetArray, offset) {
-	        this.bind();
-	        this.getValue(targetArray, offset);
-	        // Note: This class uses a State pattern on a per-method basis:
-	        // 'bind' sets 'this.getValue' / 'setValue' and shadows the
-	        // prototype version of these methods with one that represents
-	        // the bound state. When the property is not found, the methods
-	        // become no-ops.
-	    };
-	    PropertyBinding.prototype.setValue_unbound = function (sourceArray, offset) {
-	        this.bind();
-	        this.setValue(sourceArray, offset);
 	    };
 	    // create getter / setter pair for a property in the scene graph
 	    PropertyBinding.prototype.bind = function () {
@@ -3183,6 +3185,7 @@
 	    PropertyMixer.prototype.saveOriginalState = function () {
 	        var binding = this.binding;
 	        var buffer = this.buffer, stride = this.valueSize, originalValueOffset = stride * 3;
+	        console.log(binding);
 	        binding.getValue(buffer, originalValueOffset);
 	        // accu[0..1] := orig -- initially detect changes against the original
 	        for (var i = stride, e = originalValueOffset; i !== e; ++i) {
@@ -3481,17 +3484,15 @@
 	            json.values = values;
 	        }
 	        // derived classes can define a static parse method
-	        /*if ( trackType.parse !== undefined ) {
-
-	            return trackType.parse( json );
-
-	        } else {
-
+	        if (trackType.parse !== undefined) {
+	            console.log("parser");
+	            return trackType.parse(json);
+	        }
+	        else {
 	            // by default, we assume a constructor compatible with the base
-	            return new trackType( json.name, json.times, json.values, json.interpolation );
-
-	        }*/
-	        return null;
+	            console.log("no parser");
+	            return new trackType(json.name, json.times, json.values, json.interpolation);
+	        }
 	    };
 	    KeyframeTrack.toJSON = function (track) {
 	        var trackType = track;
@@ -3514,6 +3515,7 @@
 	        return json;
 	    };
 	    KeyframeTrack._getTrackTypeForValueTypeName = function (typeName) {
+	        console.log(typeName);
 	        switch (typeName.toLowerCase()) {
 	            // FIXME:
 	            case 'scalar':
@@ -3763,6 +3765,7 @@
 	        _this.ValueTypeName = 'vector';
 	        return _this;
 	    }
+	    VectorKeyframeTrack.parse = undefined;
 	    return VectorKeyframeTrack;
 	}(KeyframeTrack));
 
@@ -3826,6 +3829,7 @@
 	    QuaternionKeyframeTrack.prototype.InterpolantFactoryMethodLinear = function (result) {
 	        return new QuaternionLinearInterpolant(this.times, this.values, this.getValueSize(), result);
 	    };
+	    QuaternionKeyframeTrack.parse = undefined;
 	    return QuaternionKeyframeTrack;
 	}(KeyframeTrack));
 

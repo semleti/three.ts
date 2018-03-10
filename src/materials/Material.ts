@@ -276,7 +276,7 @@ export class Material extends EventDispatcher {
 
 	clone () : Material {
 
-		return new Material().copy( this );
+		return new (this as any).constructor().copy( this );
 
 	}
 

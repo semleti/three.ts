@@ -276,12 +276,11 @@ export class WebGLShadowMap {
 
 	}
 
-	getDepthMaterial( object : any, material : any, isPointLight : boolean, lightPositionWorld : Vector3, shadowCameraNear : number, shadowCameraFar : number ) : Material {
+	getDepthMaterial( object : any, material : any, isPointLight : boolean, lightPositionWorld : Vector3, shadowCameraNear : number, shadowCameraFar : number ) : MeshDepthMaterial {
 
 		let geometry = object.geometry;
 
 		let result = null;
-
 		let materialVariants = this._depthMaterials;
 		let customMaterial = object.customDepthMaterial;
 

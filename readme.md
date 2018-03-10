@@ -31,6 +31,7 @@ The entire project is using TypeScript.
 ~1% of the typings are wrong.  
 I got it working for a personal project (although with having a little ordering issue when rendering).  
 The project currently passes all unit tests except for 4 (which is better than the js version from my what I can tell :p ) (I just cheated a little bit ;( ).  
+~80% of the examples are working, despite a few render artifacts.
 #### Also:
 This is my first real Github repo, so I have no clue what I'm doing ¯\\\_(ツ)_/¯
 
@@ -66,7 +67,7 @@ The size difference is most likely due to the way TypeScript creates classes and
 
 
 ## RoadMap
-- Port the tests and examples from [three.js](https://github.com/mrdoob/three.js/) to TypeScript to make sure everything works as intended. (probably going to keep them on the js side actually)
+- ~~Port the tests and examples from [three.js](https://github.com/mrdoob/three.js/) to TypeScript to make sure everything works as intended.~~ **done** (probably going to keep them on the js side actually)
 - Resolve the circular dependencies.
 - Finish and correct the typings.
 - Contact the three.js maintainers to maybe cooperate? (I'll need help to make three.ts production ready).

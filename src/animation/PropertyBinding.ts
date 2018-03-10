@@ -517,11 +517,10 @@ export class PropertyBinding {
 
 	}
 
-	getValue;
-	setValue;
+	
 
 
-	getValue_unbound( targetArray, offset : number ) : void {
+	getValue = function getValue_unbound( targetArray, offset : number ) : void {
 
 		this.bind();
 		this.getValue( targetArray, offset );
@@ -534,7 +533,7 @@ export class PropertyBinding {
 
 	}
 
-	setValue_unbound( sourceArray, offset : number ) : void {
+	setValue = function setValue_unbound( sourceArray, offset : number ) : void {
 
 		this.bind();
 		this.setValue( sourceArray, offset );

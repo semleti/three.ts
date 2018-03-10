@@ -63,8 +63,7 @@ export class KeyframeTrack {
 		}
 
 		// derived classes can define a static parse method
-		/*if ( trackType.parse !== undefined ) {
-
+		if ( trackType.parse !== undefined ) {
 			return trackType.parse( json );
 
 		} else {
@@ -72,8 +71,7 @@ export class KeyframeTrack {
 			// by default, we assume a constructor compatible with the base
 			return new trackType( json.name, json.times, json.values, json.interpolation );
 
-		}*/
-		return null;
+		}
 
 	}
 
@@ -114,7 +112,6 @@ export class KeyframeTrack {
 	static _getTrackTypeForValueTypeName ( typeName : string ) : typeof KeyframeTrack {
 
 		switch ( typeName.toLowerCase() ) {
-
 			// FIXME:
 			case 'scalar':
 			case 'double':
