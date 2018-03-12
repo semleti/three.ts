@@ -243,6 +243,8 @@
 
 		<script>
 
+		var isHTMLPreview = window.location.href.indexOf("htmlpreview.github.io") !== -1;
+
 		function extractQuery() {
 			var p = window.location.search.indexOf( '?q=' );
 			if( p !== -1 ) {
@@ -292,7 +294,9 @@
 			var link = document.createElement( 'a' );
 			link.className = 'link';
 			link.href = file + '.html';
-			if(window.location.href.indexOf("htmlpreview.github.io") === -1)
+			console.log(window.location.href);
+			console.log(window.location.href.indexOf("htmlpreview.github.io") === -1);
+			if(!isHTMLPreview)
 			{
 				link.textContent = getName( file );
 				link.setAttribute( 'target', 'viewer' );
@@ -385,10 +389,13 @@
 		function updateFilter() {
 
 			var v = filterInput.value;
-			if( v !== '' ) {
-				window.history.replaceState( {} , '', '?q=' + v + window.location.hash );
-			} else {
-				window.history.replaceState( {} , '', window.location.pathname + window.location.hash );
+			if(isHTMLPreview)
+			{
+				if( v !== '' ) {
+					window.history.replaceState( {} , '', '?q=' + v + window.location.hash );
+				} else {
+					window.history.replaceState( {} , '', window.location.pathname + window.location.hash );
+				}
 			}
 
 			var exp = new RegExp( v, 'gi' );
