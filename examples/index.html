@@ -293,11 +293,13 @@
 
 			var link = document.createElement( 'a' );
 			link.className = 'link';
-			link.href = file + '.html';
-			console.log(window.location.href);
-			console.log(window.location.href.indexOf("htmlpreview.github.io") === -1);
+			if(isHTMLPreview)
+			{
+				link.href = window.location.href.replace("index.html","") + file + '.html';
+			}
 			if(!isHTMLPreview)
 			{
+				link.href = file + '.html';
 				link.textContent = getName( file );
 				link.setAttribute( 'target', 'viewer' );
 				link.addEventListener( 'click', function ( event ) {
