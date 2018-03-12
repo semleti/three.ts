@@ -42,12 +42,13 @@ LOTS of BUGS!
 A bit less buggy now that I've fixed a few using the unit tests.  
 Even less buggy now that most examples work!
   
-I'm a novice at three.js, so I stumbled my way to this point.  
+I'm a novice at three.js AND TypeScript, so I stumbled my way to this point.  
 Most bugs will likely arise from these sources (I think):  
 - wrong scope for 'this' while I was moving stuff around
 - uninitialised properties
 - temporary hacks to get it to compile I forgot about
 - typos? (most should have been caught by TypeScript and google-closure-compiler, but you never know)
+- TypeScript behaviour different than what I assumed
 
 ## Examples
 ~90% of the examples are currently working.  
