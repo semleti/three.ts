@@ -54,8 +54,10 @@ Most bugs will likely arise from these sources (I think):
 ~90% of the examples are currently working.  
 You can easily check them out online at https://htmlpreview.github.io/?https://github.com/semleti/three.ts/blob/master/examples/index.html .  
 Sadly, the index.html isn't working optimally, as github is sending 'X-Frame-Options : deny' headers :/  
-This also prevents texture loading for some of the examples :'(  
 So I implemented a quick ugly fix to get it to work.  
+  
+This also prevents texture loading for some of the examples as well as throws some minor errors :'(  
+So you might want to download them :/
 
 ## Build
 The build process is controlled by the '.vscode/build.js' script:  
