@@ -38,7 +38,8 @@ export class SphereGeometry extends Geometry {
 export class SphereBufferGeometry extends BufferGeometry {
 
 	type : string = 'SphereBufferGeometry';
-	constructor( radius? : number, widthSegments? : number, heightSegments? : number, phiStart? : number, phiLength? : number, thetaStart? : number, thetaLength? : number ){
+	constructor( radius : number = 1, widthSegments : number = 8, heightSegments : number = 6, phiStart : number = 0,
+		phiLength : number = Math.PI * 2, thetaStart : number = 0, thetaLength : number = Math.PI ){
 		super();
 		this.parameters = {
 			radius: radius,
@@ -50,16 +51,10 @@ export class SphereBufferGeometry extends BufferGeometry {
 			thetaLength: thetaLength
 		};
 	
-		radius = radius || 1;
 	
-		widthSegments = Math.max( 3, Math.floor( widthSegments ) || 8 );
-		heightSegments = Math.max( 2, Math.floor( heightSegments ) || 6 );
-	
-		phiStart = phiStart !== undefined ? phiStart : 0;
-		phiLength = phiLength !== undefined ? phiLength : Math.PI * 2;
-	
-		thetaStart = thetaStart !== undefined ? thetaStart : 0;
-		thetaLength = thetaLength !== undefined ? thetaLength : Math.PI;
+		widthSegments = Math.max( 3, Math.floor( widthSegments ) );
+		heightSegments = Math.max( 2, Math.floor( heightSegments ) );
+
 	
 		let thetaEnd = thetaStart + thetaLength;
 	

@@ -10,10 +10,9 @@ export class DepthTexture extends Texture {
 
 	isDepthTexture : boolean = true;
 	constructor( width : number, height : number, type : number, mapping : number, wrapS : number, wrapT : number,
-		 magFilter? : number, minFilter? : number, anisotropy? : number, format? : number ){
+		 magFilter : number = NearestFilter, minFilter : number = NearestFilter, anisotropy? : number, format : number = DepthFormat ){
 
-		super(null, mapping, wrapS, wrapT, magFilter !== undefined ? magFilter : NearestFilter, minFilter !== undefined ? minFilter : NearestFilter, format !== undefined ? format : DepthFormat, type, anisotropy );
-		format = format !== undefined ? format : DepthFormat;
+		super(null, mapping, wrapS, wrapT, magFilter, minFilter, format , DepthTexture.fixType(type,format), anisotropy );
 	
 		if ( format !== DepthFormat && format !== DepthStencilFormat ) {
 	
@@ -21,17 +20,16 @@ export class DepthTexture extends Texture {
 	
 		}
 	
-		if ( type === undefined && format === DepthFormat ) type = UnsignedShortType;
-		if ( type === undefined && format === DepthStencilFormat ) type = UnsignedInt248Type;
-	
-	
 		this.image = { width: width, height: height };
 	
-		this.magFilter = magFilter !== undefined ? magFilter : NearestFilter;
-		this.minFilter = minFilter !== undefined ? minFilter : NearestFilter;
-	
 		this.flipY = false;
-		this.generateMipmaps	= false;
+		this.generateMipmaps = false;
+	}
+
+	static fixType(type : any, format : any){
+		if ( type === undefined && format === DepthFormat ) return UnsignedShortType;
+		if ( type === undefined && format === DepthStencilFormat ) return UnsignedInt248Type;
+		return type;
 	}
 
 }

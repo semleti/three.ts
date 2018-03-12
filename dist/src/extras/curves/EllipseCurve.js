@@ -13,17 +13,25 @@ import { Vector2 } from '../../math/Vector2';
 var EllipseCurve = /** @class */ (function (_super) {
     __extends(EllipseCurve, _super);
     function EllipseCurve(aX, aY, xRadius, yRadius, aStartAngle, aEndAngle, aClockwise, aRotation) {
+        if (aX === void 0) { aX = 0; }
+        if (aY === void 0) { aY = 0; }
+        if (xRadius === void 0) { xRadius = 1; }
+        if (yRadius === void 0) { yRadius = 1; }
+        if (aStartAngle === void 0) { aStartAngle = 0; }
+        if (aEndAngle === void 0) { aEndAngle = 2 * Math.PI; }
+        if (aClockwise === void 0) { aClockwise = false; }
+        if (aRotation === void 0) { aRotation = 0; }
         var _this = _super.call(this) || this;
         _this.type = 'EllipseCurve';
         _this.isEllipseCurve = true;
-        _this.aX = aX || 0;
-        _this.aY = aY || 0;
-        _this.xRadius = xRadius || 1;
-        _this.yRadius = yRadius || 1;
-        _this.aStartAngle = aStartAngle || 0;
-        _this.aEndAngle = aEndAngle || 2 * Math.PI;
-        _this.aClockwise = aClockwise || false;
-        _this.aRotation = aRotation || 0;
+        _this.aX = aX;
+        _this.aY = aY;
+        _this.xRadius = xRadius;
+        _this.yRadius = yRadius;
+        _this.aStartAngle = aStartAngle;
+        _this.aEndAngle = aEndAngle;
+        _this.aClockwise = aClockwise;
+        _this.aRotation = aRotation;
         return _this;
     }
     EllipseCurve.prototype.getPoint = function (t, optionalTarget) {

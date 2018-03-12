@@ -37,18 +37,15 @@ export class ArrowHelper extends Object3D {
 	color : number;
 	headLength : number;
 	headWidth : number ;
-	constructor( dir : Vector3, origin : Vector3, length : number, color : number, headLength : number, headWidth : number ){
+	constructor( dir : Vector3, origin : Vector3, length : number = 1, color : number = 0xffff00, headLength : number = 0.2*length, headWidth : number = 0.2*headLength ){
 		super();
+
 		this.dir = dir;
 		this.origin = origin;
 		this.length = length;
 		this.color = color;
 		this.headLength = headLength;
 		this.headWidth = headWidth;
-		if ( color === undefined ) color = 0xffff00;
-		if ( length === undefined ) length = 1;
-		if ( headLength === undefined ) headLength = 0.2 * length;
-		if ( headWidth === undefined ) headWidth = 0.2 * headLength;
 
 		if ( lineGeometry === undefined ) {
 

@@ -3,8 +3,9 @@
  */
 var AudioAnalyser = /** @class */ (function () {
     function AudioAnalyser(audio, fftSize) {
+        if (fftSize === void 0) { fftSize = 2048; }
         this.analyser = audio.context.createAnalyser();
-        this.analyser.fftSize = fftSize !== undefined ? fftSize : 2048;
+        this.analyser.fftSize = fftSize;
         this.data = new Uint8Array(this.analyser.frequencyBinCount);
         audio.getOutput().connect(this.analyser);
     }

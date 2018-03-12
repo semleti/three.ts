@@ -513,9 +513,6 @@ Object.assign(Geometry.prototype, {
     computeTangents: function () {
         console.error('THREE.Geometry: .computeTangents() has been removed.');
     },
-    computeLineDistances: function () {
-        console.error('THREE.Geometry: .computeLineDistances() has been removed. Use THREE.Line.computeLineDistances() instead.');
-    }
 });
 Object.assign(Object3D.prototype, {
     getChildByName: function (name) {

@@ -9,12 +9,16 @@ import { _Math } from './Math';
  */
 var Euler = /** @class */ (function () {
     function Euler(x, y, z, order) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (z === void 0) { z = 0; }
+        if (order === void 0) { order = Euler.DefaultOrder; }
         this.isEuler = true;
         this.onChangeCallback = function () { };
-        this._x = x || 0;
-        this._y = y || 0;
-        this._z = z || 0;
-        this._order = order || Euler.DefaultOrder;
+        this._x = x;
+        this._y = y;
+        this._z = z;
+        this._order = order;
     }
     Object.defineProperty(Euler.prototype, "x", {
         get: function () {

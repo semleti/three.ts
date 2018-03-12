@@ -16,11 +16,13 @@ import { NearestFilter } from '../constants';
 var DataTexture = /** @class */ (function (_super) {
     __extends(DataTexture, _super);
     function DataTexture(data, width, height, format, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, encoding) {
-        var _this = _super.call(this, null, mapping, wrapS, wrapT, magFilter !== undefined ? magFilter : NearestFilter, minFilter !== undefined ? minFilter : NearestFilter, format, type, anisotropy, encoding) || this;
+        if (magFilter === void 0) { magFilter = NearestFilter; }
+        if (minFilter === void 0) { minFilter = NearestFilter; }
+        var _this = _super.call(this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding) || this;
         _this.isDataTexture = true;
         _this.image = { data: data, width: width, height: height };
-        _this.magFilter = magFilter !== undefined ? magFilter : NearestFilter;
-        _this.minFilter = minFilter !== undefined ? minFilter : NearestFilter;
+        _this.magFilter = magFilter;
+        _this.minFilter = minFilter;
         _this.generateMipmaps = false;
         _this.flipY = false;
         _this.unpackAlignment = 1;

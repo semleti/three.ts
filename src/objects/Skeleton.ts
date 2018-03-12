@@ -11,10 +11,8 @@ import { Bone } from './Bone';
 export class Skeleton{
 
 	bones;boneMatrices;boneInverses;boneTexture;
-	constructor( bones? : Array<Bone>, boneInverses? : Array<Matrix4> ) {
+	constructor( bones : Array<Bone> = [], boneInverses? : Array<Matrix4> ) {
 		// copy the bone array
-
-		bones = bones || [];
 
 		this.bones = bones.slice( 0 );
 		this.boneMatrices = new Float32Array( this.bones.length * 16 );

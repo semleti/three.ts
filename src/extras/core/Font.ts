@@ -20,10 +20,7 @@ export class Font {
 	}
 
 
-	generateShapes ( text : string, size? : number, divisions? : number ) : Array<Shape> {
-
-		if ( size === undefined ) size = 100;
-		if ( divisions === undefined ) divisions = 4;
+	generateShapes ( text : string, size : number = 100, divisions : number = 4 ) : Array<Shape> {
 
 		let shapes = [];
 		let paths = Font.createPaths( text, size, divisions, this.data );

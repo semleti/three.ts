@@ -15,8 +15,8 @@ export class CompressedTextureLoader {
 	// override in sub classes
 	_parser : any = null;
 	path : string;
-	constructor( manager : LoadingManager ){
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
+		this.manager = manager;
 	}
 
 	load ( url : string, onLoad : Function, onProgress : Function, onError : Function ) : CompressedTexture {

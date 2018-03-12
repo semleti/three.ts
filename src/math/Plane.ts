@@ -9,11 +9,11 @@ import { Matrix4, Sphere, Box3, Line, Line3, LineCurve3 } from '../Three';
 export class Plane {
 	normal : Vector3;
 	constant : number;
-	constructor( normal? : Vector3, constant? : number ){
+	constructor( normal? : Vector3, constant : number = 0 ){
 		// normal is assumed to be normalized
 
 		this.normal = ( normal !== undefined ) ? normal : new Vector3( 1, 0, 0 );
-		this.constant = ( constant !== undefined ) ? constant : 0;
+		this.constant = constant;
 	}
 
 	set ( normal : Vector3, constant : number ) : Plane {

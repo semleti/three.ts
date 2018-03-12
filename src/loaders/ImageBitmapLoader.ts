@@ -11,7 +11,7 @@ export class ImageBitmapLoader {
 	manager : LoadingManager;
 	options : any;
 	path : string;
-	constructor( manager : LoadingManager ){
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
 
 		if ( typeof createImageBitmap === 'undefined' ) {
 	
@@ -25,7 +25,7 @@ export class ImageBitmapLoader {
 	
 		}
 	
-		this.manager = manager !== undefined ? manager : DefaultLoadingManager;
+		this.manager = manager;
 		this.options = undefined;
 	}
 

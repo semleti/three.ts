@@ -1,16 +1,10 @@
-/**
- * @author Don McCurdy / https://www.donmccurdy.com
- */
 var LoaderUtils = /** @class */ (function () {
     function LoaderUtils() {
     }
     LoaderUtils.decodeText = function (array) {
-        // FIXME:
-        /*if ( typeof TextDecoder !== 'undefined' ) {
-
-            return new TextDecoder().decode( array );
-
-        }*/
+        if (typeof TextDecoder !== 'undefined') {
+            return new TextDecoder().decode(array);
+        }
         // Avoid the String.fromCharCode.apply(null, array) shortcut, which
         // throws a "maximum call stack size exceeded" error for large arrays.
         var s = '';

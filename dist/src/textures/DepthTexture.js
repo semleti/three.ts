@@ -17,23 +17,26 @@ import { NearestFilter, UnsignedShortType, UnsignedInt248Type, DepthFormat, Dept
 var DepthTexture = /** @class */ (function (_super) {
     __extends(DepthTexture, _super);
     function DepthTexture(width, height, type, mapping, wrapS, wrapT, magFilter, minFilter, anisotropy, format) {
-        var _this = _super.call(this, null, mapping, wrapS, wrapT, magFilter !== undefined ? magFilter : NearestFilter, minFilter !== undefined ? minFilter : NearestFilter, format !== undefined ? format : DepthFormat, type, anisotropy) || this;
+        if (magFilter === void 0) { magFilter = NearestFilter; }
+        if (minFilter === void 0) { minFilter = NearestFilter; }
+        if (format === void 0) { format = DepthFormat; }
+        var _this = _super.call(this, null, mapping, wrapS, wrapT, magFilter, minFilter, format, DepthTexture.fixType(type, format), anisotropy) || this;
         _this.isDepthTexture = true;
-        format = format !== undefined ? format : DepthFormat;
         if (format !== DepthFormat && format !== DepthStencilFormat) {
             throw new Error('DepthTexture format must be either THREE.DepthFormat or THREE.DepthStencilFormat');
         }
-        if (type === undefined && format === DepthFormat)
-            type = UnsignedShortType;
-        if (type === undefined && format === DepthStencilFormat)
-            type = UnsignedInt248Type;
         _this.image = { width: width, height: height };
-        _this.magFilter = magFilter !== undefined ? magFilter : NearestFilter;
-        _this.minFilter = minFilter !== undefined ? minFilter : NearestFilter;
         _this.flipY = false;
         _this.generateMipmaps = false;
         return _this;
     }
+    DepthTexture.fixType = function (type, format) {
+        if (type === undefined && format === DepthFormat)
+            return UnsignedShortType;
+        if (type === undefined && format === DepthStencilFormat)
+            return UnsignedInt248Type;
+        return type;
+    };
     return DepthTexture;
 }(Texture));
 export { DepthTexture };

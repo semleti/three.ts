@@ -6,7 +6,8 @@ import { DefaultLoadingManager } from './LoadingManager';
 var loading = {};
 var FileLoader = /** @class */ (function () {
     function FileLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
     }
     FileLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         if (url === undefined)

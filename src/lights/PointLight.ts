@@ -13,10 +13,10 @@ export class PointLight extends Light {
 	type : string = 'PointLight';
 	shadow : LightShadow;
 	isPointLight : boolean = true;
-	constructor( color : Color, intensity : number, distance : number, decay : number ){
+	constructor( color : Color, intensity : number, distance : number = 0, decay : number = 1 ){
 		super( color, intensity );
-		this.distance = ( distance !== undefined ) ? distance : 0;
-		this.decay = ( decay !== undefined ) ? decay : 1;	// for physically correct lights, should be 2.
+		this.distance = distance;
+		this.decay = decay;	// for physically correct lights, should be 2.
 
 		this.shadow = new LightShadow( new PerspectiveCamera( 90, 1, 0.5, 500 ) );
 	}

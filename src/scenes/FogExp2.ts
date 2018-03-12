@@ -11,10 +11,10 @@ export class FogExp2 {
 	color : Color;
 	density : number;
 	isFogExp2 : boolean = true;
-	constructor( color : number, density : number ){
+	constructor( color : number, density : number = 0.00025 ){
 
 		this.color = new Color( color );
-		this.density = ( density !== undefined ) ? density : 0.00025;
+		this.density = density;
 	}
 
 	clone () : FogExp2 {

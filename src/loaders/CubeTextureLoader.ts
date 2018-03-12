@@ -12,8 +12,8 @@ export class CubeTextureLoader {
 	manager : LoadingManager;
 	path : string;
 	crossOrigin : string = 'Anonymous';
-	constructor( manager? : LoadingManager ){
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
+		this.manager = manager;
 
 	}
 

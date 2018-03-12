@@ -19,7 +19,8 @@ import { BufferGeometry } from '../core/BufferGeometry';
 var AxesHelper = /** @class */ (function (_super) {
     __extends(AxesHelper, _super);
     function AxesHelper(size) {
-        return _super.call(this, AxesHelper.constructGeom(size || 1), { vertexColors: VertexColors }) || this;
+        if (size === void 0) { size = 1; }
+        return _super.call(this, AxesHelper.constructGeom(size), { vertexColors: VertexColors }) || this;
     }
     AxesHelper.constructGeom = function (size) {
         var vertices = [

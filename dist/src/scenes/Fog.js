@@ -5,11 +5,13 @@ import { Color } from '../math/Color';
  */
 var Fog = /** @class */ (function () {
     function Fog(color, near, far) {
+        if (near === void 0) { near = 1; }
+        if (far === void 0) { far = 1000; }
         this.name = '';
         this.isFog = true;
         this.color = new Color(color);
-        this.near = (near !== undefined) ? near : 1;
-        this.far = (far !== undefined) ? far : 1000;
+        this.near = near;
+        this.far = far;
     }
     Fog.prototype.clone = function () {
         return new Fog(this.color.getHex(), this.near, this.far);

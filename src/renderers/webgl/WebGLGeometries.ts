@@ -20,52 +20,54 @@ export class WebGLGeometries {
 		this.infoMemory = infoMemory;
 	}
 
-	onGeometryDispose( event : any ) : void {
+	onGeometryDispose = function(scope){
+		return function( event : any ) : void {
 
-		let geometry = event.target;
-		let buffergeometry = this.geometries[ geometry.id ];
+			let geometry = event.target;
+			let buffergeometry = scope.geometries[ geometry.id ];
 
-		if ( buffergeometry.index !== null ) {
+			if ( buffergeometry.index !== null ) {
 
-			this.attributes.remove( buffergeometry.index );
+				scope.attributes.remove( buffergeometry.index );
+
+			}
+
+			for ( let name in buffergeometry.attributes ) {
+
+				scope.attributes.remove( buffergeometry.attributes[ name ] );
+
+			}
+
+			geometry.removeEventListener( 'dispose', scope.onGeometryDispose );
+
+			delete scope.geometries[ geometry.id ];
+
+			// TODO Remove duplicate code
+
+			let attribute = scope.wireframeAttributes[ geometry.id ];
+
+			if ( attribute ) {
+
+				scope.attributes.remove( attribute );
+				delete scope.wireframeAttributes[ geometry.id ];
+
+			}
+
+			attribute = scope.wireframeAttributes[ buffergeometry.id ];
+
+			if ( attribute ) {
+
+				scope.attributes.remove( attribute );
+				delete scope.wireframeAttributes[ buffergeometry.id ];
+
+			}
+
+			//
+
+			scope.infoMemory.geometries --;
 
 		}
-
-		for ( let name in buffergeometry.attributes ) {
-
-			this.attributes.remove( buffergeometry.attributes[ name ] );
-
-		}
-
-		geometry.removeEventListener( 'dispose', this.onGeometryDispose );
-
-		delete this.geometries[ geometry.id ];
-
-		// TODO Remove duplicate code
-
-		let attribute = this.wireframeAttributes[ geometry.id ];
-
-		if ( attribute ) {
-
-			this.attributes.remove( attribute );
-			delete this.wireframeAttributes[ geometry.id ];
-
-		}
-
-		attribute = this.wireframeAttributes[ buffergeometry.id ];
-
-		if ( attribute ) {
-
-			this.attributes.remove( attribute );
-			delete this.wireframeAttributes[ buffergeometry.id ];
-
-		}
-
-		//
-
-		this.infoMemory.geometries --;
-
-	}
+	}(this);
 
 	get( object : Object3D, geometry : Geometry | BufferGeometry ) {
 

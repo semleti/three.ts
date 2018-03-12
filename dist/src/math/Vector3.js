@@ -11,10 +11,13 @@ import { Quaternion } from './Quaternion';
  */
 var Vector3 = /** @class */ (function () {
     function Vector3(x, y, z) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (z === void 0) { z = 0; }
         this.isVector3 = true;
-        this.x = x || 0;
-        this.y = y || 0;
-        this.z = z || 0;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
     Vector3.prototype.set = function (x, y, z) {
         this.x = x;

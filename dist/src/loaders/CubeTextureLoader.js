@@ -6,8 +6,9 @@ import { CubeTexture } from '../textures/CubeTexture';
 import { DefaultLoadingManager } from './LoadingManager';
 var CubeTextureLoader = /** @class */ (function () {
     function CubeTextureLoader(manager) {
+        if (manager === void 0) { manager = DefaultLoadingManager; }
         this.crossOrigin = 'Anonymous';
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        this.manager = manager;
     }
     CubeTextureLoader.prototype.load = function (urls, onLoad, onProgress, onError) {
         var texture = new CubeTexture();

@@ -13,20 +13,21 @@ export class EllipseCurve extends Curve {
 	aClockwise : boolean;
 	aRotation : number;
 	isEllipseCurve : boolean = true;
-	constructor( aX? : number, aY? : number, xRadius? : number, yRadius? : number, aStartAngle? : number, aEndAngle? : number, aClockwise? : boolean, aRotation? : number ){
+	constructor( aX : number = 0, aY : number = 0, xRadius : number = 1, yRadius : number = 1, aStartAngle : number = 0,
+		aEndAngle : number = 2 * Math.PI, aClockwise : boolean = false, aRotation : number = 0 ){
 		super();
-		this.aX = aX || 0;
-		this.aY = aY || 0;
+		this.aX = aX;
+		this.aY = aY;
 
-		this.xRadius = xRadius || 1;
-		this.yRadius = yRadius || 1;
+		this.xRadius = xRadius;
+		this.yRadius = yRadius;
 
-		this.aStartAngle = aStartAngle || 0;
-		this.aEndAngle = aEndAngle || 2 * Math.PI;
+		this.aStartAngle = aStartAngle;
+		this.aEndAngle = aEndAngle;
 
-		this.aClockwise = aClockwise || false;
+		this.aClockwise = aClockwise;
 
-		this.aRotation = aRotation || 0;
+		this.aRotation = aRotation;
 
 	}
 

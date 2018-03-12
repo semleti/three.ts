@@ -7,11 +7,15 @@
  */
 var Vector4 = /** @class */ (function () {
     function Vector4(x, y, z, w) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        if (z === void 0) { z = 0; }
+        if (w === void 0) { w = 1; }
         this.isVector4 = true;
-        this.x = x || 0;
-        this.y = y || 0;
-        this.z = z || 0;
-        this.w = (w !== undefined) ? w : 1;
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.w = w;
     }
     Vector4.prototype.set = function (x, y, z, w) {
         this.x = x;

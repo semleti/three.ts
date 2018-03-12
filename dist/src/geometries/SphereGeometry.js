@@ -43,6 +43,13 @@ export { SphereGeometry };
 var SphereBufferGeometry = /** @class */ (function (_super) {
     __extends(SphereBufferGeometry, _super);
     function SphereBufferGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength) {
+        if (radius === void 0) { radius = 1; }
+        if (widthSegments === void 0) { widthSegments = 8; }
+        if (heightSegments === void 0) { heightSegments = 6; }
+        if (phiStart === void 0) { phiStart = 0; }
+        if (phiLength === void 0) { phiLength = Math.PI * 2; }
+        if (thetaStart === void 0) { thetaStart = 0; }
+        if (thetaLength === void 0) { thetaLength = Math.PI; }
         var _this = _super.call(this) || this;
         _this.type = 'SphereBufferGeometry';
         _this.parameters = {
@@ -54,13 +61,8 @@ var SphereBufferGeometry = /** @class */ (function (_super) {
             thetaStart: thetaStart,
             thetaLength: thetaLength
         };
-        radius = radius || 1;
-        widthSegments = Math.max(3, Math.floor(widthSegments) || 8);
-        heightSegments = Math.max(2, Math.floor(heightSegments) || 6);
-        phiStart = phiStart !== undefined ? phiStart : 0;
-        phiLength = phiLength !== undefined ? phiLength : Math.PI * 2;
-        thetaStart = thetaStart !== undefined ? thetaStart : 0;
-        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI;
+        widthSegments = Math.max(3, Math.floor(widthSegments));
+        heightSegments = Math.max(2, Math.floor(heightSegments));
         var thetaEnd = thetaStart + thetaLength;
         var ix, iy;
         var index = 0;

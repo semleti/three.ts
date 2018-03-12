@@ -91,12 +91,12 @@ export class CatmullRomCurve3 extends Curve {
 	curveType : string;
 	tension : number;
 	isCatmullRomCurve3 :boolean = true;
-	constructor( points?, closed?, curveType?, tension? ){
+	constructor( points : Array<Vector3> = [], closed : boolean = false, curveType  :string = 'centripital', tension : number = 0.5 ){
 		super();
-		this.points = points || [];
-		this.closed = closed || false;
-		this.curveType = curveType || 'centripetal';
-		this.tension = tension || 0.5;
+		this.points = points;
+		this.closed = closed;
+		this.curveType = curveType;
+		this.tension = tension;
 	}
 
 

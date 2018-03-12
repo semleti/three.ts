@@ -23,6 +23,7 @@ import { _Math } from '../math/Math';
  */
 var AnimationClip = /** @class */ (function () {
     function AnimationClip(name, duration, tracks) {
+        if (duration === void 0) { duration = -1; }
         this.name = name;
         this.tracks = tracks;
         this.duration = (duration !== undefined) ? duration : -1;

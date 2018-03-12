@@ -36,7 +36,8 @@ import * as Geometries from '../geometries/Geometries';
  */
 var ObjectLoader = /** @class */ (function () {
     function ObjectLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
         this.texturePath = '';
     }
     ObjectLoader.prototype.load = function (url, onLoad, onProgress, onError) {

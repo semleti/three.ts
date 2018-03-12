@@ -42,6 +42,12 @@ export { RingGeometry };
 var RingBufferGeometry = /** @class */ (function (_super) {
     __extends(RingBufferGeometry, _super);
     function RingBufferGeometry(innerRadius, outerRadius, thetaSegments, phiSegments, thetaStart, thetaLength) {
+        if (innerRadius === void 0) { innerRadius = 0.5; }
+        if (outerRadius === void 0) { outerRadius = 1; }
+        if (thetaSegments === void 0) { thetaSegments = 8; }
+        if (phiSegments === void 0) { phiSegments = 1; }
+        if (thetaStart === void 0) { thetaStart = 0; }
+        if (thetaLength === void 0) { thetaLength = Math.PI * 2; }
         var _this = _super.call(this) || this;
         _this.type = 'RingBufferGeometry';
         _this.parameters = {
@@ -52,12 +58,8 @@ var RingBufferGeometry = /** @class */ (function (_super) {
             thetaStart: thetaStart,
             thetaLength: thetaLength
         };
-        innerRadius = innerRadius || 0.5;
-        outerRadius = outerRadius || 1;
-        thetaStart = thetaStart !== undefined ? thetaStart : 0;
-        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
-        thetaSegments = thetaSegments !== undefined ? Math.max(3, thetaSegments) : 8;
-        phiSegments = phiSegments !== undefined ? Math.max(1, phiSegments) : 1;
+        thetaSegments = Math.max(3, thetaSegments);
+        phiSegments = Math.max(1, phiSegments);
         // buffers
         var indices = [];
         var vertices = [];

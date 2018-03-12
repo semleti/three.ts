@@ -5,8 +5,9 @@ import { Cache } from './Cache';
 import { DefaultLoadingManager } from './LoadingManager';
 var ImageLoader = /** @class */ (function () {
     function ImageLoader(manager) {
+        if (manager === void 0) { manager = DefaultLoadingManager; }
         this.crossOrigin = 'Anonymous';
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        this.manager = manager;
     }
     ImageLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         if (url === undefined)

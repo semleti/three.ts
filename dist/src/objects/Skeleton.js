@@ -8,7 +8,7 @@ import { Matrix4 } from '../math/Matrix4';
 var Skeleton = /** @class */ (function () {
     function Skeleton(bones, boneInverses) {
         // copy the bone array
-        bones = bones || [];
+        if (bones === void 0) { bones = []; }
         this.bones = bones.slice(0);
         this.boneMatrices = new Float32Array(this.bones.length * 16);
         // use the supplied bone inverses or calculate the inverses

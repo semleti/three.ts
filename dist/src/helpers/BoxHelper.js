@@ -20,7 +20,8 @@ import { BufferGeometry } from '../core/BufferGeometry';
 var BoxHelper = /** @class */ (function (_super) {
     __extends(BoxHelper, _super);
     function BoxHelper(object, color) {
-        var _this = _super.call(this, BoxHelper.constructGeom(), new LineBasicMaterial({ color: color || 0xffff00 })) || this;
+        if (color === void 0) { color = 0xffff00; }
+        var _this = _super.call(this, BoxHelper.constructGeom(), new LineBasicMaterial({ color: color })) || this;
         _this.object = object;
         _this.matrixAutoUpdate = false;
         _this.update();

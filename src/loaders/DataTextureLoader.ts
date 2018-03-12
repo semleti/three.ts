@@ -13,9 +13,9 @@ export class DataTextureLoader {
 
 	manager : LoadingManager;
 	_parser : any;
-	constructor( manager : LoadingManager ){
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
 
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+		this.manager = manager;
 	
 		// override in sub classes
 		this._parser = null;

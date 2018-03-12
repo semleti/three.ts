@@ -11,9 +11,9 @@ import { Matrix3, Matrix4 } from '../Three';
 export class Sphere {
 	center : Vector3;
 	radius : number;
-	constructor( center? : Vector3, radius? : number ){
+	constructor( center? : Vector3, radius : number = 0 ){
 		this.center = ( center !== undefined ) ? center : new Vector3();
-		this.radius = ( radius !== undefined ) ? radius : 0;
+		this.radius = radius;
 	}
 	
 	set ( center : Vector3, radius : number ) : Sphere {

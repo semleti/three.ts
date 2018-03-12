@@ -16,7 +16,7 @@ export class Face3 {
 	color : Color;
 	vertexColors : Array<Color>;
 	materialIndex : number;
-	constructor( a? : number, b? : number, c? : number, normal? : Vector3 | Array<Vector3>, color? : Color | Array<Color>, materialIndex? : number ){
+	constructor( a? : number, b? : number, c? : number, normal? : Vector3 | Array<Vector3>, color? : Color | Array<Color>, materialIndex : number = 0 ){
 		this.a = a;
 		this.b = b;
 		this.c = c;
@@ -27,7 +27,7 @@ export class Face3 {
 		this.color = ( color && (color as Color).isColor ) ? color as Color : new Color();
 		this.vertexColors = Array.isArray( color ) ? color : [];
 
-		this.materialIndex = materialIndex !== undefined ? materialIndex : 0;
+		this.materialIndex = materialIndex;
 
 	}
 

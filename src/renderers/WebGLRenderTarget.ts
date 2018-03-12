@@ -29,7 +29,7 @@ export class WebGLRenderTarget extends EventDispatcher {
 	stencilBuffer : boolean;
 	depthTexture : DepthTexture;
 	isWebGLRenderTarget : boolean = true;
-	constructor( width? : number, height? : number, options? : any ){
+	constructor( width? : number, height? : number, options : any = {} ){
 		super();
 
 		this.width = width;
@@ -39,8 +39,6 @@ export class WebGLRenderTarget extends EventDispatcher {
 		this.scissorTest = false;
 	
 		this.viewport = new Vector4( 0, 0, width, height );
-	
-		options = options || {};
 	
 		if ( options.minFilter === undefined ) options.minFilter = LinearFilter;
 	

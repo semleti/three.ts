@@ -6,7 +6,8 @@ import { DefaultLoadingManager } from './LoadingManager';
  */
 var AnimationLoader = /** @class */ (function () {
     function AnimationLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
     }
     AnimationLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         var scope = this;

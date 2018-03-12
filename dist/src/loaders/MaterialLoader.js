@@ -7,7 +7,8 @@ import * as Materials from '../materials/Materials';
  */
 var MaterialLoader = /** @class */ (function () {
     function MaterialLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
         this.textures = {};
     }
     MaterialLoader.prototype.load = function (url, onLoad, onProgress, onError) {

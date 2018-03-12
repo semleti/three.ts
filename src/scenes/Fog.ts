@@ -9,12 +9,12 @@ export class Fog {
 	name : string = '';
 	color;near;far;
 	isFog  : boolean= true;
-	constructor( color : number, near : number, far : number ){
+	constructor( color : number, near : number = 1, far : number = 1000 ){
 
 		this.color = new Color( color );
 	
-		this.near = ( near !== undefined ) ? near : 1;
-		this.far = ( far !== undefined ) ? far : 1000;
+		this.near = near;
+		this.far = far;
 	}
 
 	clone  () : Fog {

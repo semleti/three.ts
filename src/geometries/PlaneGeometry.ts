@@ -33,7 +33,7 @@ export class PlaneGeometry extends Geometry {
 export class PlaneBufferGeometry extends BufferGeometry {
 	
 	type : string = 'PlaneBufferGeometry';
-	constructor( width : number, height : number, widthSegments? : number, heightSegments? : number ){
+	constructor( width : number = 1, height : number = 1, widthSegments : number = 1, heightSegments : number = 1 ){
 		super();
 
 		this.parameters = {
@@ -43,14 +43,11 @@ export class PlaneBufferGeometry extends BufferGeometry {
 			heightSegments: heightSegments
 		};
 	
-		width = width || 1;
-		height = height || 1;
-	
 		let width_half = width / 2;
 		let height_half = height / 2;
 	
-		let gridX = Math.floor( widthSegments ) || 1;
-		let gridY = Math.floor( heightSegments ) || 1;
+		let gridX = Math.floor( widthSegments );
+		let gridY = Math.floor( heightSegments );
 	
 		let gridX1 = gridX + 1;
 		let gridY1 = gridY + 1;

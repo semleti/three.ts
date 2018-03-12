@@ -20,7 +20,7 @@ export class DirectionalLightHelper extends Object3D {
 	lightPlane : Line;
 	targetLine : Line;
 	size : number;
-	constructor( light : DirectionalLight, size : number, color : Color ){
+	constructor( light : DirectionalLight, size : number = 1, color : Color ){
 		super();
 		this.size = size;
 		this.light = light;
@@ -30,8 +30,6 @@ export class DirectionalLightHelper extends Object3D {
 		this.matrixAutoUpdate = false;
 
 		this.color = color;
-
-		if ( size === undefined ) size = 1;
 
 		let geometry = new BufferGeometry();
 		geometry.addAttribute( 'position', new Float32BufferAttribute( [

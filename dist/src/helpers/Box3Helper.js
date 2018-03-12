@@ -19,10 +19,11 @@ import { BufferGeometry } from '../core/BufferGeometry';
 var Box3Helper = /** @class */ (function (_super) {
     __extends(Box3Helper, _super);
     function Box3Helper(box, hex) {
+        if (hex === void 0) { hex = 0xffff00; }
         var _this = _super.call(this, box, hex) || this;
         _this.type = 'Box3Helper';
         _this.box = box;
-        var color = (hex !== undefined) ? hex : 0xffff00;
+        var color = hex;
         var indices = new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6, 6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7]);
         var positions = [1, 1, 1, -1, 1, 1, -1, -1, 1, 1, -1, 1, 1, 1, -1, -1, 1, -1, -1, -1, -1, 1, -1, -1];
         var geometry = new BufferGeometry();

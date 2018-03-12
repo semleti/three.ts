@@ -28,11 +28,11 @@ export class DirectGeometry {
 
 	// update flags
 
-	verticesNeedUpdate = false;
-	normalsNeedUpdate = false;
-	colorsNeedUpdate = false;
-	uvsNeedUpdate = false;
-	groupsNeedUpdate = false;
+	verticesNeedUpdate : boolean = false;
+	normalsNeedUpdate : boolean = false;
+	colorsNeedUpdate : boolean = false;
+	uvsNeedUpdate : boolean = false;
+	groupsNeedUpdate : boolean = false;
 	constructor(){
 
 	}

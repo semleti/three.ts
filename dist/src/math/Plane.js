@@ -6,8 +6,9 @@ import { Vector3 } from './Vector3';
 var Plane = /** @class */ (function () {
     function Plane(normal, constant) {
         // normal is assumed to be normalized
+        if (constant === void 0) { constant = 0; }
         this.normal = (normal !== undefined) ? normal : new Vector3(1, 0, 0);
-        this.constant = (constant !== undefined) ? constant : 0;
+        this.constant = constant;
     }
     Plane.prototype.set = function (normal, constant) {
         this.normal.copy(normal);

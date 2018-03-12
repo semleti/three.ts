@@ -7,8 +7,9 @@ import { Texture } from '../textures/Texture';
 import { DefaultLoadingManager } from './LoadingManager';
 var TextureLoader = /** @class */ (function () {
     function TextureLoader(manager) {
+        if (manager === void 0) { manager = DefaultLoadingManager; }
         this.crossOrigin = 'Anonymous';
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        this.manager = manager;
     }
     TextureLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         var texture = new Texture();

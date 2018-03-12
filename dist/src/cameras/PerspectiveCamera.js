@@ -20,6 +20,10 @@ import { _Math } from '../math/Math';
 var PerspectiveCamera = /** @class */ (function (_super) {
     __extends(PerspectiveCamera, _super);
     function PerspectiveCamera(fov, aspect, near, far) {
+        if (fov === void 0) { fov = 50; }
+        if (aspect === void 0) { aspect = 1; }
+        if (near === void 0) { near = 0.1; }
+        if (far === void 0) { far = 2000; }
         var _this = _super.call(this) || this;
         _this.type = 'PerspectiveCamera';
         _this.zoom = 1;
@@ -28,10 +32,10 @@ var PerspectiveCamera = /** @class */ (function (_super) {
         _this.filmGauge = 35; // width of the film (default in millimeters)
         _this.filmOffset = 0; // horizontal film offset (same unit as gauge)
         _this.isPerspectiveCamera = true;
-        _this.fov = fov !== undefined ? fov : 50;
-        _this.near = near !== undefined ? near : 0.1;
-        _this.far = far !== undefined ? far : 2000;
-        _this.aspect = aspect !== undefined ? aspect : 1;
+        _this.fov = fov;
+        _this.near = near;
+        _this.far = far;
+        _this.aspect = aspect;
         _this.updateProjectionMatrix();
         return _this;
     }

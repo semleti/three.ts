@@ -16,12 +16,12 @@ export class Raycaster {
 	near : number;
 	far : number;
 	params;
-	constructor( origin : Vector3, direction : Vector3, near : number, far : number ){
+	constructor( origin : Vector3, direction : Vector3, near : number = 0, far : number = Infinity ){
 		this.ray = new Ray( origin, direction );
 		// direction is assumed to be normalized (for accurate distance calculations)
 
-		this.near = near || 0;
-		this.far = far || Infinity;
+		this.near = near;
+		this.far = far;
 
 		this.params = {
 			Mesh: {},

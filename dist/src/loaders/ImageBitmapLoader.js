@@ -5,13 +5,14 @@ import { Cache } from './Cache';
 import { DefaultLoadingManager } from './LoadingManager';
 var ImageBitmapLoader = /** @class */ (function () {
     function ImageBitmapLoader(manager) {
+        if (manager === void 0) { manager = DefaultLoadingManager; }
         if (typeof createImageBitmap === 'undefined') {
             console.warn('THREE.ImageBitmapLoader: createImageBitmap() not supported.');
         }
         if (typeof fetch === 'undefined') {
             console.warn('THREE.ImageBitmapLoader: fetch() not supported.');
         }
-        this.manager = manager !== undefined ? manager : DefaultLoadingManager;
+        this.manager = manager;
         this.options = undefined;
     }
     ImageBitmapLoader.prototype.setOptions = function (options) {

@@ -16,10 +16,10 @@ export class Spherical {
 	radius : number;
 	phi : number;
 	theta : number;
-	constructor( radius? : number, phi? : number, theta? : number ){
-		this.radius = ( radius !== undefined ) ? radius : 1.0;
-		this.phi = ( phi !== undefined ) ? phi : 0; // up / down towards top and bottom pole
-		this.theta = ( theta !== undefined ) ? theta : 0; // around the equator of the sphere
+	constructor( radius : number = 1.0, phi : number = 0, theta : number = 0 ){
+		this.radius = radius;
+		this.phi = phi; // up / down towards top and bottom pole
+		this.theta = theta; // around the equator of the sphere
 	}
 
 	set ( radius : number, phi : number, theta : number ) : Spherical {

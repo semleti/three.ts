@@ -9,9 +9,10 @@ import { DefaultLoadingManager } from './LoadingManager';
  */
 var CompressedTextureLoader = /** @class */ (function () {
     function CompressedTextureLoader(manager) {
+        if (manager === void 0) { manager = DefaultLoadingManager; }
         // override in sub classes
         this._parser = null;
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        this.manager = manager;
     }
     CompressedTextureLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         var scope = this;

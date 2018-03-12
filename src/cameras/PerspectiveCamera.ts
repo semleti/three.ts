@@ -23,15 +23,15 @@ export class PerspectiveCamera extends Camera {
 	filmOffset : number = 0; // horizontal film offset (same unit as gauge)
 	isPerspectiveCamera : boolean = true;
 	bounds : Vector4;
-	constructor( fov? : number, aspect? : number, near? : number, far? : number ){
+	constructor( fov : number = 50, aspect : number = 1, near : number = 0.1, far : number = 2000 ){
 		super();
 
-		this.fov = fov !== undefined ? fov : 50;
+		this.fov = fov;
 
-		this.near = near !== undefined ? near : 0.1;
-		this.far = far !== undefined ? far : 2000;
+		this.near = near;
+		this.far = far;
 
-		this.aspect = aspect !== undefined ? aspect : 1;
+		this.aspect = aspect;
 
 		this.updateProjectionMatrix();
 	}

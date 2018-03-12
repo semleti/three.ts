@@ -46,6 +46,7 @@ export { ShapeGeometry };
 var ShapeBufferGeometry = /** @class */ (function (_super) {
     __extends(ShapeBufferGeometry, _super);
     function ShapeBufferGeometry(shapes, curveSegments) {
+        if (curveSegments === void 0) { curveSegments = 12; }
         var _this = _super.call(this) || this;
         _this.type = 'ShapeBufferGeometry';
         // buffers
@@ -60,7 +61,7 @@ var ShapeBufferGeometry = /** @class */ (function (_super) {
             shapes: shapes,
             curveSegments: curveSegments
         };
-        _this.curveSegments = curveSegments || 12;
+        _this.curveSegments = curveSegments;
         // allow single and array values for "shapes" parameter
         if (Array.isArray(shapes) === false) {
             _this.addShape(shapes);

@@ -6,7 +6,8 @@ import { DefaultLoadingManager } from './LoadingManager';
  */
 var AudioLoader = /** @class */ (function () {
     function AudioLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
     }
     AudioLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         var loader = new FileLoader(this.manager);

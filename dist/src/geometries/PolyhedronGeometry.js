@@ -42,15 +42,15 @@ export { PolyhedronGeometry };
 var PolyhedronBufferGeometry = /** @class */ (function (_super) {
     __extends(PolyhedronBufferGeometry, _super);
     function PolyhedronBufferGeometry(vertices, indices, radius, detail) {
+        if (vertices === void 0) { vertices = []; }
+        if (indices === void 0) { indices = []; }
+        if (radius === void 0) { radius = 1; }
+        if (detail === void 0) { detail = 0; }
         var _this = _super.call(this) || this;
         _this.type = 'PolyhedronBufferGeometry';
         // default buffer data
         _this.vertexBuffer = [];
         _this.uvBuffer = [];
-        vertices = vertices || [];
-        indices = indices || [];
-        radius = radius || 1;
-        detail = detail || 0;
         _this.parameters = {
             vertices: vertices,
             indices: indices,

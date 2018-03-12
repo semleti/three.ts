@@ -6,6 +6,7 @@ import { Vector3 } from '../math/Vector3';
  */
 var Face3 = /** @class */ (function () {
     function Face3(a, b, c, normal, color, materialIndex) {
+        if (materialIndex === void 0) { materialIndex = 0; }
         this.a = a;
         this.b = b;
         this.c = c;
@@ -13,7 +14,7 @@ var Face3 = /** @class */ (function () {
         this.vertexNormals = Array.isArray(normal) ? normal : [];
         this.color = (color && color.isColor) ? color : new Color();
         this.vertexColors = Array.isArray(color) ? color : [];
-        this.materialIndex = materialIndex !== undefined ? materialIndex : 0;
+        this.materialIndex = materialIndex;
     }
     Face3.prototype.clone = function () {
         return new Face3().copy(this);

@@ -11,6 +11,7 @@ import { WrapAroundEnding, ZeroCurvatureEnding, ZeroSlopeEnding, LoopPingPong, L
  */
 var AnimationAction = /** @class */ (function () {
     function AnimationAction(mixer, clip, localRoot) {
+        if (localRoot === void 0) { localRoot = null; }
         this._cacheIndex = null; // for the memory manager
         this._byClipCacheIndex = null; // for the memory manager
         this._timeScaleInterpolant = null;
@@ -35,7 +36,7 @@ var AnimationAction = /** @class */ (function () {
         this.zeroSlopeAtEnd = true; // clips for start, loop and end
         this._mixer = mixer;
         this._clip = clip;
-        this._localRoot = localRoot || null;
+        this._localRoot = localRoot;
         var tracks = clip.tracks, nTracks = tracks.length, interpolants = new Array(nTracks);
         var interpolantSettings = {
             endingStart: ZeroCurvatureEnding,

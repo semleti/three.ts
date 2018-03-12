@@ -17,16 +17,20 @@ import { Object3D } from '../core/Object3D';
 var SpotLight = /** @class */ (function (_super) {
     __extends(SpotLight, _super);
     function SpotLight(color, intensity, distance, angle, penumbra, decay) {
+        if (distance === void 0) { distance = 0; }
+        if (angle === void 0) { angle = Math.PI / 3; }
+        if (penumbra === void 0) { penumbra = 0; }
+        if (decay === void 0) { decay = 1; }
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'SpotLight';
         _this.isSpotLight = true;
         _this.position.copy(Object3D.DefaultUp);
         _this.updateMatrix();
         _this.target = new Object3D();
-        _this.distance = (distance !== undefined) ? distance : 0;
-        _this.angle = (angle !== undefined) ? angle : Math.PI / 3;
-        _this.penumbra = (penumbra !== undefined) ? penumbra : 0;
-        _this.decay = (decay !== undefined) ? decay : 1; // for physically correct lights, should be 2.
+        _this.distance = distance;
+        _this.angle = angle;
+        _this.penumbra = penumbra;
+        _this.decay = decay; // for physically correct lights, should be 2.
         _this.shadow = new SpotLightShadow();
         return _this;
     }

@@ -839,11 +839,11 @@ export function BinaryTextureLoader( manager ) {
 		console.error( 'THREE.Geometry: .computeTangents() has been removed.' );
 
 	},
-	computeLineDistances: function () {
+	/*computeLineDistances: function () {
 
 		console.error( 'THREE.Geometry: .computeLineDistances() has been removed. Use THREE.Line.computeLineDistances() instead.' );
 
-	}
+	}*/
 
 } );
 

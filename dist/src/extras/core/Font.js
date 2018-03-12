@@ -10,10 +10,8 @@ var Font = /** @class */ (function () {
         this.data = data;
     }
     Font.prototype.generateShapes = function (text, size, divisions) {
-        if (size === undefined)
-            size = 100;
-        if (divisions === undefined)
-            divisions = 4;
+        if (size === void 0) { size = 100; }
+        if (divisions === void 0) { divisions = 4; }
         var shapes = [];
         var paths = Font.createPaths(text, size, divisions, this.data);
         for (var p = 0, pl = paths.length; p < pl; p++) {

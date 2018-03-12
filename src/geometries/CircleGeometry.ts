@@ -36,7 +36,7 @@ export class CircleBufferGeometry extends BufferGeometry {
 	vertices : Array<number> = [];
 	normals : Array<number> = [];
 	uvs : Array<number> = [];
-	constructor( radius : number, segments : number, thetaStart : number, thetaLength : number ){
+	constructor( radius : number = 1, segments : number = 8, thetaStart : number = 0, thetaLength : number = Math.PI * 2 ){
 		super();
 		this.parameters = {
 			radius: radius,
@@ -45,11 +45,7 @@ export class CircleBufferGeometry extends BufferGeometry {
 			thetaLength: thetaLength
 		};
 	
-		radius = radius || 1;
-		segments = segments !== undefined ? Math.max( 3, segments ) : 8;
-	
-		thetaStart = thetaStart !== undefined ? thetaStart : 0;
-		thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
+		segments = Math.max( 3, segments );
 
 		// helper variables
 

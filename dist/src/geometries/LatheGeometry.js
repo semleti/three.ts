@@ -43,6 +43,9 @@ export { LatheGeometry };
 var LatheBufferGeometry = /** @class */ (function (_super) {
     __extends(LatheBufferGeometry, _super);
     function LatheBufferGeometry(points, segments, phiStart, phiLength) {
+        if (segments === void 0) { segments = 12; }
+        if (phiStart === void 0) { phiStart = 0; }
+        if (phiLength === void 0) { phiLength = Math.PI * 2; }
         var _this = _super.call(this) || this;
         _this.type = 'LatheBufferGeometry';
         _this.parameters = {
@@ -51,9 +54,7 @@ var LatheBufferGeometry = /** @class */ (function (_super) {
             phiStart: phiStart,
             phiLength: phiLength
         };
-        segments = Math.floor(segments) || 12;
-        phiStart = phiStart || 0;
-        phiLength = phiLength || Math.PI * 2;
+        segments = Math.floor(segments);
         // clamp phiLength so it's in range of [ 0, 2PI ]
         phiLength = _Math.clamp(phiLength, 0, Math.PI * 2);
         // buffers

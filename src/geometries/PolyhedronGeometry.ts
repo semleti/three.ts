@@ -36,13 +36,9 @@ export class PolyhedronBufferGeometry extends BufferGeometry {
 	// default buffer data
 	vertexBuffer : Array<number> = [];
 	uvBuffer : Array<number> = [];
-	constructor( vertices : Array<number>, indices : Array<number>, radius? : number, detail? : number )
+	constructor( vertices : Array<number> = [], indices : Array<number> = [], radius : number = 1, detail : number = 0 )
 	{
 		super();
-		vertices = vertices || [];
-		indices = indices || [];
-		radius = radius || 1;
-		detail = detail || 0;
 		this.parameters = {
 			vertices: vertices,
 			indices: indices,

@@ -6,7 +6,8 @@ import { DefaultLoadingManager } from './LoadingManager';
  */
 var FontLoader = /** @class */ (function () {
     function FontLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
     }
     FontLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         var scope = this;

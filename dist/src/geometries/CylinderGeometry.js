@@ -44,6 +44,14 @@ export { CylinderGeometry };
 var CylinderBufferGeometry = /** @class */ (function (_super) {
     __extends(CylinderBufferGeometry, _super);
     function CylinderBufferGeometry(radiusTop, radiusBottom, height, radialSegments, heightSegments, openEnded, thetaStart, thetaLength) {
+        if (radiusTop === void 0) { radiusTop = 1; }
+        if (radiusBottom === void 0) { radiusBottom = 1; }
+        if (height === void 0) { height = 1; }
+        if (radialSegments === void 0) { radialSegments = 8; }
+        if (heightSegments === void 0) { heightSegments = 1; }
+        if (openEnded === void 0) { openEnded = false; }
+        if (thetaStart === void 0) { thetaStart = 0; }
+        if (thetaLength === void 0) { thetaLength = Math.PI * 2; }
         var _this = _super.call(this) || this;
         _this.type = 'CylinderBufferGeometry';
         // buffers
@@ -54,14 +62,8 @@ var CylinderBufferGeometry = /** @class */ (function (_super) {
         _this.indx = 0;
         _this.indexArray = [];
         _this.groupStart = 0;
-        radiusTop = radiusTop !== undefined ? radiusTop : 1;
-        radiusBottom = radiusBottom !== undefined ? radiusBottom : 1;
-        height = height || 1;
-        radialSegments = Math.floor(radialSegments) || 8;
-        heightSegments = Math.floor(heightSegments) || 1;
-        openEnded = openEnded !== undefined ? openEnded : false;
-        thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
-        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
+        radialSegments = Math.floor(radialSegments);
+        heightSegments = Math.floor(heightSegments);
         _this.parameters = {
             radiusTop: radiusTop,
             radiusBottom: radiusBottom,

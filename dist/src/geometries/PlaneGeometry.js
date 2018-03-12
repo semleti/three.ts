@@ -38,6 +38,10 @@ export { PlaneGeometry };
 var PlaneBufferGeometry = /** @class */ (function (_super) {
     __extends(PlaneBufferGeometry, _super);
     function PlaneBufferGeometry(width, height, widthSegments, heightSegments) {
+        if (width === void 0) { width = 1; }
+        if (height === void 0) { height = 1; }
+        if (widthSegments === void 0) { widthSegments = 1; }
+        if (heightSegments === void 0) { heightSegments = 1; }
         var _this = _super.call(this) || this;
         _this.type = 'PlaneBufferGeometry';
         _this.parameters = {
@@ -46,12 +50,10 @@ var PlaneBufferGeometry = /** @class */ (function (_super) {
             widthSegments: widthSegments,
             heightSegments: heightSegments
         };
-        width = width || 1;
-        height = height || 1;
         var width_half = width / 2;
         var height_half = height / 2;
-        var gridX = Math.floor(widthSegments) || 1;
-        var gridY = Math.floor(heightSegments) || 1;
+        var gridX = Math.floor(widthSegments);
+        var gridY = Math.floor(heightSegments);
         var gridX1 = gridX + 1;
         var gridY1 = gridY + 1;
         var segment_width = width / gridX;

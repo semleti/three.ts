@@ -10,9 +10,12 @@ import { _Math } from './Math';
  */
 var Spherical = /** @class */ (function () {
     function Spherical(radius, phi, theta) {
-        this.radius = (radius !== undefined) ? radius : 1.0;
-        this.phi = (phi !== undefined) ? phi : 0; // up / down towards top and bottom pole
-        this.theta = (theta !== undefined) ? theta : 0; // around the equator of the sphere
+        if (radius === void 0) { radius = 1.0; }
+        if (phi === void 0) { phi = 0; }
+        if (theta === void 0) { theta = 0; }
+        this.radius = radius;
+        this.phi = phi; // up / down towards top and bottom pole
+        this.theta = theta; // around the equator of the sphere
     }
     Spherical.prototype.set = function (radius, phi, theta) {
         this.radius = radius;

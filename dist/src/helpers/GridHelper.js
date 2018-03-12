@@ -19,7 +19,11 @@ import { Color } from '../math/Color';
 var GridHelper = /** @class */ (function (_super) {
     __extends(GridHelper, _super);
     function GridHelper(size, divisions, color1, color2) {
-        return _super.call(this, GridHelper.constructGeom(divisions || 10, size = size || 10, new Color(color1 !== undefined ? color1 : 0x444444), new Color(color2 !== undefined ? color2 : 0x888888)), { vertexColors: VertexColors }) || this;
+        if (size === void 0) { size = 10; }
+        if (divisions === void 0) { divisions = 10; }
+        if (color1 === void 0) { color1 = 0x444444; }
+        if (color2 === void 0) { color2 = 0x888888; }
+        return _super.call(this, GridHelper.constructGeom(divisions, size, new Color(color1), new Color(color2)), { vertexColors: VertexColors }) || this;
     }
     GridHelper.constructGeom = function (divisions, size, color1, color2) {
         var center = divisions / 2;

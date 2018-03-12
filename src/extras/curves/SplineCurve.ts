@@ -8,9 +8,9 @@ export class SplineCurve extends Curve {
 	type : string = 'SplineCurve';
 	points : Array<Vector2>;
 	isSplineCurve : boolean = true;
-	constructor( points? : Array<Vector2> ){
+	constructor( points : Array<Vector2> = [] ){
 		super();
-		this.points = points || [];
+		this.points = points;
 	}
 
 	getPoint ( t : number, optionalTarget? : Vector2 ) : Vector2 {

@@ -14,8 +14,8 @@ import { Object3D } from '../Three';
 export class BoxHelper extends LineSegments {
 
 	object : Object3D;
-	constructor( object : Object3D, color : number ){
-		super(BoxHelper.constructGeom(), new LineBasicMaterial( { color: color || 0xffff00} ));
+	constructor( object : Object3D, color : number = 0xffff00 ){
+		super(BoxHelper.constructGeom(), new LineBasicMaterial( { color: color} ));
 		this.object = object;
 	
 		this.matrixAutoUpdate = false;

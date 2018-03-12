@@ -15,9 +15,10 @@ import { PerspectiveCamera } from './PerspectiveCamera';
 var ArrayCamera = /** @class */ (function (_super) {
     __extends(ArrayCamera, _super);
     function ArrayCamera(array) {
+        if (array === void 0) { array = []; }
         var _this = _super.call(this) || this;
         _this.isArrayCamera = true;
-        _this.cameras = array || [];
+        _this.cameras = array;
         return _this;
     }
     return ArrayCamera;

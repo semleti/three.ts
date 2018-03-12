@@ -61,14 +61,14 @@ export class ShapeBufferGeometry extends BufferGeometry {
 	groupStart : number = 0;
 	groupCount : number = 0;
 	curveSegments : number;
-	constructor( shapes : Shape | Array<Shape>, curveSegments? : number ){
+	constructor( shapes : Shape | Array<Shape>, curveSegments : number = 12 ){
 		super();
 		this.parameters = {
 			shapes: shapes,
 			curveSegments: curveSegments
 		};
 	
-		this.curveSegments = curveSegments || 12;
+		this.curveSegments = curveSegments;
 	
 		
 	

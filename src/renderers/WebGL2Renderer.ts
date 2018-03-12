@@ -14,10 +14,9 @@ export class WebGL2Renderer {
 
 	gl;_viewport;_pixelRatio;_width;_height;_canvas;state;_premultipliedAlpha;extensions;
 	_autoClear;_autoClearColor;_autoClearDepth;_autoClearStencil;_clearColor;_clearAlpha;
-	constructor( parameters : any ){
+	constructor( parameters : any = {} ){
 
 		console.log( 'THREE.WebGL2Renderer', REVISION );
-		parameters = parameters || {};
 	
 		this._canvas = parameters.canvas !== undefined ? parameters.canvas : document.createElementNS( 'http://www.w3.org/1999/xhtml', 'canvas' ) as HTMLCanvasElement;
 		var	_context = parameters.context !== undefined ? parameters.context : null,

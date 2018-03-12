@@ -15,9 +15,10 @@ import { InterleavedBuffer } from './InterleavedBuffer';
 var InstancedInterleavedBuffer = /** @class */ (function (_super) {
     __extends(InstancedInterleavedBuffer, _super);
     function InstancedInterleavedBuffer(array, stride, meshPerAttribute) {
+        if (meshPerAttribute === void 0) { meshPerAttribute = 1; }
         var _this = _super.call(this, array, stride) || this;
         _this.isInstancedInterleavedBuffer = true;
-        _this.meshPerAttribute = meshPerAttribute || 1;
+        _this.meshPerAttribute = meshPerAttribute;
         return _this;
     }
     InstancedInterleavedBuffer.prototype.copy = function (source) {

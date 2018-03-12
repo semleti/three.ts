@@ -15,11 +15,13 @@ import { Light } from './Light';
 var RectAreaLight = /** @class */ (function (_super) {
     __extends(RectAreaLight, _super);
     function RectAreaLight(color, intensity, width, height) {
+        if (width === void 0) { width = 10; }
+        if (height === void 0) { height = 10; }
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'RectAreaLight';
         _this.isRectAreaLight = true;
-        _this.width = (width !== undefined) ? width : 10;
-        _this.height = (height !== undefined) ? height : 10;
+        _this.width = width;
+        _this.height = height;
         return _this;
     }
     RectAreaLight.prototype.clone = function () {

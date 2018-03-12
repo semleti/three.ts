@@ -18,11 +18,11 @@ export class Euler {
 	static DefaultOrder = 'XYZ';
 	
 	isEuler : boolean = true;	
-	constructor( x? : number, y? : number, z? : number, order? : string ){
-		this._x = x || 0;
-		this._y = y || 0;
-		this._z = z || 0;
-		this._order = order || Euler.DefaultOrder;
+	constructor( x : number = 0, y : number = 0, z : number = 0, order : string = Euler.DefaultOrder ){
+		this._x = x;
+		this._y = y;
+		this._z = z;
+		this._order = order;
 	}
 
 	get x () {

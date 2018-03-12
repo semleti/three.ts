@@ -8,9 +8,9 @@ import { Camera } from './Camera';
 export class ArrayCamera extends PerspectiveCamera {
 	cameras : Array<Camera>;
 	isArrayCamera : boolean = true;
-	constructor( array : Array<Camera> ){
+	constructor( array : Array<Camera> = [] ){
 		super();
-		this.cameras = array || [];
+		this.cameras = array;
 	}
 
 }

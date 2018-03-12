@@ -41,6 +41,12 @@ export { BoxGeometry };
 var BoxBufferGeometry = /** @class */ (function (_super) {
     __extends(BoxBufferGeometry, _super);
     function BoxBufferGeometry(width, height, depth, widthSegments, heightSegments, depthSegments) {
+        if (width === void 0) { width = 1; }
+        if (height === void 0) { height = 1; }
+        if (depth === void 0) { depth = 1; }
+        if (widthSegments === void 0) { widthSegments = 1; }
+        if (heightSegments === void 0) { heightSegments = 1; }
+        if (depthSegments === void 0) { depthSegments = 1; }
         var _this = _super.call(this) || this;
         _this.type = 'BoxBufferGeometry';
         // buffers
@@ -59,13 +65,10 @@ var BoxBufferGeometry = /** @class */ (function (_super) {
             heightSegments: heightSegments,
             depthSegments: depthSegments
         };
-        width = width || 1;
-        height = height || 1;
-        depth = depth || 1;
         // segments
-        widthSegments = Math.floor(widthSegments) || 1;
-        heightSegments = Math.floor(heightSegments) || 1;
-        depthSegments = Math.floor(depthSegments) || 1;
+        widthSegments = Math.floor(widthSegments);
+        heightSegments = Math.floor(heightSegments);
+        depthSegments = Math.floor(depthSegments);
         // build each side of the box geometry
         _this.buildPlane('z', 'y', 'x', -1, -1, depth, height, width, depthSegments, heightSegments, 0); // px
         _this.buildPlane('z', 'y', 'x', 1, -1, depth, height, -width, depthSegments, heightSegments, 1); // nx

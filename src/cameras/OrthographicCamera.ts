@@ -18,7 +18,7 @@ export class OrthographicCamera extends Camera {
 	//TODO: create class defined in setviewofsset
 	view = null;
 	isOrthographicCamera : boolean = true;
-	constructor( left : number, right : number, top : number, bottom : number, near : number, far : number ){
+	constructor( left : number, right : number, top : number, bottom : number, near : number = 0.1, far : number = 2000 ){
 		super();
 
 		this.left = left;
@@ -26,8 +26,8 @@ export class OrthographicCamera extends Camera {
 		this.top = top;
 		this.bottom = bottom;
 
-		this.near = ( near !== undefined ) ? near : 0.1;
-		this.far = ( far !== undefined ) ? far : 2000;
+		this.near = near;
+		this.far = far;
 
 		this.updateProjectionMatrix();
 

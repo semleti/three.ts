@@ -15,8 +15,8 @@ export class FileLoader {
 	withCredentials : boolean;
 	requestHeader : Array<string>;
 	mimeType;
-	constructor( manager : LoadingManager ){
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
+		this.manager = manager;
 	}
 
 	load ( url : string, onLoad : Function, onProgress : Function, onError : Function ) : XMLHttpRequest {

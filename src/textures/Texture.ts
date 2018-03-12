@@ -13,10 +13,11 @@ import { Matrix3 } from '../math/Matrix3';
 
 
 export class Texture extends EventDispatcher {
-	static textureId : number;
+	static textureId : number = 0;
 	id : number;
 	uuid : string;
 	name : string;
+	//{width:number,height:number,uuid:string}
 	image : any;
 	mipmaps : Array<any>;
 	mapping : number;
@@ -41,29 +42,30 @@ export class Texture extends EventDispatcher {
 	version : number;
 	onUpdate : Function = function(){};
 	isTexture : boolean = true;
-	constructor( image? : any, mapping? : number, wrapS? : number, wrapT? : number, magFilter? : number, minFilter? : number,
-		 format? : number, type? : number, anisotropy? : number, encoding? : number ){
+	constructor( image : any = Texture.DEFAULT_IMAGE, mapping : number = Texture.DEFAULT_MAPPING, wrapS : number = ClampToEdgeWrapping,
+		 wrapT : number = ClampToEdgeWrapping, magFilter : number = LinearFilter, minFilter : number = LinearMipMapLinearFilter,
+		 format : number = RGBAFormat, type : number = UnsignedByteType, anisotropy : number = 1, encoding : number = LinearEncoding ){
 		super();
 		this.id = Texture.textureId ++;
 		this.uuid = _Math.generateUUID();
 
 		this.name = '';
 	
-		this.image = image !== undefined ? image : Texture.DEFAULT_IMAGE;
+		this.image = image;
 		this.mipmaps = [];
 	
-		this.mapping = mapping !== undefined ? mapping : Texture.DEFAULT_MAPPING;
+		this.mapping = mapping;
 	
-		this.wrapS = wrapS !== undefined ? wrapS : ClampToEdgeWrapping;
-		this.wrapT = wrapT !== undefined ? wrapT : ClampToEdgeWrapping;
+		this.wrapS = wrapS;
+		this.wrapT = wrapT;
 	
-		this.magFilter = magFilter !== undefined ? magFilter : LinearFilter;
-		this.minFilter = minFilter !== undefined ? minFilter : LinearMipMapLinearFilter;
+		this.magFilter = magFilter;
+		this.minFilter = minFilter;
 	
-		this.anisotropy = anisotropy !== undefined ? anisotropy : 1;
+		this.anisotropy = anisotropy;
 	
-		this.format = format !== undefined ? format : RGBAFormat;
-		this.type = type !== undefined ? type : UnsignedByteType;
+		this.format = format;
+		this.type = type;
 	
 		this.offset = new Vector2( 0, 0 );
 		this.repeat = new Vector2( 1, 1 );
@@ -82,7 +84,7 @@ export class Texture extends EventDispatcher {
 		//
 		// Also changing the encoding after already used by a Material will not automatically make the Material
 		// update.  You need to explicitly call Material.needsUpdate to trigger it to recompile.
-		this.encoding = encoding !== undefined ? encoding : LinearEncoding;
+		this.encoding = encoding;
 	
 		this.version = 0;
 		this.onUpdate = null;
@@ -334,6 +336,6 @@ export class Texture extends EventDispatcher {
 	}
 
 	static DEFAULT_IMAGE : any = undefined;
-	static DEFAULT_MAPPING = UVMapping;
+	static DEFAULT_MAPPING : number = UVMapping;
 
 }

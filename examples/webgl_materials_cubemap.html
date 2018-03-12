@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - materials - cube reflection / refraction [Walt]</title>
+		<title>three.ts webgl - materials - cube reflection / refraction [Walt]</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -121,6 +121,7 @@
 				renderer = new THREE.WebGLRenderer();
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.setClearColor( 0xff00ff );
 				container.appendChild( renderer.domElement );
 
 				//
@@ -152,10 +153,10 @@
 			}
 
 			function createScene( geometry, m1, m2, m3 ) {
-
+				console.log("createing scene");
 				var s = 15;
 
-				var mesh = new THREE.Mesh( geometry, m1 );
+				/*var mesh = new THREE.Mesh( geometry, m1 );
 				mesh.position.z = - 100;
 				mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
 				scene.add( mesh );
@@ -170,7 +171,7 @@
 				mesh.position.x = 900;
 				mesh.position.z = - 100;
 				mesh.scale.x = mesh.scale.y = mesh.scale.z = s;
-				scene.add( mesh );
+				scene.add( mesh );*/
 
 			}
 

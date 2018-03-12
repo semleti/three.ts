@@ -22,6 +22,7 @@ import { LineBasicMaterial } from '../materials/LineBasicMaterial';
 var DirectionalLightHelper = /** @class */ (function (_super) {
     __extends(DirectionalLightHelper, _super);
     function DirectionalLightHelper(light, size, color) {
+        if (size === void 0) { size = 1; }
         var _this = _super.call(this) || this;
         _this.size = size;
         _this.light = light;
@@ -29,8 +30,6 @@ var DirectionalLightHelper = /** @class */ (function (_super) {
         _this.matrix = light.matrixWorld;
         _this.matrixAutoUpdate = false;
         _this.color = color;
-        if (size === undefined)
-            size = 1;
         var geometry = new BufferGeometry();
         geometry.addAttribute('position', new Float32BufferAttribute([
             -size, size, 0,

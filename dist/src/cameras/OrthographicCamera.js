@@ -17,6 +17,8 @@ import { Object3D } from '../core/Object3D';
 var OrthographicCamera = /** @class */ (function (_super) {
     __extends(OrthographicCamera, _super);
     function OrthographicCamera(left, right, top, bottom, near, far) {
+        if (near === void 0) { near = 0.1; }
+        if (far === void 0) { far = 2000; }
         var _this = _super.call(this) || this;
         _this.type = 'OrthographicCamera';
         _this.zoom = 1;
@@ -27,8 +29,8 @@ var OrthographicCamera = /** @class */ (function (_super) {
         _this.right = right;
         _this.top = top;
         _this.bottom = bottom;
-        _this.near = (near !== undefined) ? near : 0.1;
-        _this.far = (far !== undefined) ? far : 2000;
+        _this.near = near;
+        _this.far = far;
         _this.updateProjectionMatrix();
         return _this;
     }

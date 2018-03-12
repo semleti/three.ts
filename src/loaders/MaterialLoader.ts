@@ -12,8 +12,8 @@ export class MaterialLoader {
 
 	manager : LoadingManager;
 	textures : any;
-	constructor( manager? : LoadingManager ){
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
+		this.manager = manager;
 		this.textures = {};
 	}
 

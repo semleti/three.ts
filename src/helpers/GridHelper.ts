@@ -11,10 +11,8 @@ import { Color } from '../math/Color';
 
 export class GridHelper extends LineSegments {
 
-	constructor( size : number, divisions : number, color1 : number, color2 : number ){
-		super(GridHelper.constructGeom(divisions || 10,size = size || 10,
-			new Color( color1 !== undefined ? color1 : 0x444444 ),
-			new Color( color2 !== undefined ? color2 : 0x888888 )),
+	constructor( size : number = 10, divisions : number = 10, color1 : number = 0x444444, color2 : number = 0x888888 ){
+		super(GridHelper.constructGeom(divisions , size , new Color( color1 ), new Color( color2 )),
 			{ vertexColors: VertexColors });
 	}
 

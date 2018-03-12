@@ -47,20 +47,13 @@ export class CylinderBufferGeometry extends BufferGeometry {
 	indexArray : Array<Array<number>> = [];
 	groupStart : number = 0;
 	halfHeight : number;
-	constructor( radiusTop? : number, radiusBottom? : number, height? : number, radialSegments? : number, heightSegments? : number,
-		 openEnded? : boolean, thetaStart? : number, thetaLength? : number )
+	constructor( radiusTop : number = 1, radiusBottom : number = 1, height : number = 1, radialSegments : number = 8,
+		heightSegments : number = 1, openEnded : boolean = false, thetaStart : number = 0, thetaLength : number =  Math.PI * 2 )
 	{
 		super();
-		radiusTop = radiusTop !== undefined ? radiusTop : 1;
-		radiusBottom = radiusBottom !== undefined ? radiusBottom : 1;
-		height = height || 1;
 
-		radialSegments = Math.floor( radialSegments ) || 8;
-		heightSegments = Math.floor( heightSegments ) || 1;
-
-		openEnded = openEnded !== undefined ? openEnded : false;
-		thetaStart = thetaStart !== undefined ? thetaStart : 0.0;
-		thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
+		radialSegments = Math.floor( radialSegments );
+		heightSegments = Math.floor( heightSegments );
 
 		this.parameters = {
 			radiusTop: radiusTop,

@@ -18,7 +18,8 @@ var Earcut = /** @class */ (function () {
     }
     //TODO: create class
     Earcut.triangulate = function (data, holeIndices, dim) {
-        dim = dim || 2;
+        if (dim === void 0) { dim = 2; }
+        dim = dim;
         var hasHoles = holeIndices && holeIndices.length, outerLen = hasHoles ? holeIndices[0] * dim : data.length, outerNode = linkedList(data, 0, outerLen, dim, true), triangles = [];
         if (!outerNode)
             return triangles;

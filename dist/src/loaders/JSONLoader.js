@@ -15,12 +15,13 @@ import { DefaultLoadingManager } from './LoadingManager';
  */
 var JSONLoader = /** @class */ (function () {
     function JSONLoader(manager) {
+        if (manager === void 0) { manager = DefaultLoadingManager; }
         this.withCredentials = false;
         if (typeof manager === 'boolean') {
             console.warn('THREEONLoader: showStatus parameter has been removed from constructor.');
             manager = undefined;
         }
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        this.manager = manager;
     }
     JSONLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         var scope = this;

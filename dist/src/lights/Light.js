@@ -17,11 +17,12 @@ import { Color } from '../math/Color';
 var Light = /** @class */ (function (_super) {
     __extends(Light, _super);
     function Light(color, intensity) {
+        if (intensity === void 0) { intensity = 1; }
         var _this = _super.call(this) || this;
         _this.type = 'Light';
         _this.isLight = true;
         _this.color = new Color(color);
-        _this.intensity = intensity !== undefined ? intensity : 1;
+        _this.intensity = intensity;
         _this.receiveShadow = undefined;
         return _this;
     }

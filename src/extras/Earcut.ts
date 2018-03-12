@@ -9,9 +9,9 @@ import { Vector3 } from "../math/Vector3";
 export abstract class Earcut {
 
 	//TODO: create class
-	static triangulate ( data : any, holeIndices : Array<number>, dim? : number ) : Array<number> {
+	static triangulate ( data : any, holeIndices : Array<number>, dim : number = 2 ) : Array<number> {
 
-		dim = dim || 2;
+		dim = dim;
 
 		let hasHoles = holeIndices && holeIndices.length,
 			outerLen = hasHoles ? holeIndices[ 0 ] * dim : data.length,

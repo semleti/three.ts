@@ -1,17 +1,18 @@
 /**
  * @author Don McCurdy / https://www.donmccurdy.com
  */
-
+declare class TextDecoder{
+	decode;
+}
 export abstract class LoaderUtils{
 
 	static decodeText ( array : Array<number> ) : string {
 
-		// FIXME:
-		/*if ( typeof TextDecoder !== 'undefined' ) {
+		if ( typeof TextDecoder !== 'undefined' ) {
 
 			return new TextDecoder().decode( array );
 
-		}*/
+		}
 
 		// Avoid the String.fromCharCode.apply(null, array) shortcut, which
 		// throws a "maximum call stack size exceeded" error for large arrays.

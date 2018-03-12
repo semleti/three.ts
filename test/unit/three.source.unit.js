@@ -3185,7 +3185,6 @@
 	    PropertyMixer.prototype.saveOriginalState = function () {
 	        var binding = this.binding;
 	        var buffer = this.buffer, stride = this.valueSize, originalValueOffset = stride * 3;
-	        console.log(binding);
 	        binding.getValue(buffer, originalValueOffset);
 	        // accu[0..1] := orig -- initially detect changes against the original
 	        for (var i = stride, e = originalValueOffset; i !== e; ++i) {
@@ -3485,12 +3484,10 @@
 	        }
 	        // derived classes can define a static parse method
 	        if (trackType.parse !== undefined) {
-	            console.log("parser");
 	            return trackType.parse(json);
 	        }
 	        else {
 	            // by default, we assume a constructor compatible with the base
-	            console.log("no parser");
 	            return new trackType(json.name, json.times, json.values, json.interpolation);
 	        }
 	    };
@@ -3515,7 +3512,6 @@
 	        return json;
 	    };
 	    KeyframeTrack._getTrackTypeForValueTypeName = function (typeName) {
-	        console.log(typeName);
 	        switch (typeName.toLowerCase()) {
 	            // FIXME:
 	            case 'scalar':
@@ -10679,7 +10675,7 @@
 	        return data;
 	    };
 	    Material.prototype.clone = function () {
-	        return new Material().copy(this);
+	        return new this.constructor().copy(this);
 	    };
 	    Material.prototype.copy = function (source) {
 	        this.name = source.name;
@@ -14128,6 +14124,7 @@
 	        this.files = {};
 	    };
 	    Cache.enabled = false;
+	    Cache.files = {};
 	    return Cache;
 	}());
 
@@ -15755,14 +15752,14 @@
 	        this.onLoadProgress = function () { };
 	        this.onLoadComplete = function () { };
 	    }
-	    Loader.initMaterials = function (materials, texturePath, crossOrigin) {
+	    Loader.prototype.initMaterials = function (materials, texturePath, crossOrigin) {
 	        var array = [];
 	        for (var i = 0; i < materials.length; ++i) {
 	            array[i] = this.createMaterial(materials[i], texturePath, crossOrigin);
 	        }
 	        return array;
 	    };
-	    Loader.createMaterial = function (m, texturePath, crossOrigin) {
+	    Loader.prototype.createMaterial = function (m, texturePath, crossOrigin) {
 	        var BlendingMode = {
 	            NoBlending: NoBlending,
 	            NormalBlending: NormalBlending,
@@ -16336,7 +16333,7 @@
 	            return { geometry: geometry };
 	        }
 	        else {
-	            var materials = Loader.initMaterials(json.materials, texturePath, this.crossOrigin);
+	            var materials = Loader.prototype.initMaterials(json.materials, texturePath, this.crossOrigin);
 	            return { geometry: geometry, materials: materials };
 	        }
 	    };
@@ -31804,7 +31801,7 @@
 	            };
 	        }());
 	        console.log('THREE.WebGLRenderer', REVISION);
-	        this.parameters = this.parameters || {};
+	        this.parameters = parameters || {};
 	        this._canvas = this.parameters.canvas !== undefined ? this.parameters.canvas : document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
 	        var _context = this.parameters.context !== undefined ? this.parameters.context : null, _alpha = this.parameters.alpha !== undefined ? this.parameters.alpha : false, _depth = this.parameters.depth !== undefined ? this.parameters.depth : true, _stencil = this.parameters.stencil !== undefined ? this.parameters.stencil : true, _antialias = this.parameters.antialias !== undefined ? this.parameters.antialias : false;
 	        this._premultipliedAlpha = this.parameters.premultipliedAlpha !== undefined ? this.parameters.premultipliedAlpha : true;

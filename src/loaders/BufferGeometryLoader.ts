@@ -12,8 +12,8 @@ import { DefaultLoadingManager, LoadingManager } from './LoadingManager';
 export class BufferGeometryLoader {
 
 	manager : LoadingManager;
-	constructor( manager? : LoadingManager ){
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
+		this.manager = manager;
 	}
 	
 	load ( url : string, onLoad : Function, onProgress : Function, onError : Function ) : void {

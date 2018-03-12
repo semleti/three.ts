@@ -15,9 +15,10 @@ import { BufferAttribute } from './BufferAttribute';
 var InstancedBufferAttribute = /** @class */ (function (_super) {
     __extends(InstancedBufferAttribute, _super);
     function InstancedBufferAttribute(array, itemSize, meshPerAttribute) {
+        if (meshPerAttribute === void 0) { meshPerAttribute = 1; }
         var _this = _super.call(this, array, itemSize) || this;
         _this.isInstancedBufferAttribute = true;
-        _this.meshPerAttribute = meshPerAttribute || 1;
+        _this.meshPerAttribute = meshPerAttribute;
         return _this;
     }
     InstancedBufferAttribute.prototype.copy = function (source) {

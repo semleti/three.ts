@@ -9,8 +9,8 @@ export class Clock {
 
 	running : boolean = false;
 	autoStart : boolean;
-	constructor( autoStart? : boolean ){
-		this.autoStart = ( autoStart !== undefined ) ? autoStart : true;
+	constructor( autoStart : boolean = true ){
+		this.autoStart = autoStart;
 	}
 
 	start () : void {

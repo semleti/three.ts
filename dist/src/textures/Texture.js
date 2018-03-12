@@ -22,22 +22,32 @@ import { Matrix3 } from '../math/Matrix3';
 var Texture = /** @class */ (function (_super) {
     __extends(Texture, _super);
     function Texture(image, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding) {
+        if (image === void 0) { image = Texture.DEFAULT_IMAGE; }
+        if (mapping === void 0) { mapping = Texture.DEFAULT_MAPPING; }
+        if (wrapS === void 0) { wrapS = ClampToEdgeWrapping; }
+        if (wrapT === void 0) { wrapT = ClampToEdgeWrapping; }
+        if (magFilter === void 0) { magFilter = LinearFilter; }
+        if (minFilter === void 0) { minFilter = LinearMipMapLinearFilter; }
+        if (format === void 0) { format = RGBAFormat; }
+        if (type === void 0) { type = UnsignedByteType; }
+        if (anisotropy === void 0) { anisotropy = 1; }
+        if (encoding === void 0) { encoding = LinearEncoding; }
         var _this = _super.call(this) || this;
         _this.onUpdate = function () { };
         _this.isTexture = true;
         _this.id = Texture.textureId++;
         _this.uuid = _Math.generateUUID();
         _this.name = '';
-        _this.image = image !== undefined ? image : Texture.DEFAULT_IMAGE;
+        _this.image = image;
         _this.mipmaps = [];
-        _this.mapping = mapping !== undefined ? mapping : Texture.DEFAULT_MAPPING;
-        _this.wrapS = wrapS !== undefined ? wrapS : ClampToEdgeWrapping;
-        _this.wrapT = wrapT !== undefined ? wrapT : ClampToEdgeWrapping;
-        _this.magFilter = magFilter !== undefined ? magFilter : LinearFilter;
-        _this.minFilter = minFilter !== undefined ? minFilter : LinearMipMapLinearFilter;
-        _this.anisotropy = anisotropy !== undefined ? anisotropy : 1;
-        _this.format = format !== undefined ? format : RGBAFormat;
-        _this.type = type !== undefined ? type : UnsignedByteType;
+        _this.mapping = mapping;
+        _this.wrapS = wrapS;
+        _this.wrapT = wrapT;
+        _this.magFilter = magFilter;
+        _this.minFilter = minFilter;
+        _this.anisotropy = anisotropy;
+        _this.format = format;
+        _this.type = type;
         _this.offset = new Vector2(0, 0);
         _this.repeat = new Vector2(1, 1);
         _this.center = new Vector2(0, 0);
@@ -52,7 +62,7 @@ var Texture = /** @class */ (function (_super) {
         //
         // Also changing the encoding after already used by a Material will not automatically make the Material
         // update.  You need to explicitly call Material.needsUpdate to trigger it to recompile.
-        _this.encoding = encoding !== undefined ? encoding : LinearEncoding;
+        _this.encoding = encoding;
         _this.version = 0;
         _this.onUpdate = null;
         return _this;
@@ -208,6 +218,7 @@ var Texture = /** @class */ (function (_super) {
         enumerable: true,
         configurable: true
     });
+    Texture.textureId = 0;
     Texture.DEFAULT_IMAGE = undefined;
     Texture.DEFAULT_MAPPING = UVMapping;
     return Texture;

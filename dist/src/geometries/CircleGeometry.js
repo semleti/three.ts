@@ -40,6 +40,10 @@ export { CircleGeometry };
 var CircleBufferGeometry = /** @class */ (function (_super) {
     __extends(CircleBufferGeometry, _super);
     function CircleBufferGeometry(radius, segments, thetaStart, thetaLength) {
+        if (radius === void 0) { radius = 1; }
+        if (segments === void 0) { segments = 8; }
+        if (thetaStart === void 0) { thetaStart = 0; }
+        if (thetaLength === void 0) { thetaLength = Math.PI * 2; }
         var _this = _super.call(this) || this;
         _this.type = 'CircleBufferGeometry';
         // buffers
@@ -53,10 +57,7 @@ var CircleBufferGeometry = /** @class */ (function (_super) {
             thetaStart: thetaStart,
             thetaLength: thetaLength
         };
-        radius = radius || 1;
-        segments = segments !== undefined ? Math.max(3, segments) : 8;
-        thetaStart = thetaStart !== undefined ? thetaStart : 0;
-        thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
+        segments = Math.max(3, segments);
         // helper variables
         var i, s;
         var vertex = new Vector3();

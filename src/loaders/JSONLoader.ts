@@ -21,7 +21,7 @@ export class JSONLoader {
 	withCredentials : boolean = false;
 	crossOrigin : string;
 	texturePath : string;
-	constructor( manager? : LoadingManager ){
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
 
 		if ( typeof manager === 'boolean' ) {
 	
@@ -30,7 +30,7 @@ export class JSONLoader {
 	
 		}
 	
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+		this.manager = manager;
 	
 	}
 

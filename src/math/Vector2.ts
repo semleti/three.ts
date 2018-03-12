@@ -12,10 +12,10 @@ export class Vector2 {
 	y : number;
 
 	isVector2 : boolean = true;
-	constructor( x? : number, y? : number ){
+	constructor( x : number = 0, y : number = 0 ){
 
-		this.x = x || 0;
-		this.y = y || 0;
+		this.x = x;
+		this.y = y;
 	}
 
 	get width () : number {

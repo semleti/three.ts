@@ -7,9 +7,9 @@ import { InterleavedBuffer } from './InterleavedBuffer';
 export class InstancedInterleavedBuffer extends InterleavedBuffer {
 	isInstancedInterleavedBuffer : boolean = true;
 	meshPerAttribute : number;
-	constructor( array : any, stride : number, meshPerAttribute? : number ){
+	constructor( array : any, stride : number, meshPerAttribute : number = 1 ){
 		super(array, stride);
-		this.meshPerAttribute = meshPerAttribute || 1;
+		this.meshPerAttribute = meshPerAttribute;
 
 	}
 

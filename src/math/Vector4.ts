@@ -14,11 +14,11 @@ export class Vector4 {
 	z : number;
 	w : number;
 	isVector4 : boolean = true;
-	constructor( x? : number, y? : number, z? : number, w? : number ){
-		this.x = x || 0;
-		this.y = y || 0;
-		this.z = z || 0;
-		this.w = ( w !== undefined ) ? w : 1;
+	constructor( x : number = 0, y : number = 0, z : number = 0, w : number = 1 ){
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
 	}
 
 	set ( x : number, y : number, z : number, w : number ) : Vector4 {

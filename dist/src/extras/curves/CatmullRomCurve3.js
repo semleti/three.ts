@@ -76,13 +76,17 @@ var px = new CubicPoly(), py = new CubicPoly(), pz = new CubicPoly();
 var CatmullRomCurve3 = /** @class */ (function (_super) {
     __extends(CatmullRomCurve3, _super);
     function CatmullRomCurve3(points, closed, curveType, tension) {
+        if (points === void 0) { points = []; }
+        if (closed === void 0) { closed = false; }
+        if (curveType === void 0) { curveType = 'centripital'; }
+        if (tension === void 0) { tension = 0.5; }
         var _this = _super.call(this) || this;
         _this.type = 'CatmullRomCurve3';
         _this.isCatmullRomCurve3 = true;
-        _this.points = points || [];
-        _this.closed = closed || false;
-        _this.curveType = curveType || 'centripetal';
-        _this.tension = tension || 0.5;
+        _this.points = points;
+        _this.closed = closed;
+        _this.curveType = curveType;
+        _this.tension = tension;
         return _this;
     }
     CatmullRomCurve3.prototype.getPoint = function (t, optionalTarget) {

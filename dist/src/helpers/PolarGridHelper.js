@@ -22,7 +22,13 @@ import { Color } from '../math/Color';
 var PolarGridHelper = /** @class */ (function (_super) {
     __extends(PolarGridHelper, _super);
     function PolarGridHelper(radius, radials, circles, divisions, color1, color2) {
-        return _super.call(this, PolarGridHelper.constructGeom(radius || 10, radials || 16, circles || 8, divisions || 64, new Color(color1 !== undefined ? color1 : 0x444444), new Color(color2 !== undefined ? color2 : 0x888888)), new LineBasicMaterial({ vertexColors: VertexColors })) || this;
+        if (radius === void 0) { radius = 10; }
+        if (radials === void 0) { radials = 16; }
+        if (circles === void 0) { circles = 8; }
+        if (divisions === void 0) { divisions = 64; }
+        if (color1 === void 0) { color1 = 0x444444; }
+        if (color2 === void 0) { color2 = 0x888888; }
+        return _super.call(this, PolarGridHelper.constructGeom(radius, radials, circles, divisions, new Color(color1), new Color(color2)), new LineBasicMaterial({ vertexColors: VertexColors })) || this;
     }
     PolarGridHelper.constructGeom = function (radius, radials, circles, divisions, color1, color2) {
         var vertices = [];

@@ -3,11 +3,12 @@
  */
 var Clock = /** @class */ (function () {
     function Clock(autoStart) {
+        if (autoStart === void 0) { autoStart = true; }
         this.startTime = 0;
         this.oldTime = 0;
         this.elapsedTime = 0;
         this.running = false;
-        this.autoStart = (autoStart !== undefined) ? autoStart : true;
+        this.autoStart = autoStart;
     }
     Clock.prototype.start = function () {
         this.startTime = (typeof performance === 'undefined' ? Date : performance).now(); // see #10732

@@ -13,7 +13,7 @@ export class Triangle {
 	a : Vector3;
 	b : Vector3;
 	c : Vector3;
-	constructor( a?  :Vector3, b?  :Vector3, c?  :Vector3 ){
+	constructor( a? : Vector3, b? : Vector3, c? : Vector3 ){
 		this.a = ( a !== undefined ) ? a : new Vector3();
 		this.b = ( b !== undefined ) ? b : new Vector3();
 		this.c = ( c !== undefined ) ? c : new Vector3();

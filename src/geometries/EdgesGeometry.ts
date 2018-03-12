@@ -12,9 +12,8 @@ import { Vector3 } from '../math/Vector3';
 export class EdgesGeometry extends BufferGeometry {
 	type : string = 'EdgesGeometry';
 	vertices : Array<number> = [];
-	constructor( geometry : Geometry | BufferGeometry, thresholdAngle? : number ){
+	constructor( geometry : Geometry | BufferGeometry, thresholdAngle : number = 1 ){
 		super();
-		thresholdAngle = ( thresholdAngle !== undefined ) ? thresholdAngle : 1;
 		this.parameters = {
 			thresholdAngle: thresholdAngle
 		};

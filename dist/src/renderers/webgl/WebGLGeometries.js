@@ -8,35 +8,37 @@ var WebGLGeometries = /** @class */ (function () {
     function WebGLGeometries(gl, attributes, infoMemory) {
         this.geometries = {};
         this.wireframeAttributes = {};
+        this.onGeometryDispose = function (scope) {
+            return function (event) {
+                var geometry = event.target;
+                var buffergeometry = scope.geometries[geometry.id];
+                if (buffergeometry.index !== null) {
+                    scope.attributes.remove(buffergeometry.index);
+                }
+                for (var name_1 in buffergeometry.attributes) {
+                    scope.attributes.remove(buffergeometry.attributes[name_1]);
+                }
+                geometry.removeEventListener('dispose', scope.onGeometryDispose);
+                delete scope.geometries[geometry.id];
+                // TODO Remove duplicate code
+                var attribute = scope.wireframeAttributes[geometry.id];
+                if (attribute) {
+                    scope.attributes.remove(attribute);
+                    delete scope.wireframeAttributes[geometry.id];
+                }
+                attribute = scope.wireframeAttributes[buffergeometry.id];
+                if (attribute) {
+                    scope.attributes.remove(attribute);
+                    delete scope.wireframeAttributes[buffergeometry.id];
+                }
+                //
+                scope.infoMemory.geometries--;
+            };
+        }(this);
         this.gl = gl;
         this.attributes = attributes;
         this.infoMemory = infoMemory;
     }
-    WebGLGeometries.prototype.onGeometryDispose = function (event) {
-        var geometry = event.target;
-        var buffergeometry = this.geometries[geometry.id];
-        if (buffergeometry.index !== null) {
-            this.attributes.remove(buffergeometry.index);
-        }
-        for (var name_1 in buffergeometry.attributes) {
-            this.attributes.remove(buffergeometry.attributes[name_1]);
-        }
-        geometry.removeEventListener('dispose', this.onGeometryDispose);
-        delete this.geometries[geometry.id];
-        // TODO Remove duplicate code
-        var attribute = this.wireframeAttributes[geometry.id];
-        if (attribute) {
-            this.attributes.remove(attribute);
-            delete this.wireframeAttributes[geometry.id];
-        }
-        attribute = this.wireframeAttributes[buffergeometry.id];
-        if (attribute) {
-            this.attributes.remove(attribute);
-            delete this.wireframeAttributes[buffergeometry.id];
-        }
-        //
-        this.infoMemory.geometries--;
-    };
     WebGLGeometries.prototype.get = function (object, geometry) {
         var buffergeometry = this.geometries[geometry.id];
         if (buffergeometry)

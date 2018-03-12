@@ -7,9 +7,9 @@ import { BufferAttribute } from './BufferAttribute';
 export class InstancedBufferAttribute extends BufferAttribute {
 	meshPerAttribute : number;
 	isInstancedBufferAttribute : boolean = true;	
-	constructor( array : any, itemSize : number, meshPerAttribute? : number ){
+	constructor( array : any, itemSize : number, meshPerAttribute : number = 1 ){
 		super(array, itemSize);
-		this.meshPerAttribute = meshPerAttribute || 1;
+		this.meshPerAttribute = meshPerAttribute;
 
 	}
 

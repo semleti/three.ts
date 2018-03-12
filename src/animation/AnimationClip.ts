@@ -19,7 +19,7 @@ export class AnimationClip{
 	tracks : Array<KeyframeTrack>;
 	duration : number;
 	uuid : string;
-	constructor( name : string, duration : number, tracks : Array<KeyframeTrack> ){
+	constructor( name : string, duration : number = -1, tracks : Array<KeyframeTrack> ){
 		this.name = name;
 		this.tracks = tracks;
 		this.duration = ( duration !== undefined ) ? duration : - 1;

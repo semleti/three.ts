@@ -14,17 +14,18 @@ export class SpotLight extends Light {
 	decay : number;
 	shadow : LightShadow;
 	isSpotLight : boolean = true;
-	constructor( color : Color, intensity : number, distance : number, angle : number, penumbra : number, decay : number ){
+	constructor( color : Color, intensity : number, distance : number = 0, angle : number = Math.PI / 3, penumbra : number = 0,
+		decay : number = 1){
 		super(color, intensity);
 		this.position.copy( Object3D.DefaultUp );
 		this.updateMatrix();
 
 		this.target = new Object3D();
 
-		this.distance = ( distance !== undefined ) ? distance : 0;
-		this.angle = ( angle !== undefined ) ? angle : Math.PI / 3;
-		this.penumbra = ( penumbra !== undefined ) ? penumbra : 0;
-		this.decay = ( decay !== undefined ) ? decay : 1;	// for physically correct lights, should be 2.
+		this.distance = distance;
+		this.angle = angle;
+		this.penumbra = penumbra;
+		this.decay = decay;	// for physically correct lights, should be 2.
 
 		this.shadow = new SpotLightShadow();
 	}

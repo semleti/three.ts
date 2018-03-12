@@ -6,8 +6,9 @@ import { Vector3 } from './Vector3';
  */
 var Sphere = /** @class */ (function () {
     function Sphere(center, radius) {
+        if (radius === void 0) { radius = 0; }
         this.center = (center !== undefined) ? center : new Vector3();
-        this.radius = (radius !== undefined) ? radius : 0;
+        this.radius = radius;
     }
     Sphere.prototype.set = function (center, radius) {
         this.center.copy(center);

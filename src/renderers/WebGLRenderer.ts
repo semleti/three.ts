@@ -76,13 +76,13 @@ export class WebGLRenderer {
 	_width : number;
 	_height : number;
 	_canvas : HTMLCanvasElement;
-	constructor( parameters : any ){
+	constructor( parameters : any = {} ){
 		console.log( 'THREE.WebGLRenderer', REVISION );
 
-		this.parameters = this.parameters || {};
+		this.parameters = parameters;
 	
 		this._canvas = this.parameters.canvas !== undefined ? this.parameters.canvas : document.createElementNS( 'http://www.w3.org/1999/xhtml', 'canvas' ) as HTMLCanvasElement;
-		var	_context = this.parameters.context !== undefined ? this.parameters.context : null,
+		let	_context = this.parameters.context !== undefined ? this.parameters.context : null,
 	
 			_alpha = this.parameters.alpha !== undefined ? this.parameters.alpha : false,
 			_depth = this.parameters.depth !== undefined ? this.parameters.depth : true,
@@ -618,15 +618,17 @@ export class WebGLRenderer {
 
 	}
 
-	onMaterialDispose( event : any ) : void {
+	onMaterialDispose = function(scope){
+		return function( event : any ) : void {
 
-		let material = event.target;
+			let material = event.target;
 
-		material.removeEventListener( 'dispose', this.onMaterialDispose );
+			material.removeEventListener( 'dispose', scope.onMaterialDispose );
 
-		this.deallocateMaterial( material );
+			scope.deallocateMaterial( material );
 
-	}
+		}
+	}(this);
 
 	// Buffer deallocation
 
@@ -655,15 +657,17 @@ export class WebGLRenderer {
 
 	// Buffer rendering
 
-	renderObjectImmediate( object : any, program : any, material : any ) : void {
+	renderObjectImmediate = function(scope){
+		return function( object : any, program : any, material : any ) : void {
 
-		object.render( function ( object ) {
+			object.render( function ( object ) {
 
-			this._this.renderBufferImmediate( object, program, material );
+				scope.renderBufferImmediate( object, program, material );
 
-		} );
+			} );
 
-	}
+		}
+	}(this);
 
 	renderBufferImmediate ( object : any, program : any, material : any ) : void {
 
@@ -1055,52 +1059,54 @@ export class WebGLRenderer {
 
 	// Compile
 
-	compile ( scene : Scene, camera : Camera ) : void {
+	compile = function(scope){
+		return function( scene : Scene, camera : Camera ) : void {
 
-		this.currentRenderState = this.renderStates.get( scene, camera );
-		this.currentRenderState.init();
+			scope.currentRenderState = scope.renderStates.get( scene, camera );
+			scope.currentRenderState.init();
 
-		scene.traverse( function ( object ) {
+			scene.traverse( function ( object ) {
 
-			if ( object.isLight ) {
+				if ( object.isLight ) {
 
-				this.currentRenderState.pushLight( object );
+					scope.currentRenderState.pushLight( object );
 
-				if ( object.castShadow ) {
+					if ( object.castShadow ) {
 
-					this.currentRenderState.pushShadow( object );
-
-				}
-
-			}
-
-		} );
-
-		this.currentRenderState.setupLights( camera );
-
-		scene.traverse( function ( object ) {
-
-			if ( object.material ) {
-
-				if ( Array.isArray( object.material ) ) {
-
-					for ( let i = 0; i < object.material.length; i ++ ) {
-
-						this.initMaterial( object.material[ i ], scene.fog, object );
+						scope.currentRenderState.pushShadow( object );
 
 					}
 
-				} else {
+				}
 
-					this.initMaterial( object.material, scene.fog, object );
+			} );
+
+			scope.currentRenderState.setupLights( camera );
+
+			scene.traverse( function ( object ) {
+
+				if ( object.material ) {
+
+					if ( Array.isArray( object.material ) ) {
+
+						for ( let i = 0; i < object.material.length; i ++ ) {
+
+							scope.initMaterial( object.material[ i ], scene.fog, object );
+
+						}
+
+					} else {
+
+						scope.initMaterial( object.material, scene.fog, object );
+
+					}
 
 				}
 
-			}
+			} );
 
-		} );
-
-	}
+		}
+	}(this);
 
 	// Animation Loop
 
@@ -1139,15 +1145,18 @@ export class WebGLRenderer {
 
 	}
 
-	animationLoop( time : number ) : void {
+	animationLoop = function(scope)
+	{
+		return function( time : number ) : void {
 
-		if ( this.isAnimating === false ) return;
+			if ( scope.isAnimating === false ) return;
 
-		this.onAnimationFrame( time );
+			scope.onAnimationFrame( time );
 
-		this.requestAnimationLoopFrame();
+			scope.requestAnimationLoopFrame();
 
-	}
+		}
+	}(this);
 
 	animate ( callback : Function ) : void {
 

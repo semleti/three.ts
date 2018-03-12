@@ -8,8 +8,8 @@ import { Color } from '../math/Color';
 import { Vector4 } from '../math/Vector4';
 var WebGL2Renderer = /** @class */ (function () {
     function WebGL2Renderer(parameters) {
+        if (parameters === void 0) { parameters = {}; }
         console.log('THREE.WebGL2Renderer', REVISION);
-        parameters = parameters || {};
         this._canvas = parameters.canvas !== undefined ? parameters.canvas : document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
         var _context = parameters.context !== undefined ? parameters.context : null, _alpha = parameters.alpha !== undefined ? parameters.alpha : false, _depth = parameters.depth !== undefined ? parameters.depth : true, _stencil = parameters.stencil !== undefined ? parameters.stencil : true, _antialias = parameters.antialias !== undefined ? parameters.antialias : false, _preserveDrawingBuffer = parameters.preserveDrawingBuffer !== undefined ? parameters.preserveDrawingBuffer : false, _powerPreference = parameters.powerPreference !== undefined ? parameters.powerPreference : 'default';
         this._premultipliedAlpha = parameters.premultipliedAlpha !== undefined ? parameters.premultipliedAlpha : true;

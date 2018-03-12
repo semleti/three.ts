@@ -16,15 +16,15 @@ export class PlaneHelper extends Line {
 	plane : Plane;
 	size : number;
 	type : string = 'PlaneHelper';
-	constructor( plane : Plane, size : number, hex : number ){
-		super(PlaneHelper.constructGeom(),new LineBasicMaterial( { color: hex || 0xffff00 } ));
+	constructor( plane : Plane, size : number = 1, hex : number = 0xffff00 ){
+		super(PlaneHelper.constructGeom(),new LineBasicMaterial( { color: hex} ));
 
 
 		this.plane = plane;
 
-		this.size = ( size === undefined ) ? 1 : size;
+		this.size = size;
 
-		let color = ( hex !== undefined ) ? hex : 0xffff00;
+		let color = hex;
 
 
 

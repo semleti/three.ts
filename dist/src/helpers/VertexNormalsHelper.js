@@ -21,9 +21,12 @@ import { BufferGeometry } from '../core/BufferGeometry';
 var VertexNormalsHelper = /** @class */ (function (_super) {
     __extends(VertexNormalsHelper, _super);
     function VertexNormalsHelper(object, size, hex, linewidth) {
-        var _this = _super.call(this, VertexNormalsHelper.constructGeom(object), new LineBasicMaterial({ color: hex || 0xff0000, linewidth: linewidth || 1 })) || this;
+        if (size === void 0) { size = 1; }
+        if (hex === void 0) { hex = 0xff0000; }
+        if (linewidth === void 0) { linewidth = 1; }
+        var _this = _super.call(this, VertexNormalsHelper.constructGeom(object), new LineBasicMaterial({ color: hex, linewidth: linewidth })) || this;
         _this.object = object;
-        _this.size = (size !== undefined) ? size : 1;
+        _this.size = size;
         _this.matrixAutoUpdate = false;
         _this.update();
         return _this;

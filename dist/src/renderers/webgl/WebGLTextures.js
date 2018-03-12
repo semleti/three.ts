@@ -6,6 +6,26 @@ import { _Math } from '../../math/Math';
 var WebGLTextures = /** @class */ (function () {
     function WebGLTextures(_gl, extensions, state, properties, capabilities, utils, infoMemory, infoRender) {
         this._videoTextures = [];
+        //
+        this.onTextureDispose = function (scope) {
+            return function (event) {
+                var texture = event.target;
+                texture.removeEventListener('dispose', scope.onTextureDispose);
+                scope.deallocateTexture(texture);
+                if (texture.isVideoTexture) {
+                    delete scope._videoTextures[texture.id];
+                }
+                scope.infoMemory.textures--;
+            };
+        }(this);
+        this.onRenderTargetDispose = function (scope) {
+            return function (event) {
+                var renderTarget = event.target;
+                renderTarget.removeEventListener('dispose', scope.onRenderTargetDispose);
+                scope.deallocateRenderTarget(renderTarget);
+                scope.infoMemory.textures--;
+            };
+        }(this);
         this._gl = _gl;
         this.extensions = extensions;
         this.properties = properties;
@@ -62,22 +82,6 @@ var WebGLTextures = /** @class */ (function () {
             return this._gl.NEAREST;
         }
         return this._gl.LINEAR;
-    };
-    //
-    WebGLTextures.prototype.onTextureDispose = function (event) {
-        var texture = event.target;
-        texture.removeEventListener('dispose', this.onTextureDispose);
-        this.deallocateTexture(texture);
-        if (texture.isVideoTexture) {
-            delete this._videoTextures[texture.id];
-        }
-        this.infoMemory.textures--;
-    };
-    WebGLTextures.prototype.onRenderTargetDispose = function (event) {
-        var renderTarget = event.target;
-        renderTarget.removeEventListener('dispose', this.onRenderTargetDispose);
-        this.deallocateRenderTarget(renderTarget);
-        this.infoMemory.textures--;
     };
     //
     WebGLTextures.prototype.deallocateTexture = function (texture) {

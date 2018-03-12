@@ -21,8 +21,11 @@ import { BufferGeometry } from '../core/BufferGeometry';
 var FaceNormalsHelper = /** @class */ (function (_super) {
     __extends(FaceNormalsHelper, _super);
     function FaceNormalsHelper(object, size, hex, linewidth) {
-        var _this = _super.call(this, FaceNormalsHelper.constructGeom(object), new LineBasicMaterial({ color: hex || 0xffff00, linewidth: linewidth || 1 })) || this;
-        _this.size = (size !== undefined) ? size : 1;
+        if (size === void 0) { size = 1; }
+        if (hex === void 0) { hex = 0xffff00; }
+        if (linewidth === void 0) { linewidth = 1; }
+        var _this = _super.call(this, FaceNormalsHelper.constructGeom(object), new LineBasicMaterial({ color: hex, linewidth: linewidth })) || this;
+        _this.size = size;
         _this.object = object;
         _this.matrixAutoUpdate = false;
         _this.update();

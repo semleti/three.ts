@@ -6,9 +6,12 @@
  */
 var Cylindrical = /** @class */ (function () {
     function Cylindrical(radius, theta, y) {
-        this.radius = (radius !== undefined) ? radius : 1.0; // distance from the origin to a point in the x-z plane
-        this.theta = (theta !== undefined) ? theta : 0; // counterclockwise angle in the x-z plane measured in radians from the positive z-axis
-        this.y = (y !== undefined) ? y : 0; // height above the x-z plane
+        if (radius === void 0) { radius = 1.0; }
+        if (theta === void 0) { theta = 0; }
+        if (y === void 0) { y = 0; }
+        this.radius = radius; // distance from the origin to a point in the x-z plane
+        this.theta = theta; // counterclockwise angle in the x-z plane measured in radians from the positive z-axis
+        this.y = y; // height above the x-z plane
     }
     Cylindrical.prototype.set = function (radius, theta, y) {
         this.radius = radius;

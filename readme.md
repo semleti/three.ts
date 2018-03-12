@@ -31,7 +31,7 @@ The entire project is using TypeScript.
 ~1% of the typings are wrong.  
 I got it working for a personal project (although with having a little ordering issue when rendering).  
 The project currently passes all unit tests except for 4 (which is better than the js version from my what I can tell :p ) (I just cheated a little bit ;( ).  
-~80% of the examples are working, despite a few render artifacts.
+~90% of the examples are working, despite a few render artifacts.
 #### Also:
 This is my first real Github repo, so I have no clue what I'm doing ¯\\\_(ツ)_/¯
 
@@ -49,6 +49,13 @@ Most bugs will likely arise from these sources (I think):
 - temporary hacks to get it to compile I forgot about
 - typos? (most should have been caught by TypeScript and google-closure-compiler, but you never know)
 
+## Examples
+~90% of the examples are currently working.  
+You can easily check them out online on https://htmlpreview.github.io .  
+Just paste the link to the html file.  
+ex: https://htmlpreview.github.io/?https://github.com/semleti/three.ts/blob/master/examples/webgl_animation_cloth.html  
+Sadly, the index.html isn't working, as github is sending 'X-Frame-Options : deny' headers :/  
+This also prevents texture loading for some of the examples :'(
 
 ## Build
 The build process is controlled by the '.vscode/build.js' script:  

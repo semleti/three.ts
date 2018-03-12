@@ -17,11 +17,13 @@ import { LightShadow } from './LightShadow';
 var PointLight = /** @class */ (function (_super) {
     __extends(PointLight, _super);
     function PointLight(color, intensity, distance, decay) {
+        if (distance === void 0) { distance = 0; }
+        if (decay === void 0) { decay = 1; }
         var _this = _super.call(this, color, intensity) || this;
         _this.type = 'PointLight';
         _this.isPointLight = true;
-        _this.distance = (distance !== undefined) ? distance : 0;
-        _this.decay = (decay !== undefined) ? decay : 1; // for physically correct lights, should be 2.
+        _this.distance = distance;
+        _this.decay = decay; // for physically correct lights, should be 2.
         _this.shadow = new LightShadow(new PerspectiveCamera(90, 1, 0.5, 500));
         return _this;
     }

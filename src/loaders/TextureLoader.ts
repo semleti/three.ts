@@ -12,9 +12,9 @@ export class TextureLoader {
 
 	manager : LoadingManager;
 	path : string;
-	constructor( manager? : LoadingManager ){
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
 
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+		this.manager = manager;
 	}
 
 	crossOrigin : string = 'Anonymous';

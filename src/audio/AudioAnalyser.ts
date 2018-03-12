@@ -7,9 +7,9 @@ import { Audio } from "./Audio";
 export class AudioAnalyser{
 	analyser : any;
 	data : Uint8Array;
-	constructor( audio : Audio, fftSize? : number ) {
+	constructor( audio : Audio, fftSize : number = 2048 ) {
 		this.analyser = audio.context.createAnalyser();
-		this.analyser.fftSize = fftSize !== undefined ? fftSize : 2048;
+		this.analyser.fftSize = fftSize;
 
 		this.data = new Uint8Array( this.analyser.frequencyBinCount );
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>three.js webgl - Depth Texture</title>
+		<title>three.ts webgl - Depth Texture</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<style>
@@ -74,6 +74,7 @@
 				float depth = readDepth(tDepth, vUv);
 
 				gl_FragColor.rgb = vec3(depth);
+				gl_FragColor.g = 1.0;
 				gl_FragColor.a = 1.0;
 			}
 		</script>
@@ -82,7 +83,7 @@
 	<body>
 		<canvas></canvas>
 		<div id="info">
-			<a href="http://threejs.org" target="_blank" rel="noopener">threejs</a> - WebGL - Depth Texture<br/>
+			<a href="https://github.com/semleti/three.ts" target="_blank" rel="noopener">threets</a> - WebGL - Depth Texture<br/>
 			Stores render target depth in a texture attachment.<br/>
 			Created by <a href="http://twitter.com/mattdesl" target="_blank" rel="noopener">@mattdesl</a>.
 

@@ -9,7 +9,8 @@ import { DefaultLoadingManager } from './LoadingManager';
  */
 var DataTextureLoader = /** @class */ (function () {
     function DataTextureLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
         // override in sub classes
         this._parser = null;
     }

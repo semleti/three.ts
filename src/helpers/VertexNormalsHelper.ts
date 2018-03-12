@@ -14,11 +14,11 @@ import { Object3D, Geometry } from '../Three';
 export class VertexNormalsHelper extends LineSegments {
 	object : Object3D;
 	size : number;
-	constructor( object : Object3D, size : number, hex : number, linewidth : number ){
-		super(VertexNormalsHelper.constructGeom(object),new LineBasicMaterial( { color: hex || 0xff0000, linewidth: linewidth || 1 } ));
+	constructor( object : Object3D, size : number = 1, hex : number = 0xff0000, linewidth : number = 1 ){
+		super(VertexNormalsHelper.constructGeom(object),new LineBasicMaterial( { color: hex, linewidth: linewidth} ));
 		this.object = object;
 
-		this.size = ( size !== undefined ) ? size : 1;
+		this.size = size
 
 		this.matrixAutoUpdate = false;
 

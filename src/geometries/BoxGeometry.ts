@@ -43,8 +43,8 @@ export class BoxBufferGeometry extends BufferGeometry {
 
 	numberOfVertices : number = 0;
 	groupStart : number = 0;
-	constructor( width? : number, height? : number, depth? : number, widthSegments? : number, heightSegments? : number,
-		 depthSegments? : number ){
+	constructor( width : number = 1, height : number = 1, depth : number = 1, widthSegments : number = 1, heightSegments : number = 1,
+		 depthSegments : number = 1 ){
 		super();
 		this.parameters = {
 			width: width,
@@ -55,15 +55,11 @@ export class BoxBufferGeometry extends BufferGeometry {
 			depthSegments: depthSegments
 		};
 	
-		width = width || 1;
-		height = height || 1;
-		depth = depth || 1;
-	
 		// segments
 	
-		widthSegments = Math.floor( widthSegments ) || 1;
-		heightSegments = Math.floor( heightSegments ) || 1;
-		depthSegments = Math.floor( depthSegments ) || 1;
+		widthSegments = Math.floor( widthSegments );
+		heightSegments = Math.floor( heightSegments );
+		depthSegments = Math.floor( depthSegments );
 		
 		// build each side of the box geometry
 		this.buildPlane( 'z', 'y', 'x', - 1, - 1, depth, height, width, depthSegments, heightSegments, 0 ); // px

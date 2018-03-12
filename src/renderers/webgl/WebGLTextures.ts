@@ -118,35 +118,40 @@ export class WebGLTextures {
 
 	//
 
-	onTextureDispose( event : any ) : void {
+	onTextureDispose = function(scope){
+		return function( event : any ) : void {
 
-		let texture = event.target;
+			let texture = event.target;
 
-		texture.removeEventListener( 'dispose', this.onTextureDispose );
+			texture.removeEventListener( 'dispose', scope.onTextureDispose );
 
-		this.deallocateTexture( texture );
+			scope.deallocateTexture( texture );
 
-		if ( texture.isVideoTexture ) {
+			if ( texture.isVideoTexture ) {
 
-			delete this._videoTextures[ texture.id ];
+				delete scope._videoTextures[ texture.id ];
+
+			}
+
+			scope.infoMemory.textures --;
 
 		}
+	}(this);
 
-		this.infoMemory.textures --;
+	onRenderTargetDispose = function(scope){
+		return function( event : any )  : void {
 
-	}
+			let renderTarget = event.target;
 
-	onRenderTargetDispose( event : any ) : void {
+			renderTarget.removeEventListener( 'dispose', scope.onRenderTargetDispose );
 
-		let renderTarget = event.target;
+			scope.deallocateRenderTarget( renderTarget );
 
-		renderTarget.removeEventListener( 'dispose', this.onRenderTargetDispose );
+			scope.infoMemory.textures --;
 
-		this.deallocateRenderTarget( renderTarget );
-
-		this.infoMemory.textures --;
-
-	}
+		}
+		
+	}(this);
 
 	//
 
@@ -214,6 +219,7 @@ export class WebGLTextures {
 		this.properties.remove( renderTarget );
 
 	}
+	
 
 	//
 

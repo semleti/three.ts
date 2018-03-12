@@ -36,6 +36,10 @@ var lineGeometry, coneGeometry;
 var ArrowHelper = /** @class */ (function (_super) {
     __extends(ArrowHelper, _super);
     function ArrowHelper(dir, origin, length, color, headLength, headWidth) {
+        if (length === void 0) { length = 1; }
+        if (color === void 0) { color = 0xffff00; }
+        if (headLength === void 0) { headLength = 0.2 * length; }
+        if (headWidth === void 0) { headWidth = 0.2 * headLength; }
         var _this = _super.call(this) || this;
         _this.dir = dir;
         _this.origin = origin;
@@ -43,14 +47,6 @@ var ArrowHelper = /** @class */ (function (_super) {
         _this.color = color;
         _this.headLength = headLength;
         _this.headWidth = headWidth;
-        if (color === undefined)
-            color = 0xffff00;
-        if (length === undefined)
-            length = 1;
-        if (headLength === undefined)
-            headLength = 0.2 * length;
-        if (headWidth === undefined)
-            headWidth = 0.2 * headLength;
         if (lineGeometry === undefined) {
             lineGeometry = new BufferGeometry();
             lineGeometry.addAttribute('position', new Float32BufferAttribute([0, 0, 0, 0, 1, 0], 3));

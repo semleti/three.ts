@@ -11,8 +11,8 @@ import { BufferGeometry } from '../core/BufferGeometry';
 
 export class AxesHelper extends LineSegments {
 
-	constructor( size : number ){
-		super(AxesHelper.constructGeom(size || 1),
+	constructor( size : number = 1 ){
+		super(AxesHelper.constructGeom(size),
 		{ vertexColors: VertexColors });
 	}
 

@@ -19,10 +19,10 @@ export class Light extends Object3D {
 	penumbra : number;
 	shadow : LightShadow;
 	isLight : boolean = true;
-	constructor( color : Color, intensity : number ){
+	constructor( color : Color, intensity : number = 1 ){
 		super();
 		this.color = new Color( color );
-		this.intensity = intensity !== undefined ? intensity : 1;
+		this.intensity = intensity;
 	
 		this.receiveShadow = undefined;
 	}

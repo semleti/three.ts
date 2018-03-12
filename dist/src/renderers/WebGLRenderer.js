@@ -37,9 +37,61 @@ import { WebGLRenderStates } from './webgl/WebGLRenderStates';
  */
 var WebGLRenderer = /** @class */ (function () {
     function WebGLRenderer(parameters) {
+        if (parameters === void 0) { parameters = {}; }
+        this.onMaterialDispose = function (scope) {
+            return function (event) {
+                var material = event.target;
+                material.removeEventListener('dispose', scope.onMaterialDispose);
+                scope.deallocateMaterial(material);
+            };
+        }(this);
+        // Buffer rendering
+        this.renderObjectImmediate = function (scope) {
+            return function (object, program, material) {
+                object.render(function (object) {
+                    scope.renderBufferImmediate(object, program, material);
+                });
+            };
+        }(this);
+        // Compile
+        this.compile = function (scope) {
+            return function (scene, camera) {
+                scope.currentRenderState = scope.renderStates.get(scene, camera);
+                scope.currentRenderState.init();
+                scene.traverse(function (object) {
+                    if (object.isLight) {
+                        scope.currentRenderState.pushLight(object);
+                        if (object.castShadow) {
+                            scope.currentRenderState.pushShadow(object);
+                        }
+                    }
+                });
+                scope.currentRenderState.setupLights(camera);
+                scene.traverse(function (object) {
+                    if (object.material) {
+                        if (Array.isArray(object.material)) {
+                            for (var i = 0; i < object.material.length; i++) {
+                                scope.initMaterial(object.material[i], scene.fog, object);
+                            }
+                        }
+                        else {
+                            scope.initMaterial(object.material, scene.fog, object);
+                        }
+                    }
+                });
+            };
+        }(this);
         // Animation Loop
         this.isAnimating = false;
         this.onAnimationFrame = null;
+        this.animationLoop = function (scope) {
+            return function (time) {
+                if (scope.isAnimating === false)
+                    return;
+                scope.onAnimationFrame(time);
+                scope.requestAnimationLoopFrame();
+            };
+        }(this);
         // this.setTexture2D = setTexture2D;
         this.setTexture2D = (function () {
             var warned = false;
@@ -91,7 +143,7 @@ var WebGLRenderer = /** @class */ (function () {
             };
         }());
         console.log('THREE.WebGLRenderer', REVISION);
-        this.parameters = this.parameters || {};
+        this.parameters = parameters;
         this._canvas = this.parameters.canvas !== undefined ? this.parameters.canvas : document.createElementNS('http://www.w3.org/1999/xhtml', 'canvas');
         var _context = this.parameters.context !== undefined ? this.parameters.context : null, _alpha = this.parameters.alpha !== undefined ? this.parameters.alpha : false, _depth = this.parameters.depth !== undefined ? this.parameters.depth : true, _stencil = this.parameters.stencil !== undefined ? this.parameters.stencil : true, _antialias = this.parameters.antialias !== undefined ? this.parameters.antialias : false;
         this._premultipliedAlpha = this.parameters.premultipliedAlpha !== undefined ? this.parameters.premultipliedAlpha : true;
@@ -390,11 +442,6 @@ var WebGLRenderer = /** @class */ (function () {
         this._isContextLost = false;
         this.initGLContext();
     };
-    WebGLRenderer.prototype.onMaterialDispose = function (event) {
-        var material = event.target;
-        material.removeEventListener('dispose', this.onMaterialDispose);
-        this.deallocateMaterial(material);
-    };
     // Buffer deallocation
     WebGLRenderer.prototype.deallocateMaterial = function (material) {
         this.releaseMaterialProgramReference(material);
@@ -406,12 +453,6 @@ var WebGLRenderer = /** @class */ (function () {
         if (programInfo !== undefined) {
             this.programCache.releaseProgram(programInfo);
         }
-    };
-    // Buffer rendering
-    WebGLRenderer.prototype.renderObjectImmediate = function (object, program, material) {
-        object.render(function (object) {
-            this._this.renderBufferImmediate(object, program, material);
-        });
     };
     WebGLRenderer.prototype.renderBufferImmediate = function (object, program, material) {
         this.state.initAttributes();
@@ -651,32 +692,6 @@ var WebGLRenderer = /** @class */ (function () {
         }
         this.state.disableUnusedAttributes();
     };
-    // Compile
-    WebGLRenderer.prototype.compile = function (scene, camera) {
-        this.currentRenderState = this.renderStates.get(scene, camera);
-        this.currentRenderState.init();
-        scene.traverse(function (object) {
-            if (object.isLight) {
-                this.currentRenderState.pushLight(object);
-                if (object.castShadow) {
-                    this.currentRenderState.pushShadow(object);
-                }
-            }
-        });
-        this.currentRenderState.setupLights(camera);
-        scene.traverse(function (object) {
-            if (object.material) {
-                if (Array.isArray(object.material)) {
-                    for (var i = 0; i < object.material.length; i++) {
-                        this.initMaterial(object.material[i], scene.fog, object);
-                    }
-                }
-                else {
-                    this.initMaterial(object.material, scene.fog, object);
-                }
-            }
-        });
-    };
     WebGLRenderer.prototype.startAnimation = function () {
         if (this.isAnimating)
             return;
@@ -694,12 +709,6 @@ var WebGLRenderer = /** @class */ (function () {
         else {
             window.requestAnimationFrame(this.animationLoop);
         }
-    };
-    WebGLRenderer.prototype.animationLoop = function (time) {
-        if (this.isAnimating === false)
-            return;
-        this.onAnimationFrame(time);
-        this.requestAnimationLoopFrame();
     };
     WebGLRenderer.prototype.animate = function (callback) {
         this.onAnimationFrame = callback;

@@ -20,11 +20,13 @@ import { BufferGeometry } from '../core/BufferGeometry';
 var PlaneHelper = /** @class */ (function (_super) {
     __extends(PlaneHelper, _super);
     function PlaneHelper(plane, size, hex) {
-        var _this = _super.call(this, PlaneHelper.constructGeom(), new LineBasicMaterial({ color: hex || 0xffff00 })) || this;
+        if (size === void 0) { size = 1; }
+        if (hex === void 0) { hex = 0xffff00; }
+        var _this = _super.call(this, PlaneHelper.constructGeom(), new LineBasicMaterial({ color: hex })) || this;
         _this.type = 'PlaneHelper';
         _this.plane = plane;
-        _this.size = (size === undefined) ? 1 : size;
-        var color = (hex !== undefined) ? hex : 0xffff00;
+        _this.size = size;
+        var color = hex;
         //
         var positions2 = [1, 1, 1, -1, 1, 1, -1, -1, 1, 1, 1, 1, -1, -1, 1, 1, -1, 1];
         var geometry2 = new BufferGeometry();

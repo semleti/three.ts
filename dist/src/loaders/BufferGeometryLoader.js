@@ -9,7 +9,8 @@ import { DefaultLoadingManager } from './LoadingManager';
  */
 var BufferGeometryLoader = /** @class */ (function () {
     function BufferGeometryLoader(manager) {
-        this.manager = (manager !== undefined) ? manager : DefaultLoadingManager;
+        if (manager === void 0) { manager = DefaultLoadingManager; }
+        this.manager = manager;
     }
     BufferGeometryLoader.prototype.load = function (url, onLoad, onProgress, onError) {
         var scope = this;

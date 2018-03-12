@@ -36,7 +36,8 @@ export class RingGeometry extends Geometry {
 export class RingBufferGeometry extends BufferGeometry {
 	
 	type : string = 'RingBufferGeometry';
-	constructor( innerRadius : number, outerRadius : number, thetaSegments : number, phiSegments : number, thetaStart : number, thetaLength : number ){
+	constructor( innerRadius : number = 0.5, outerRadius : number = 1, thetaSegments : number = 8, phiSegments : number = 1,
+		 thetaStart : number = 0, thetaLength : number = Math.PI * 2 ){
 		super();
 
 		this.parameters = {
@@ -48,14 +49,8 @@ export class RingBufferGeometry extends BufferGeometry {
 			thetaLength: thetaLength
 		};
 	
-		innerRadius = innerRadius || 0.5;
-		outerRadius = outerRadius || 1;
-	
-		thetaStart = thetaStart !== undefined ? thetaStart : 0;
-		thetaLength = thetaLength !== undefined ? thetaLength : Math.PI * 2;
-	
-		thetaSegments = thetaSegments !== undefined ? Math.max( 3, thetaSegments ) : 8;
-		phiSegments = phiSegments !== undefined ? Math.max( 1, phiSegments ) : 1;
+		thetaSegments = Math.max( 3, thetaSegments );
+		phiSegments = Math.max( 1, phiSegments );
 	
 		// buffers
 	

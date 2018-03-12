@@ -15,9 +15,9 @@ export class FaceNormalsHelper extends LineSegments {
 
 	object : Object3D;
 	size : number;
-	constructor( object : Object3D, size : number, hex : number, linewidth : number ){
-		super(FaceNormalsHelper.constructGeom(object), new LineBasicMaterial( { color: hex || 0xffff00, linewidth: linewidth || 1 } ));
-		this.size = ( size !== undefined ) ? size : 1;
+	constructor( object : Object3D, size : number = 1, hex : number = 0xffff00, linewidth : number = 1 ){
+		super(FaceNormalsHelper.constructGeom(object), new LineBasicMaterial( { color: hex, linewidth: linewidth } ));
+		this.size = size;
 
 		this.object = object;
 

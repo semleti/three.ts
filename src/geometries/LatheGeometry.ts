@@ -37,7 +37,7 @@ export class LatheGeometry extends Geometry {
 export class LatheBufferGeometry extends BufferGeometry {
 
 	type : string = 'LatheBufferGeometry';
-	constructor( points : Array<Vector2>, segments : number, phiStart : number, phiLength : number ){
+	constructor( points : Array<Vector2>, segments : number = 12, phiStart : number = 0, phiLength : number = Math.PI * 2 ){
 		super();
 		this.parameters = {
 			points: points,
@@ -46,9 +46,7 @@ export class LatheBufferGeometry extends BufferGeometry {
 			phiLength: phiLength
 		};
 		
-		segments = Math.floor( segments ) || 12;
-		phiStart = phiStart || 0;
-		phiLength = phiLength || Math.PI * 2;
+		segments = Math.floor( segments );
 	
 		// clamp phiLength so it's in range of [ 0, 2PI ]
 	

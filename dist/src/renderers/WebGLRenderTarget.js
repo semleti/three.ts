@@ -26,6 +26,7 @@ import { _Math } from '../math/Math';
 var WebGLRenderTarget = /** @class */ (function (_super) {
     __extends(WebGLRenderTarget, _super);
     function WebGLRenderTarget(width, height, options) {
+        if (options === void 0) { options = {}; }
         var _this = _super.call(this) || this;
         _this.uuid = _Math.generateUUID();
         _this.isWebGLRenderTarget = true;
@@ -34,7 +35,6 @@ var WebGLRenderTarget = /** @class */ (function (_super) {
         _this.scissor = new Vector4(0, 0, width, height);
         _this.scissorTest = false;
         _this.viewport = new Vector4(0, 0, width, height);
-        options = options || {};
         if (options.minFilter === undefined)
             options.minFilter = LinearFilter;
         _this.texture = new Texture(undefined, undefined, options.wrapS, options.wrapT, options.magFilter, options.minFilter, options.format, options.type, options.anisotropy, options.encoding);

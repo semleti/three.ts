@@ -11,10 +11,10 @@ export class RectAreaLight extends Light {
 	width : number;
 	height : number;
 	isRectAreaLight : boolean = true;
-	constructor( color : Color, intensity : number, width : number, height : number ){
+	constructor( color : Color, intensity : number, width : number = 10, height : number = 10 ){
 		super(color, intensity);
-		this.width = ( width !== undefined ) ? width : 10;
-		this.height = ( height !== undefined ) ? height : 10;
+		this.width = width;
+		this.height = height;
 	}
 
 	clone() : RectAreaLight {

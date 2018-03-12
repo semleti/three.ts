@@ -6,11 +6,13 @@ import { Ray } from '../math/Ray';
  */
 var Raycaster = /** @class */ (function () {
     function Raycaster(origin, direction, near, far) {
+        if (near === void 0) { near = 0; }
+        if (far === void 0) { far = Infinity; }
         this.linePrecision = 1;
         this.ray = new Ray(origin, direction);
         // direction is assumed to be normalized (for accurate distance calculations)
-        this.near = near || 0;
-        this.far = far || Infinity;
+        this.near = near;
+        this.far = far;
         this.params = {
             Mesh: {},
             Line: {},

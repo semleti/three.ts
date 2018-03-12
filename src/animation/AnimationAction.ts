@@ -55,11 +55,11 @@ export class AnimationAction {
 	zeroSlopeAtStart : boolean 	= true;		// for smooth interpolation w/o separate
 	zeroSlopeAtEnd : boolean		= true;		// clips for start, loop and end
 
-	constructor( mixer : AnimationMixer, clip : AnimationClip, localRoot : AnimationClip ){
+	constructor( mixer : AnimationMixer, clip : AnimationClip, localRoot : AnimationClip = null ){
 
 		this._mixer = mixer;
 		this._clip = clip;
-		this._localRoot = localRoot || null;
+		this._localRoot = localRoot;
 
 		let tracks = clip.tracks,
 			nTracks = tracks.length,

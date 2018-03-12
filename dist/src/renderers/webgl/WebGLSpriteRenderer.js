@@ -231,8 +231,8 @@ var WebGLSpriteRenderer = /** @class */ (function () {
         ].join('\n'));
         this.gl.compileShader(vertexShader);
         this.gl.compileShader(fragmentShader);
-        this.gl.attachShader(this.program, vertexShader);
-        this.gl.attachShader(this.program, fragmentShader);
+        this.gl.attachShader(program, vertexShader);
+        this.gl.attachShader(program, fragmentShader);
         this.gl.linkProgram(program);
         return program;
     };

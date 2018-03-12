@@ -10,9 +10,9 @@ export class FontLoader {
 
 	manager : LoadingManager;
 	path : string;
-	constructor( manager : LoadingManager ){
+	constructor( manager : LoadingManager = DefaultLoadingManager ){
 
-		this.manager = ( manager !== undefined ) ? manager : DefaultLoadingManager;
+		this.manager = manager;
 	}
 
 	load ( url : string, onLoad : Function, onProgress : Function, onError : Function ) : void {

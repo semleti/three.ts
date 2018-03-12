@@ -14,10 +14,11 @@ import { Vector2 } from '../../math/Vector2';
 var SplineCurve = /** @class */ (function (_super) {
     __extends(SplineCurve, _super);
     function SplineCurve(points) {
+        if (points === void 0) { points = []; }
         var _this = _super.call(this) || this;
         _this.type = 'SplineCurve';
         _this.isSplineCurve = true;
-        _this.points = points || [];
+        _this.points = points;
         return _this;
     }
     SplineCurve.prototype.getPoint = function (t, optionalTarget) {

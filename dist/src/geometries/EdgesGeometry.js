@@ -19,10 +19,10 @@ import { _Math } from '../math/Math';
 var EdgesGeometry = /** @class */ (function (_super) {
     __extends(EdgesGeometry, _super);
     function EdgesGeometry(geometry, thresholdAngle) {
+        if (thresholdAngle === void 0) { thresholdAngle = 1; }
         var _this = _super.call(this) || this;
         _this.type = 'EdgesGeometry';
         _this.vertices = [];
-        thresholdAngle = (thresholdAngle !== undefined) ? thresholdAngle : 1;
         _this.parameters = {
             thresholdAngle: thresholdAngle
         };

@@ -16,10 +16,12 @@ import { CubeReflectionMapping } from '../constants';
 var CubeTexture = /** @class */ (function (_super) {
     __extends(CubeTexture, _super);
     function CubeTexture(images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding) {
-        var _this = _super.call(this, images !== undefined ? images : [], mapping !== undefined ? mapping : CubeReflectionMapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding) || this;
+        if (images === void 0) { images = []; }
+        if (mapping === void 0) { mapping = CubeReflectionMapping; }
+        var _this = _super.call(this, images, mapping, wrapS, wrapT, magFilter, minFilter, format, type, anisotropy, encoding) || this;
         _this.isCubeTexture = true;
-        _this.images = images !== undefined ? images : [];
-        _this.mapping = mapping !== undefined ? mapping : CubeReflectionMapping;
+        _this.images = images;
+        _this.mapping = mapping;
         _this.flipY = false;
         return _this;
     }
