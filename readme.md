@@ -1,5 +1,5 @@
 # three.ts
-Ongoing port of [three.js](https://github.com/mrdoob/three.js) to [TypeScript](https://www.typescriptlang.org).  
+Ongoing unofficial port of [three.js](https://github.com/mrdoob/three.js) to [TypeScript](https://www.typescriptlang.org).  
 Currently using revision 91dev.  
 
 
@@ -25,7 +25,7 @@ You can find the task by 'ctrl+shit+P' and typing 'task'.
 The tests require [qunit](https://www.npmjs.com/package/qunit).
 
 ## Status
-The entire project is using TypeScript.  
+The entire source code is using TypeScript.  
 ~90% of the typings are done.  
 ~2% of the typings are janky.  
 ~1% of the typings are wrong.  
@@ -39,8 +39,8 @@ This is my first real Github repo, so I have no clue what I'm doing ¯\\\_(ツ)_
 ## BUGGY
 Buggy.  
 LOTS of BUGS!  
-Do NOT use!  
 A bit less buggy now that I've fixed a few using the unit tests.
+Even less buggy now that most examples work!
   
 I'm a novice at three.js, so I stumbled my way to this point.  
 Most bugs will likely arise from these sources (I think):  
@@ -51,11 +51,10 @@ Most bugs will likely arise from these sources (I think):
 
 ## Examples
 ~90% of the examples are currently working.  
-You can easily check them out online on https://htmlpreview.github.io .  
-Just paste the link to the html file.  
-ex: https://htmlpreview.github.io/?https://github.com/semleti/three.ts/blob/master/examples/webgl_animation_cloth.html  
-Sadly, the index.html isn't working, as github is sending 'X-Frame-Options : deny' headers :/  
-This also prevents texture loading for some of the examples :'(
+You can easily check them out online at https://htmlpreview.github.io/?https://github.com/semleti/three.ts/blob/master/examples/index.html .  
+Sadly, the index.html isn't working optimally, as github is sending 'X-Frame-Options : deny' headers :/  
+This also prevents texture loading for some of the examples :'(  
+So I implemented a quick ugly fix to get it to work.  
 
 ## Build
 The build process is controlled by the '.vscode/build.js' script:  
