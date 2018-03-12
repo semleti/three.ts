@@ -389,7 +389,7 @@
 		function updateFilter() {
 
 			var v = filterInput.value;
-			if(isHTMLPreview)
+			if(!isHTMLPreview)
 			{
 				if( v !== '' ) {
 					window.history.replaceState( {} , '', '?q=' + v + window.location.hash );
