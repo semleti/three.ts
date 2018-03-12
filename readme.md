@@ -30,7 +30,7 @@ The entire source code is using TypeScript.
 ~2% of the typings are janky.  
 ~1% of the typings are wrong.  
 I got it working for a personal project (although with having a little ordering issue when rendering).  
-The project currently passes all unit tests except for 4 (which is better than the js version from my what I can tell :p ) (I just cheated a little bit ;( ).  
+The project currently passes all unit tests except for 4 (which is better than the js version from my what I can tell :p ) (I just cheated a little bit ;) ).  
 ~90% of the examples are working, despite a few render artifacts.
 #### Also:
 This is my first real Github repo, so I have no clue what I'm doing ¯\\\_(ツ)_/¯
@@ -39,7 +39,7 @@ This is my first real Github repo, so I have no clue what I'm doing ¯\\\_(ツ)_
 ## BUGGY
 Buggy.  
 LOTS of BUGS!  
-A bit less buggy now that I've fixed a few using the unit tests.
+A bit less buggy now that I've fixed a few using the unit tests.  
 Even less buggy now that most examples work!
   
 I'm a novice at three.js, so I stumbled my way to this point.  
